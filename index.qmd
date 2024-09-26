@@ -1,0 +1,32 @@
+---
+title: "My Website"
+---
+
+My name is **Lauren** and I am *22 years old*. 
+
+
+I am currently a student in Baruch's [MS Business Analytics Program](https://zicklin.baruch.cuny.edu/academic-programs/graduate/ms/masters-in-business-analytics/).
+
+
+### My Dogs!
+
+
+I have two dogs! Their names are: 
+
+1) Macaroni 
+
+    - Macaroni (Mack) is technically my brother's dog, but we babysit him while he's at work. 
+    
+    
+    - He is a Golden Retreiver and is 2 years old! 
+
+    ![](https://yourimageshare.com/ib/wUHEdXt2VU){width=50%}
+
+1) Rusty 
+
+    - Rusty is extremely loving and the smartest dog I have ever met. 
+    
+    
+    - He is a Pitbull/Lab mix and is 13 years old (we think, he's a rescue)! 
+
+    ![](https://yourimageshare.com/ib/ngs0Qa20Uf){width=50%}

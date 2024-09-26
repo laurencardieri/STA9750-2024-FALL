@@ -1,0 +1,534 @@
+# Mini Project 01: Fiscal Characterisitics of Major US Public Transit Systems 
+
+![](https://cdn.vox-cdn.com/thumbor/ly05RTuUTtbmwtAFPVEH-ahP3Vs=/0x0:5616x3744/1200x800/filters:focal(2359x1423:3257x2321)/cdn.vox-cdn.com/uploads/chorus_image/image/65258217/shutterstock_219456484.0.jpg)
+
+## Introduction  
+
+This project was taken as inspiration from a YouTuber [City Nerd](https://www.youtube.com/CityNerd), who created a [video](https://www.youtube.com/watch?v=Wl7cprP_6KM) about the "10 Transit Services That Do Huge Numbers at the Farebox". **Farebox Recovery** is the fraction of revenues raised from fares instead of taxes. 
+
+
+For this project, we will use data from the [National Transit Database](https://www.transit.dot.gov/ntd) as our primary source. The following tables/reports will be used:
+
+
+  - The [2022 Fare Revenue](https://www.transit.dot.gov/ntd/data-product/2022-annual-database-fare-revenues) table, in which we will mostly explore revenue.
+  - The lastest [Monthly Ridership](https://www.transit.dot.gov/ntd/data-product/monthly-module-adjusted-data-release) tables, in which we will mostly explore the Unlinked Passenger Trips (UPT) and Vehicle Revenue Miles (VRM). 
+  - The [2022 Operating Expenses](https://www.transit.dot.gov/ntd/data-product/2022-operating-expenses) reports, in which we will mostly explore expenses. 
+  
+  
+We will use the 2022 verson of all reports, as up-to-date data and newer reports are often uploaded on a lag.
+
+## Getting Started
+
+First, we must download, clean, and join the tables. 
+
+Unfortunately, the code that allowed the immediate download of the data sets did not work for me. So instead, I had to download the data and import it into R, which is seen in my code below. 
+
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(readr)
+
+FARES <- read_excel("Miniproject001/2022 Fare Revenue (1).xlsx") |>
+  select(-`State/Parent NTD ID`, 
+         -`Reporter Type`,
+         -`Reporting Module`,
+         -`TOS`,
+         -`Passenger Paid Fares`,
+         -`Organization Paid Fares`) |>
+  filter(`Expense Type` == "Funds Earned During Period") |>
+  select(-`Expense Type`) |>
+  group_by(`NTD ID`,       # Sum over different `TOS` for the same `Mode`
+           `Agency Name`,  # These are direct operated and sub-contracted 
+           `Mode`) |>      # of the same transit modality
+  # Not a big effect in most munis (significant DO
+  # tends to get rid of sub-contractors), but we'll sum
+  # to unify different passenger experiences
+  summarize(`Total Fares` = sum(`Total Fares`)) |>
+  ungroup()
+
+EXPENSES <- read_csv("Miniproject001/2022_NTD_Annual_Data_-_Operating_Expenses__by_Function__20231102.csv") |>
+  select(`NTD ID`, 
+         `Agency`,
+         `Total`, 
+         `Mode`) |>
+  mutate(`NTD ID` = as.integer(`NTD ID`)) |>
+  rename(Expenses = Total) |>
+  group_by(`NTD ID`, `Mode`) |>
+  summarize(Expenses = sum(Expenses)) |>
+  ungroup()
+
+FINANCIALS <- inner_join(FARES, EXPENSES, join_by(`NTD ID`, `Mode`))
+
+```
+
+Now, we must extract the monthly transit numbers. My computer struggled to read the whole file for ridership, so I split it into two respective files, one for UPT and one for VRM. This is seen in my code below. 
+
+```{r}
+
+TRIPS <- read_excel("Miniproject001/Ridership_UPT.xlsx") |>
+  filter(`Mode/Type of Service Status` == "Active") |>
+  select(-`Legacy NTD ID`, 
+         -`Reporter Type`, 
+         -`Mode/Type of Service Status`, 
+         -`UACE CD`, 
+         -`TOS`) |>
+  pivot_longer(-c(`NTD ID`:`3 Mode`), 
+               names_to="month", 
+               values_to="UPT") |>
+  drop_na() |>
+  mutate(month=my(month)) # Parse _m_onth _y_ear date specs
+
+
+MILES <- read_excel("Miniproject001/Ridership_VRN.xlsx") |>
+  filter(`Mode/Type of Service Status` == "Active") |>
+  select(-`Legacy NTD ID`, 
+         -`Reporter Type`, 
+         -`Mode/Type of Service Status`, 
+         -`UACE CD`, 
+         -`TOS`) |>
+  pivot_longer(-c(`NTD ID`:`3 Mode`), 
+               names_to="month", 
+               values_to="VRM") |>
+  drop_na() |>
+  group_by(`NTD ID`, `Agency`, `UZA Name`, 
+           `Mode`, `3 Mode`, month) |>
+  summarize(VRM = sum(VRM)) |>
+  ungroup() |>
+  mutate(month=my(month)) # Parse _m_onth _y_ear date specs
+
+USAGE <- inner_join(TRIPS, MILES) |>
+  mutate(`NTD ID` = as.integer(`NTD ID`))
+
+```
+
+
+Now, this creates the table as follows: 
+
+```{r}
+if(!require("DT")) install.packages("DT")
+library(DT)
+
+sample_n(USAGE, 1000) |> 
+    mutate(month=as.character(month)) |> 
+    DT::datatable()
+
+```
+
+
+## Task 1: Creating Syntatic Names 
+
+Here, I decided to rename three of the columns in my table, one to remove spaces so it is easier to manipulate in code, and the other to have more common names for easier understanding. Thus, I wanted: 
+
+
+  - "UZA Name" to become "Metro_Area"
+  - "UPT" to become "Unlinked_Passenger_Trips"
+  - "VRM" to become "Vehicle Revenue Miles"
+  
+  
+So, I did this with the following code: 
+
+```{r}
+colnames(USAGE)[colnames(USAGE) == "UZA Name"] <- "Metro_Area"
+colnames(USAGE)[colnames(USAGE) == "UPT"] <- "Unlinked_Passenger_Trips"
+colnames(USAGE)[colnames(USAGE) == "VRM"] <- "Vehicle_Revenue_Miles"
+
+```
+
+And then I reloaded my table to see if the columns changed/looked good. They did! 
+
+```{r}
+library(DT)
+
+sample_n(USAGE, 1) |> 
+    mutate(month=as.character(month)) |> 
+    DT::datatable()
+```
+
+
+## Task 2: Recording the Mode Column 
+
+First, I needed to know what the unique codes were used in the Mode column in our data set. To do this, I ran the following command, which produced the following 18 codes: 
+
+```{r}
+distinct(USAGE, Mode)
+```
+
+Using the [Glossary](https://www.transit.dot.gov/ntd/national-transit-database-ntd-glossary) on the National Transit Database website, I forced search each of these codes to find their corresponding name. Then, I recoded my table to display these names. 
+
+```{r}
+USAGE <- USAGE |>
+  mutate(Mode=case_when(
+    Mode == "HR" ~ "Heavy Rail", 
+    Mode == "DR" ~ "Demand Response",
+    Mode == "FB" ~ "Ferryboat",
+    Mode == "MB" ~ "Bus",
+    Mode == "SR" ~ "Streetcar Rail",
+    Mode == "TB" ~ "Trolleybus",
+    Mode == "VP" ~ "Vanpool",
+    Mode == "CB" ~ "Commuter Bus",
+    Mode == "RB" ~ "Bus Rapid Transit",
+    Mode == "LR" ~ "Light Rail",
+    Mode == "YR" ~ "Hybrid Rail",
+    Mode == "MG" ~ "Monorail and Automated Guideway",
+    Mode == "CR" ~ "Commuter Rail",
+    Mode == "AR" ~ "Alaska Railroad",
+    Mode == "TR" ~ "Aerial Tramways",
+    Mode == "IP" ~ "Inclined Plane",
+    Mode == "PB" ~ "Publico",
+    Mode == "CC" ~ "Cable Car",
+    TRUE ~ "Unknown"))
+```
+
+Thus, my cleaned-up table became: 
+
+```{r}
+if(!require("DT")) install.packages("DT")
+library(DT)
+
+sample_n(USAGE, 1000) |> 
+    mutate(month=as.character(month)) |> 
+    DT::datatable()
+```
+
+
+## Task 3: Answering the Intructor Specified Questions with dplyr. 
+
+  1. What transit agency had the most total VRM in our data set? 
+  
+  
+```{r}
+total_vrm_agency <- USAGE |> 
+  group_by(`Agency`) |> 
+  summarize(VRM = sum(Vehicle_Revenue_Miles, na.rm = TRUE)) |>
+  arrange(desc(VRM))
+  tvrm <- total_vrm_agency |>
+    slice_max(VRM, n = 1)
+  print(tvrm)
+```
+
+Thus, the transit agency that had the most total VRM in our data set was MTA New York City Transit, with a Vehicle Revenue Miles of 10832855350. This makes sense, as public transit easily spans the entirety of New York City, whether it be the subway, buses, the ferry, or more. Since public transit is prevalent in our lives as New Yorkers, with many not even owning their own vehicle and solely relying on public transit, it is understandable that NYC is top of the list. 
+
+  2. What transit mode had the most total VRM in our data set? 
+  
+  
+```{r}
+  total_vrm_mode <- USAGE |> 
+    group_by(`Mode`) |> 
+    summarize(M = sum(Vehicle_Revenue_Miles, na.rm = TRUE)) |>
+    arrange(desc(M))
+    topmode <- total_vrm_mode |>
+      slice_max(M, n = 1)
+    print(topmode)
+```
+
+The transit mode that had the most total VRM in our data set was the BUS, with a Vehicle Revenue Miles of 49444494088. 
+
+  3. How many trips were taken on the NYC subway (Heavy Rail) in May 2024? 
+  
+  
+
+```{r}
+    May24Subway <- USAGE |>
+      filter(Mode == "Heavy Rail", month >= "2024-05-01", month <= "2024-05-31") |>
+      summarize(may_sub = sum(Unlinked_Passenger_Trips, na.rm = TRUE))
+    
+    print(May24Subway)
+```
+
+So, in May 2024, 237383777 unlinked passenger trips were taken on the NYC subway (Heavy Rail). Again, I believe that this checks out, especially with the way many New Yorkers rely on the subway to get around Manhatten during the work day. 
+
+  4. How much did NYC subway ridership fall between April 2019 and April 2020? 
+  
+```{r}
+  
+  april_19_to_20 <- USAGE |>
+      filter(Mode == "Heavy Rail", 
+             (month >= "2019-04-01" & month <= "2019-04-30") |
+             (month >= "2020-04-01" & month <= "2020-04-30"))|>
+      group_by(month) |>
+      summarize(aprupt = sum(Unlinked_Passenger_Trips, na.rm = TRUE)) |>
+      summarize(april_difference = 
+            sum(aprupt[month >= "2020-04-01" & month <= "2020-04-30"]) - 
+            sum(aprupt[month >= "2019-04-01" & month <= "2019-04-30"]))
+    
+    print(april_19_to_20)
+```
+
+Here, we can see that 296416858 **less** riders used the NYC Subway in April 2020 than April 2019. This makes a lot of sense, as April 2020 was the true start of lock down we faced because of the Covid-19 Pandemic. Whether riders were terrified to leave their homes in fear of contracting the virus or they were listening to the mandate to stay inside unless it is for an emergency, it is not a shock that the MTA had almost 300 million less riders in comparison. 
+
+To further prove this point, let's consider the same comparison, but for May 2019 and May 2020. 
+  
+```{r}
+  
+  may_19_to_20 <- USAGE |>
+      filter(Mode == "Heavy Rail", 
+             (month >= "2019-05-01" & month <= "2019-05-31") |
+             (month >= "2020-05-01" & month <= "2020-05-31"))|>
+      group_by(month) |>
+      summarize(mayupt = sum(Unlinked_Passenger_Trips, na.rm = TRUE)) |>
+      summarize(may_difference = 
+            sum(mayupt[month >= "2020-05-01" & month <= "2020-05-31"]) - 
+            sum(mayupt[month >= "2019-05-01" & month <= "2019-05-31"]))
+    
+    print(may_19_to_20)
+```
+  
+The month of May also experienced close to 300 million less riders in May 2020 than May 2019. I am sure if we were to investigate the following months as well, we would come to a similar conclusion. It is truly interesting to see the major impact that the pandemic caused in such a short period of time! 
+
+
+## Task 4: Explore and Analyze 
+
+  1. What Metro Area has the most total amount of Unlinked Passenger Trips? Do they also have the most total Vehicle Revenue Miles?
+  
+    
+```{r}
+    Total_UPT <- USAGE |> 
+    group_by(`Metro_Area`) |> 
+    summarize(most_trips = sum(`Unlinked_Passenger_Trips`, na.rm = TRUE)) |>
+    arrange(desc(most_trips))
+  topupt <- Total_UPT |>
+    slice_max(most_trips, n = 1)
+print(topupt)
+
+Total_VRM_MA <- USAGE |> 
+  group_by(`Metro_Area`) |> 
+  summarize(most_miles = sum(`Vehicle_Revenue_Miles`, na.rm = TRUE)) |>
+  arrange(desc(most_miles))
+top_vrm_ma <- Total_VRM_MA |>
+  slice_max(most_miles, n = 1)
+print(top_vrm_ma)
+
+```
+
+The Metro Area that had the most total amount of Unlinked Passenger Trips was New York--Jersey City--Newark, NY--NJ, with 84020935224 trips. This metro area also has the most total Vehicle Revenue Miles, with 21190345637 miles. It is interesting to see that this metro area is dominant on both lists, especially with the NYC MTA also leading other lists prior. 
+  
+  2. What Date had the most total amount of Vehicle Revenue Miles? What date had the least? 
+  
+  
+      
+```{r}
+  Total_date_T <- USAGE |> 
+  group_by(`month`) |> 
+  summarize(most_date = sum(`Vehicle_Revenue_Miles`, na.rm = TRUE)) |>
+  arrange(desc(most_date))
+topdate <- Total_date_T |>
+  slice_max(most_date, n = 1)
+print(topdate)
+
+Total_date_L <- USAGE |> 
+  group_by(`month`) |> 
+  summarize(least_date = sum(`Vehicle_Revenue_Miles`, na.rm = TRUE)) |>
+  arrange(desc(least_date))
+lowdate <- Total_date_L |>
+  slice_min(least_date, n = 1)
+print(lowdate)
+
+```
+ 
+The date with the most total Vehicle Revenue Miles is October 1, 2019. The date with the least is April 1, 2020. Though I am unsure why October 1, 2019 was a popular date to travel, as there was no holidays or world events happen that day, it makes sense why April 1, 2020 was the lowest, due to COVID. 
+  
+  3. Which Metro Area contributed the most to the busiest day of the year in regard to Unlinked Passenger Trips? ? Which contributed the least?
+  
+```{r}
+ Transport_Metro <- USAGE |>
+  filter(month == "2019-10-1") |>
+  group_by(Metro_Area) |>
+  summarize(most_metro = sum(Vehicle_Revenue_Miles, na.rm = TRUE)) 
+  topmetro <- Transport_Metro |> 
+  slice_max(most_metro, n=1)
+print(topmetro)
+
+topmetro <- Transport_Metro |> 
+  slice_min(most_metro, n=1)
+print(topmetro) 
+
+```
+
+
+On the busiest day of the year for Vehicle Revenue Miles, New York--Jersey City--Newark, NY--NJ contributed the most with 87400676 miles. However, Decatur, AL contributed the least, with only 25944 miles. The New York--Jersey City--Newark, NY--NJ area providing the most to this list is not shocking, as it is also the leader on the list for total VRM. 
+
+
+## Task 5: Table Summarization 
+
+Now, we will create a new table from USAGE that also has annual total UPT and VRM for 2022. 
+  
+```{r}
+
+USAGE_2022_ANNUAL <- USAGE |>
+  filter(year(month) == 2022) |>
+  group_by(`NTD ID`, Agency, Metro_Area, Mode, Unlinked_Passenger_Trips, Vehicle_Revenue_Miles) |>
+  summarize(UPT = sum(Unlinked_Passenger_Trips, na.rm = TRUE),
+           VRM = sum(Vehicle_Revenue_Miles, na.rm = TRUE)
+  ) |> 
+  ungroup()
+
+FINANCIALS <- FINANCIALS |>
+  mutate(Mode=case_when(
+    Mode == "HR" ~ "Heavy Rail", 
+    Mode == "DR" ~ "Demand Response",
+    Mode == "FB" ~ "Ferryboat",
+    Mode == "MB" ~ "Bus",
+    Mode == "SR" ~ "Streetcar Rail",
+    Mode == "TB" ~ "Trolleybus",
+    Mode == "VP" ~ "Vanpool",
+    Mode == "CB" ~ "Commuter Bus",
+    Mode == "RB" ~ "Bus Rapid Transit",
+    Mode == "LR" ~ "Light Rail",
+    Mode == "YR" ~ "Hybrid Rail",
+    Mode == "MG" ~ "Monorail and Automated Guideway",
+    Mode == "CR" ~ "Commuter Rail",
+    Mode == "AR" ~ "Alaska Railroad",
+    Mode == "TR" ~ "Aerial Tramways",
+    Mode == "IP" ~ "Inclined Plane",
+    Mode == "PB" ~ "Publico",
+    Mode == "CC" ~ "Cable Car",
+    TRUE ~ "Unknown"))
+
+USAGE_AND_FINANCIALS <- left_join(USAGE_2022_ANNUAL, 
+                                  FINANCIALS,
+                                  join_by(`NTD ID`, Mode)) |>
+  drop_na()
+
+```
+
+When I attempted to run the given code the first time, I discovered that the tables were not joining together with all of their values. I quickly realized that this was because the Modes in the Financial table was still known as their short names. For example, the "Heavy Rail" was still referred to as "HR". Thus, I ran the same code that we did on the USAGE table earlier to manipulate these codes to reflect their proper names. After this, the table formed with no issue. 
+
+```{r}
+
+sample_n(USAGE_AND_FINANCIALS, 1000) |> 
+    DT::datatable()
+
+```
+
+
+## Task 6: Farebox Recovery Among Major Systems
+
+  1. Which transit system (agency and mode) had the most UPT in 2022?
+  
+
+```{r}
+
+MTSUPT <- USAGE_AND_FINANCIALS |>
+  group_by(Agency, Mode) |>
+  summarize(mosttsupt = sum(UPT, na.rm = TRUE)) |>
+  arrange(desc(mosttsupt))
+print(MTSUPT)
+
+
+```
+
+The transit system, agency and mode, that had the most UPT in 2022 was the MTA New York City Transit with their Heavy Rail, with a total UPT of 1793073801. This number is way larger than the following on the list, which interestly enough also belongs to the MTA New York City transit and their Bus system. 
+
+  2. Which transit system (agency and mode) had the highest farebox recovery, defined as the highest ratio of Total Fares to Expenses?
+  
+  
+```{r}
+
+colnames(USAGE_AND_FINANCIALS)[colnames(USAGE_AND_FINANCIALS) == "Total Fares"] <- "Total_Fares"
+
+highest_farebox <- USAGE_AND_FINANCIALS |>
+  filter( UPT >= 400000) |>
+  mutate(farebox_rate = Total_Fares/Expenses) |> 
+  group_by(Agency, Mode) |>
+  summarize(highest_ratio = max (farebox_rate)) |>
+  arrange(desc(highest_ratio))
+print(highest_farebox)
+  
+
+
+```
+
+Here, we can clearly see that the transit system with the highest farebox recovery is Anaheim Transportation Network with their bus transportation. The fairbox recovery for each transit system is found by dividing their Total Fares by their Expenses. Interestingly enough, Anaheim Transportation Network and their buses have a ratio of .865, which is about a 57% greater than the second place spot, which is the City of Gainesville, FL with their buses!
+
+
+  
+  3. Which transit system (agency and mode) has the lowest expenses per UPT?
+  
+  
+```{r}
+
+low_expense_UPT <- USAGE_AND_FINANCIALS |>
+  filter( UPT >= 400000) |>
+  mutate(exp_p_upt = Expenses/UPT) |>
+  group_by(Agency, Mode) |>
+  summarize(lowest_exp_p_upt = min(exp_p_upt)) |>
+  arrange(lowest_exp_p_upt)
+print(low_expense_UPT)
+
+
+```
+
+Similar to the last inquiry , the transit system that has the lowest expenses per UPT is Anaheim Transportation Network with their bus transportation. Their ratio of expenses per UPT is 12.8, which is *drastically* less than the highest. The highest expense per UPT is Northeast Illinois Regional Commuter Railroad Corporation and their Cable Cars, with a ratio of 600, which is an extreme difference between the two.  
+  
+  4. Which transit system (agency and mode) has the highest total fares per UPT?
+  
+  
+```{r}
+
+high_fare_UPT <- USAGE_AND_FINANCIALS |>
+  filter(UPT >= 400000) |>
+  mutate(totalfares_p_upt = (Total_Fares/UPT)) |>
+  group_by(Agency, Mode) |>
+  summarize(high_fare_p_upt = max(totalfares_p_upt)) |>
+  arrange(desc(high_fare_p_upt))
+print(high_fare_UPT)
+
+
+```
+
+
+The transit system with the highest total fares per UPT is New Jersey Transit Corporation and their buses, with a total fare of 536 to one Unlinked Passenger Trip. This is more than double the second place spot, which goes to Northeast Illinois Regional Commuter Railroad Corporation and their Commuter Bus, with a total fare of 265 to one Unlinked Passenger Trip. 
+  
+  5. Which transit system (agency and mode) has the lowest expenses per VRM?
+
+Interestingly enough, I had to change my "Expenses" column name to "expense" for my code to recognize the column instead of the table we established prior, hence the reasoning for that code below. 
+  
+```{r}
+colnames(USAGE_AND_FINANCIALS)[colnames(USAGE_AND_FINANCIALS) == "Expenses"] <- "expense"
+
+low_exp_vrm<- USAGE_AND_FINANCIALS |>
+  filter(UPT >= 400000) |>
+  mutate(exp_p_vrm = (expense/VRM)) |>
+  group_by(Agency, Mode) |>
+  summarize(low_exp_p_vrm = min(exp_p_vrm)) |> 
+  arrange(low_exp_p_vrm) 
+print(low_exp_vrm)
+
+
+```
+
+The transit system with the lowest expenses per Vehicle Revenue Miles was Interurban Transit Partnership and their Bus transportation, with an expense of 77.2 per Vehicle Revenue Mile. This is far cheaper than the leader of this category, which is the New York City Department of Transportation and their Ferryboat, with an expense of 771 per vehicle revenue mile. Interestingly enough, out of the ten highest expenses on the list, nine of the most expensive Modes of transportation is the Ferryboat, with only the Cable Car in San Francisco coming in at fourth. This shows that a Ferryboat is most-likely the most expensive transportation mode for transit agencies to run in comparison to its vehicle revenue miles. 
+  
+  6. Which transit system (agency and mode) has the highest total fares per VRM?
+
+
+
+```{r}
+
+high_fare_VRM <- USAGE_AND_FINANCIALS |>
+  filter(UPT >= 400000) |>
+  mutate(totalfares_p_vrm = (Total_Fares/VRM)) |>
+  group_by(Agency, Mode) |>
+  summarize(high_fare_p_vrm = max(totalfares_p_vrm)) |>
+  arrange(desc(high_fare_p_vrm))
+print(high_fare_VRM)
+
+```
+
+The transit system with the highest total fares per vehicle revenue miles is Washington State Ferries, with a ratio of 1120 total fares to one vehicle revenue mile. An interesting correlation to the last inquiry is that the top three highest total fares per VRM belong to ferryboats. Furthermore, the highest value on the list is almost 500% *greater* than the third value, which is 188, and that percentage only grows as that list goes further down. 
+
+
+## Conclusion 
+
+In regard to what transit system in the country is the most effective, it depends on which data points you use to weigh your opinion. If you are considering which system has the highest values in URM and UPT, meaning it is the most frequently used, the answer would be the major transit system of NYC's MTA Transit. Not only is its heavy rail system extremely prevalent in these numbers, which makes sense since numerous rails span the lengths of New York City and are used daily by many, but the NYC MTA Bus also holds rank compared to others. 
+
+However, if you are considering which transit system is the most cost effective, it would have to be the Anaheim Transportation Network. Since a high farebox recovery ratio indicates that a transit system is profitable, Anaheim Transportation Network bus' numbers alone show that this system is highly more profitable than the rest. This agency also leads margin of lowest expenses per unlinked passenger trip, which shows that not only is this system great at making money, it also great at retaining it and not spending the majority of it on expenses. However, while this is great from a business standpoint, as a passenger this transportation agency ranks high on the total fares per vehicle revenue mile scale, as it is in 4th place. This means that this transportation is fairly expensive to ride compared to the others. 
+
+
+In my opinion, I believe that the MTA New York City Transit is the most effective in the country, due to the enormous scale it can run on at a moderate price compared to other agencies. 
+
+
+
+
+  
