@@ -13,5 +13,5 @@ website:
     
 format:
   html:
-    theme: Flatly
+    theme: Minty
     toc: false
