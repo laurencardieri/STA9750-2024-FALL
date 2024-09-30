@@ -15,7 +15,7 @@ For this project, we will use data from the [National Transit Database](https://
   - The [2022 Operating Expenses](https://www.transit.dot.gov/ntd/data-product/2022-operating-expenses) reports, in which we will mostly explore expenses. 
   
   
-We will use the 2022 verson of all reports, as up-to-date data and newer reports are often uploaded on a lag.
+We will use the 2022 version of all reports, as up-to-date data and newer reports are often uploaded on a lag.
 
 ## Getting Started
 
