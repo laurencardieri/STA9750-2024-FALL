@@ -452,8 +452,16 @@ datatable(Happy_Days_Seasons)
 
 By looking at the scores above, we can see that the scores did in fact drop towards the later seasons, with Season 8 being the lowest scoring season. For the first half of the show, they average at a high 7 rating, but a downward decline began after season 3. Season 11, which was their final season, inevitably scored back in the 7 range, but the score still did not beat any from the first four seasons. 
 
-#Task 3
+### Task 3: Custom Success Metric 
 
+For my success metric, I decided to create a scale that assess the total popularity of a work. To do this, I decided to multiply the average rating that it got by the number of votes. My logic is that a work cannot be successful without each of these metrics: a low scoring average with a lot of votes means that the movie flopped and a high scoring average with no votes means that the movie is too obscure. However, if a movie is averaged highly and has a lot of votes, this means that it is widely known and highly regarded. Thus, I believe that this is an accurate way to measure success. 
+
+To test my theory, I will run some tests to see if it holds up against actually highly regarded movies and some of the more obscure ones in Hollywood. 
+
+**Firstly**, I will choose the top ten movies on my metric and confirm that they were box office successes. 
+
+<details>
+  <summary>**Click here to see how I filtered my data to show this**</summary> 
 
 ```{r}
 
@@ -476,7 +484,30 @@ print(Top_ten)
 
 ```
 
+</details>
 
+The following are the top ten that were successes on my list: 
+
+
+1.  [The Shawshank Redemption](https://www.imdb.com/title/tt0111161/)
+2.  [The Dark Knight](https://www.imdb.com/title/tt0468569/)
+3.  [Fight Club](https://www.imdb.com/title/tt0137523/)
+4.  [Forrest Gump](https://www.imdb.com/title/tt0109830/)
+5.  [Pulp Fiction](https://www.imdb.com/title/tt0110912/)
+6.  [The Godfather](https://www.imdb.com/title/tt0068646/)
+7.  [Interstellar](https://www.imdb.com/title/tt0816692/)
+8.  [The Lord of the Rings: The Fellowship of the Ring](https://www.imdb.com/title/tt0120737/)
+9.  [The Matrix](https://www.imdb.com/title/tt0133093/)
+10.  [The Lord of the Rings: The Return of the King](https://www.imdb.com/title/tt0167260/)
+
+All of which were *MAJOR* successes in the box office. So far, this success metric is looking good! 
+
+**Secondly**, I will do the same as before, but I will choose the five lowest movies on my list and ensure they were of low quality. 
+
+
+<details>
+  <summary>**Click here to see how I filtered my data to show this**</summary> 
+  
 ```{r}
 
 movie_ratings <- movie_ratings |> 
@@ -490,10 +521,24 @@ bottom_five <- movie_ratings |>
 print(bottom_five)
 
 
-
-
 ```
+</details>
 
+The following are the 5 lowest rated on my list in regard to my metric:
+
+
+1. [Zwischen Glück und Krone](https://www.imdb.com/title/tt0498734/)
+2. [Yubiley prokurora](https://www.imdb.com/title/tt0386134/)
+3. [The Case He Couldn't Crack](https://www.imdb.com/title/tt0309422/)
+4. [18'ler Takimi](https://www.imdb.com/title/tt0960709/)
+5. [Parentesi tonde](https://www.imdb.com/title/tt1047512/)
+
+These all proved to be more obscure and poorly-rated movies. Therefore, the metric does work both ways. 
+
+**Thirdly**, now I will choose a prestige actor and confirm that they have many projects that score highly on my metric. For this, I decided to look into Tom Hanks and Leonardo DiCaprio, as I belive they are two major actors in the industry currently.  
+
+<details>
+  <summary>**Click here to see how I filtered my data to show this**</summary> 
 
 ```{r}
 
@@ -508,12 +553,6 @@ colnames(Leo)[colnames(Leo) == "knownForTitles"] <- "tconst"
 
 Leo <- inner_join(Leo, movie_ratings, join_by(tconst))
 
-```
-
-
-```{r}
-library(tidyverse)
-
 Hanks <- NAME_BASICS |>
   filter(primaryName == "Tom Hanks") |>
   separate_longer_delim(knownForTitles, ",")
@@ -523,9 +562,26 @@ colnames(Hanks)[colnames(Hanks) == "knownForTitles"] <- "tconst"
 
 Hanks <- inner_join(Hanks, movie_ratings, join_by(tconst))
 
+Leo_Hanks <- bind_rows(Leo, Hanks)
+
+Leo_Hanks2 <- Leo_Hanks |> select(primaryName, primaryTitle, averageRating, numVotes, popularity)
+```
+
+</details>
+
+
+
+```{r}
+datatable(Leo_Hanks2)
 
 ```
 
+Here, we can see that the movies given back by my success metric are in fact box office successes. Movies such as [Titanic](https://www.imdb.com/title/tt0120338/), [The Wolf of Wall Street](https://www.imdb.com/title/tt0993846/), [Cast Away](https://www.imdb.com/title/tt0162222/), and [Forrest Gump](https://www.imdb.com/title/tt0109830/) are all well-known movies that were incredibly well-rated. Thus, the metric still holds. 
+
+**Fourthly**, for my final test, I wanted to compare my metric with the highest-grossing movies of all time. After searching this data on Google, I found that some of the highest grossing movies of all time is Titanic with $2,264,750,694, Avatar: The Way of Water with $2,320,250,281, and Avatar with $2,923,706,026. 
+
+<details>
+  <summary>**Click here to see how I filtered my data to show this**</summary> 
 
 ```{r}
 
@@ -539,7 +595,16 @@ High_Grossing <- inner_join(movie_ratings, Highest_Grossing, join_by(tconst))
 
 
 ```
+</details>
 
+The chart below depicts two of the above movies. It is clear to see that the popularity score correlates with their gross, as both are high. This solidifies my success metric even further. 
+
+```{r}
+datatable(High_Grossing)
+
+```
+
+**Lastly**, now that my success metric has been solidified, I need to restrict my data set to only show me "successes." To do this, I must distinguish a number that once a movie surpasses it in its "popularity" scale, then it is deemed a success. The number I decided to pick is 5,000,000, since I feel as though every great movie *should* be able to surpass that. Then, I reduced my data set to fit that benchmark using the following code. 
 
 ```{r}
 
@@ -548,8 +613,12 @@ solid_or_better <- movie_ratings |>
 
 ```
 
-#Task 4
+### Task 4: Trends in Success Over Time 
 
+**Firstly**, I want to discover which genre had teh most "successes" in each decade. 
+
+<details>
+  <summary>**Click here to see the code**</summary> 
 
 ```{r}
 
@@ -560,16 +629,115 @@ solid_or_better <- solid_or_better|>
 solid_or_better <- solid_or_better |> separate_longer_delim(genres, ",") 
 
 
-decades_total <- solid_or_better |>
-  count(genres) 
+decades <- solid_or_better |>
+  count(genres)
+
 
 ```
 
+```{r}
+
+forties <- solid_or_better |>
+  filter(startYear >= 1940 & startYear <= 1949) |>
+  count(genres) |>
+  arrange(desc(n)) |>
+  slice(1)
+
+fifties <- solid_or_better |>
+  filter(startYear >= 1950 & startYear <= 1959) |>
+  count(genres) |>
+  arrange(desc(n)) |>
+  slice(1)
 
 
+
+sixties <- solid_or_better |>
+  filter(startYear >= 1960 & startYear <= 1969) |>
+  count(genres) |>
+  arrange(desc(n)) |>
+  slice(1)
+
+
+
+seventies <- solid_or_better |>
+  filter(startYear >= 1970 & startYear <= 1979) |>
+  count(genres) |>
+  arrange(desc(n)) |>
+  slice(1)
+
+eighties <- solid_or_better |>
+  filter(startYear >= 1980 & startYear <= 1989) |>
+  count(genres) |>
+  arrange(desc(n)) |>
+  slice(1)
+
+
+nineties <- solid_or_better |>
+  filter(startYear >= 1990 & startYear <= 1999) |>
+  count(genres) |>
+  arrange(desc(n)) |>
+  slice(1)
+
+
+thousands <- solid_or_better |>
+  filter(startYear >= 2000 & startYear <= 2009) |>
+  count(genres) |>
+  arrange(desc(n)) |>
+  slice(1)
+
+
+tens <- solid_or_better |>
+  filter(startYear >= 2010 & startYear <= 2019) |>
+  count(genres) |>
+  arrange(desc(n)) |>
+  slice(1)
+
+
+twenties <- solid_or_better |>
+  filter(startYear >= 2020 & startYear <= 2029) |>
+  count(genres) |>
+  arrange(desc(n)) |>
+  slice(1)
+
+
+
+```
 
 ```{r}
 
+print(forties)
+print(fifties)
+print(sixties)
+print(seventies)
+print(eighties)
+print(nineties)
+print(thousands)
+print(tens)
+print(twenties)
+
+```
+</details>
+
+Thus, the most successes per decade is as follows: 
+
+
+- 40s: Drama (1)
+- 50s: Crime (1)
+- 60s: Adventure (2)
+- 70s: Drama (7)
+- 80s: Action (8)
+- 90s: Drama (25)
+- 00s: Drama (30)
+- 10s: Adventure (13)
+- 20s: Action (2)
+
+
+**Secondly**, to see what genre had the most consistent "successes" and which one used to reliably produce "successes," but has fallen off, I decided to create a data table. This way, all of the successful movies per genre throughout the decades can be easily visualized. 
+
+<details>
+  <summary>**Click here to see how the table was made**</summary> 
+
+```{r}
 forties <- solid_or_better |>
   filter(startYear >= 1940 & startYear <= 1949) |>
   count(genres) 
@@ -612,24 +780,6 @@ twenties <- solid_or_better |>
   filter(startYear >= 2020 & startYear <= 2029) |>
   count(genres) 
 
-
-```
-
-40s - drama (1)
-50s - Crime (1)
-60s - adventure (2)
-70s - Drama (7) 
-80s - Action (8)
-90s - Drama (25)
-00s - Adventure (30)
-10s - Action (42)
-20s - Action (4) 
-
-
-
-
-
-```{r}
 colnames(forties)[colnames(forties) == "n"] <- "40s"
 colnames(fifties)[colnames(fifties) == "n"] <- "50s"
 colnames(sixties)[colnames(sixties) == "n"] <- "60s"
@@ -655,7 +805,7 @@ decades <- full_join(decades, decades_total, join_by(genres))
 
 
 ```
-
+</details>
 
 Below is a table that shows all of the genres throughout the years. 
 
@@ -668,11 +818,16 @@ datatable(decades)
 
 ```
 
-Looking at the chart, it is clear to see that the genre with the most consistent successes each decade is Drama, as it is the only genre that had a least one success every decade from the forties until now. The genre that used to reliably produce successes, but has fallen out of favor is ???? COME BACK TO THIS
+Looking at the chart, it is clear to see that the genre with the most consistent successes each decade is Drama, as it is the only genre that had a least one success every decade from the forties until now. It also has gotten more successes recently, with its height being in the 2000s. 
 
+The genre that used to reliably produce successes, but has fallen out of favor is Crime, as it had many success from the 1970s to 2000s, entirely fell off in the 2010s with only one success. However, since the 2000s, the Drama genre definitely fell off the most, going from 30 success to 7 to 1 per decade. 
 
-The genre that has produced the most successes since 2010 is the Adventure drama with 15 successes. 
+**Thirdly**, I want to know what genre has produced the most successes since 2010. By looking at the chart above, it is clear to see the genre with the most successes since 2010 is Adventure with 15 successes. The Action genre is closely behind that, with 13 successes.  
 
+However, I want to know if this genre has only produced the most successes because it genuinely has the highest rating, or if there were just an abundance of Adventure movies that have been created since then to contribute to the score. To do that, I used the following code: 
+
+<details>
+  <summary>**Click here to see the code**</summary> 
 
 ```{r}
 
@@ -684,11 +839,8 @@ decade2010_pop <- movie_ratings |>
   arrange(desc(totalPopularity)) |>
   slice(1:3)
 
-print(decade2010_pop)
 
 ```
-
-
 
 
 ```{r}
@@ -701,23 +853,24 @@ decade2010_amount <- movie_ratings |>
   slice(1:9) 
   
 
-print(decade2010_amount)
-
 ```
-
-
-It ranked high on the total popularity, but in the middle on the amount of productions. 
+</details>
 
 
 
-Looking again at the chart from earlier, we can see that the genre that became popular most frequently is the Action genre. It had its first successful movie in the 70s, eight the following year, to its max of 25 in the 2000s.  
 ```{r}
-
-
-
+print(decade2010_pop)
+print(decade2010_amount)
 ```
 
-Based on my findings, I decided to choose an Action genre, as while it is the fifth most produced in the last decade, it had the second highest popularity score, being one of two of the only genres to reach a success score of over a billion. The first was the drama genre, but it also leads the category with about 7,500 more movies than second place, and almost 13500 more than the action category. This shows me that they only have this high of a popularity due to the numerous successes that they had, which means each success had to average at the lower end of the success scale. On the other hand, with the action genre having less movies, but the second highest score, this shows me that each movie had to average at a high score on the success spectrum in order to secure this spot. 
+
+Here, we can see that it ranked first on the total popularity list, but ninth on the amount of movies list. This shows that this genre just produces highly-rated movies, rather than just producing an abundance of them. 
+
+**Lastly**, the genre that has become more popular in recent years is definitely the Action genre. It had its first successful movie in the 1970s, while ten other genres had earlier successes, and still skyrocketed in later decades to get 54 successes total. Only two genres are ahead of the action genre, which is drama with 77 successes and adventure with 60 successes. Since the 2000s, it is also tied for second with most "successes." 
+
+
+
+Based on my findings, I decided to choose an Action genre, as while it is the fourth most produced in the last decade, it had the third highest popularity score. It almost surpasses the Drama genre on the list, which is big considering that the drama genre has **23** more successes than the action genre. This shows me that the drama genre only have this high of a popularity due to the numerous successes that they had, which means each success had to average at the lower end of the success scale. Though the adventure genre did very well on both of these lists, I decided not to choose it as I fear it may begin to get overplayed, much like the Drama genre. However, the Action genre seems to be an up-and-coming one, as it already has more successes than the Drama genre in the 2020s, and the same amount as the adventure genre. Thus, I believe this is our best bet for a successful movie. 
 
 
 # Task 5
