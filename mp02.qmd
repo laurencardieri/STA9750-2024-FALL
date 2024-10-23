@@ -1,0 +1,891 @@
+# Mini Project 02: The Business of Show Business 
+
+![](https://griffithobservatory.org/wp-content/uploads/2021/12/cameron-venti-6QDvwq2Fjsc-unsplash-scaled-1600x800-1640738023.jpg)
+
+## Introduction
+
+In this project, I will be utilizing data from the Internet Movie Database (IMDb) to discover what the next best movie is to produce. I will then analyize this data and create a pitch to win my boss over. 
+     
+     
+     
+## Diving into the Data
+
+<details>
+  <summary>Click to see how the data was downloaded</summary>
+```{r}
+library(tidyverse)
+library(dplyr)
+
+
+get_imdb_file <- function(fname){
+    BASE_URL <- "https://datasets.imdbws.com/"
+    fname_ext <- paste0(fname, ".tsv.gz")
+    if(!file.exists(fname_ext)){
+        FILE_URL <- paste0(BASE_URL, fname_ext)
+        download.file(FILE_URL, 
+                      destfile = fname_ext)
+    }
+    as.data.frame(readr::read_tsv(fname_ext, lazy=FALSE))
+}
+
+NAME_BASICS      <- get_imdb_file("name.basics") 
+
+
+#| cache: true
+
+```
+
+
+```{r}
+
+TITLE_BASICS     <- get_imdb_file("title.basics") 
+
+
+#| cache: true
+
+```
+
+
+
+```{r}
+
+TITLE_EPISODES   <- get_imdb_file("title.episode") 
+
+#| cache: true
+
+```
+
+
+
+```{r}
+
+TITLE_RATINGS    <- get_imdb_file("title.ratings") 
+
+
+#| cache: true
+
+```
+
+
+
+```{r}
+
+TITLE_CREW       <- get_imdb_file("title.crew") 
+
+#| cache: true
+
+
+```
+
+
+
+```{r}
+
+TITLE_PRINCIPALS <- get_imdb_file("title.principals")
+#| cache: true
+
+
+```
+
+
+```{r}
+
+NAME_BASICS <- NAME_BASICS |> 
+    filter(str_count(knownForTitles, ",") > 1)
+
+
+```
+</details>
+
+
+Before we fully dive in, let's see how many obscure movies are in this dataset. 
+
+```{r}
+
+TITLE_RATINGS |>
+    ggplot(aes(x=numVotes)) + 
+    geom_histogram(bins=30) +
+    xlab("Number of IMDB Ratings") + 
+    ylab("Number of Titles") + 
+    ggtitle("Majority of IMDB Titles Have Less than 100 Ratings") + 
+    theme_bw() + 
+    scale_x_log10(label=scales::comma) + 
+    scale_y_continuous(label=scales::comma)
+
+```
+
+
+
+```{r}
+
+TITLE_RATINGS |>
+    pull(numVotes) |>
+    quantile()
+
+```
+
+```{r}
+
+TITLE_RATINGS <- TITLE_RATINGS |>
+    filter(numVotes >= 100)
+
+```
+
+
+```{r}
+
+TITLE_BASICS <- TITLE_BASICS |>
+    semi_join(TITLE_RATINGS, 
+              join_by(tconst == tconst))
+
+TITLE_CREW <- TITLE_CREW |>
+    semi_join(TITLE_RATINGS, 
+              join_by(tconst == tconst))
+
+TITLE_EPISODES_1 <- TITLE_EPISODES |>
+    semi_join(TITLE_RATINGS, 
+              join_by(tconst == tconst))
+TITLE_EPISODES_2 <- TITLE_EPISODES |>
+    semi_join(TITLE_RATINGS, 
+              join_by(parentTconst == tconst))
+
+TITLE_EPISODES <- bind_rows(TITLE_EPISODES_1,
+                            TITLE_EPISODES_2) |>
+    distinct()
+
+TITLE_PRINCIPALS <- TITLE_PRINCIPALS |>
+    semi_join(TITLE_RATINGS, join_by(tconst == tconst))
+
+
+rm(TITLE_EPISODES_1)
+rm(TITLE_EPISODES_2)
+
+```
+
+
+
+```{r}
+
+NAME_BASICS <- NAME_BASICS |>
+    mutate(birthYear = as.numeric(birthYear),
+           deathYear = as.numeric(deathYear))
+
+```
+
+##Task 1: Column Type Correction
+
+```{r}
+TITLE_BASICS <- TITLE_BASICS |>
+  mutate(isAdult = as.logical(isAdult),
+         startYear = as.numeric(startYear),
+         endYear = as.numeric(endYear),
+         runtimeMinutes = as.numeric(runtimeMinutes))
+
+TITLE_EPISODES <- TITLE_EPISODES |>
+  mutate(seasonNumber = as.numeric(seasonNumber),
+         episodeNumber = as.numeric(episodeNumber))
+
+
+
+```
+
+
+```{r}
+
+NAME_BASICS |> separate_longer_delim(knownForTitles, ",") |> slice_head(n=10) 
+
+```
+
+#Task 2
+
+## 1. How many movies are in our data set? How many TV series? How many TV episodes? 
+
+```{r}
+
+Number_of_Movies <- TITLE_BASICS |>
+  filter(titleType == "movie") |>
+  summarize(Number = n())
+
+print(Number_of_Movies$Number)
+
+
+```
+
+
+```{r}
+
+Number_of_TVshows <- TITLE_BASICS |>
+  filter(titleType == "tvSeries") |>
+  summarize(Number = n())
+
+print(Number_of_TVshows$Number)
+
+```
+
+
+
+
+```{r}
+
+Number_of_Episodes <- TITLE_EPISODES |>
+  summarize(Number = n())
+
+print(Number_of_Episodes$Number)
+
+```
+
+## 2. Who is the oldest living person in our data set?   
+
+
+```{r}
+oldest_person <- NAME_BASICS |>
+  filter(is.na(deathYear)) |>
+  arrange(birthYear) |>
+  slice(1)
+
+print(oldest_person)
+
+```
+
+Unless our oldest actor is 4000 years old, we need to restrict the data set. Oldest living person is 116. 
+
+```{r}
+
+oldest_person <- NAME_BASICS |>
+  filter(is.na(deathYear),
+         birthYear >= 1924) |>
+  arrange(birthYear) |>
+  slice(1)
+
+print(oldest_person)
+
+```
+
+Oldest is Eva Marie Saint. 
+
+
+3. There is one TV Episode in this data set with a perfect 10/10 rating and at least 200,000 IMDb ratings. What is it? What series does it belong to?
+
+```{r}
+
+Best_Episode <- TITLE_RATINGS |> 
+  filter(averageRating == 10,
+         numVotes >= 200000)
+
+print(Best_Episode)
+
+```
+
+
+```{r}
+
+Best_Episode_Name <- TITLE_BASICS |>
+  filter(tconst == "tt2301451")
+
+print(Best_Episode_Name)
+
+```
+
+Ozymandias Breaking Bad. 
+
+What four projects is the actor Mark Hamill most known for?
+
+```{r}
+
+Mark_Hamill <- NAME_BASICS |>
+  filter(primaryName == "Mark Hamill")
+
+print(Mark_Hamill)
+
+Mark_Hamill_Projects <- TITLE_BASICS |>
+  filter(tconst == "tt0076759") 
+
+print(Mark_Hamill_Projects)
+
+Mark_Hamill_Projects <- TITLE_BASICS |>
+  filter(tconst == "tt2527336") 
+
+print(Mark_Hamill_Projects)
+
+Mark_Hamill_Projects <- TITLE_BASICS |>
+  filter(tconst == "tt0086190") 
+
+print(Mark_Hamill_Projects)
+
+Mark_Hamill_Projects <- TITLE_BASICS |>
+  filter(tconst == "tt0080684") 
+
+print(Mark_Hamill_Projects)
+
+```
+
+
+What TV series, with more than 12 episodes, has the highest average rating?
+
+```{r}
+
+twelve_episodes <- TITLE_EPISODES |> 
+  filter(episodeNumber > 12)  
+
+TVseries12 <- inner_join(twelve_episodes, TITLE_RATINGS, join_by(tconst))
+
+seriesaverage <- TVseries12 |>
+  group_by(parentTconst) |>
+  summarize(average_score = mean(averageRating, na.rm = TRUE)) |>
+  arrange(desc(average_score))
+
+print(seriesaverage)
+
+
+```
+
+
+```{r}
+
+TITLE_BASICS |>
+  filter(tconst == "tt0409579") 
+
+TITLE_BASICS |>
+  filter(tconst == "tt0491739")
+
+TITLE_BASICS |>
+  filter(tconst == "tt11289784") 
+
+TITLE_BASICS |>
+  filter(tconst == "tt11363282") 
+
+TITLE_BASICS |>
+  filter(tconst == "tt21278628") 
+
+```
+
+
+
+6. The TV series Happy Days (1974-1984) gives us the common idiom “jump the shark”. The phrase comes from a controversial fifth season episode (aired in 1977) in which a lead character literally jumped over a shark on water skis. Idiomatically, it is used to refer to the moment when a once-great show becomes ridiculous and rapidly looses quality.
+
+Is it true that episodes from later seasons of Happy Days have lower average ratings than the early seasons?
+
+
+```{r}
+
+TITLE_BASICS |>
+  filter(primaryTitle == "Happy Days",
+         startYear == "1974",
+         endYear == "1984") 
+
+```
+
+
+```{r}
+
+Happy_Days <- TITLE_EPISODES |>
+  filter(parentTconst == "tt0070992")
+
+Happy_Days_Scores <- inner_join(Happy_Days, TITLE_RATINGS, join_by(tconst))
+
+```
+
+
+```{r}
+
+Happy_Days_Seasons <- Happy_Days_Scores |>
+  group_by(seasonNumber) |>
+  summarize(averagescore = mean(averageRating, na.rm = TRUE)) |>
+  arrange(seasonNumber)
+
+print(Happy_Days_Seasons)
+
+```
+
+#Task 3
+
+
+```{r}
+
+TITLE_RATINGS <- TITLE_RATINGS |>
+  mutate(popularity = averageRating*numVotes) 
+
+movie_ratings <- inner_join(TITLE_BASICS, TITLE_RATINGS, join_by(tconst))
+
+movie_ratings <- movie_ratings |> select(tconst, titleType, primaryTitle, genres, startYear, averageRating, numVotes, popularity)
+
+movie_ratings <- movie_ratings |> 
+  filter(titleType == "movie") |>
+  arrange(desc(popularity))
+
+
+Top_ten <- movie_ratings |>
+  slice(1:10)
+
+print(Top_ten)
+
+```
+
+
+```{r}
+
+movie_ratings <- movie_ratings |> 
+  filter(titleType == "movie") |>
+  arrange(popularity)
+
+
+bottom_five <- movie_ratings |>
+  slice(1:5)
+
+print(bottom_five)
+
+
+
+
+```
+
+
+```{r}
+
+Leo <- NAME_BASICS |>
+  filter(primaryName == "Leonardo DiCaprio") |>
+  separate_longer_delim(knownForTitles, ",")
+
+
+colnames(Leo)[colnames(Leo) == "knownForTitles"] <- "tconst"
+
+Leo <- inner_join(Leo, movie_ratings, join_by(tconst))
+
+```
+
+
+```{r}
+
+Hanks <- NAME_BASICS |>
+  filter(primaryName == "Tom Hanks") |>
+  separate_longer_delim(knownForTitles, ",")
+
+
+colnames(Hanks)[colnames(Hanks) == "knownForTitles"] <- "tconst"
+
+Hanks <- inner_join(Hanks, movie_ratings, join_by(tconst))
+
+
+```
+
+
+```{r}
+
+Highest_Grossing <- data.frame(
+  tconst = c("tt0499549", "tt4154796", "tt1630029", "tt0120338", "tt2488496"),
+  LifetimeGross = c("$2,923,706,026", "$2,799,439,100", "$2,320,250,281", "$2,264,750,694", "$2,071,310,218")
+)
+
+
+High_Grossing <- inner_join(movie_ratings, Highest_Grossing, join_by(tconst))
+
+
+```
+
+
+```{r}
+
+solid_or_better <- movie_ratings |>
+  filter(popularity >= 5000000)
+
+```
+
+#Task 4
+
+
+```{r}
+
+solid_or_better <- solid_or_better|>
+  arrange(startYear)
+
+
+solid_or_better <- solid_or_better |> separate_longer_delim(genres, ",") 
+
+
+decades_total <- solid_or_better |>
+  count(genres) 
+
+```
+
+
+
+
+```{r}
+
+forties <- solid_or_better |>
+  filter(startYear >= 1940 & startYear <= 1949) |>
+  count(genres) 
+
+fifties <- solid_or_better |>
+  filter(startYear >= 1950 & startYear <= 1959) |>
+  count(genres) 
+
+
+sixties <- solid_or_better |>
+  filter(startYear >= 1960 & startYear <= 1969) |>
+  count(genres) 
+
+
+seventies <- solid_or_better |>
+  filter(startYear >= 1970 & startYear <= 1979) |>
+  count(genres) 
+
+
+
+eighties <- solid_or_better |>
+  filter(startYear >= 1980 & startYear <= 1989) |>
+  count(genres) 
+
+nineties <- solid_or_better |>
+  filter(startYear >= 1990 & startYear <= 1999) |>
+  count(genres) 
+
+
+thousands <- solid_or_better |>
+  filter(startYear >= 2000 & startYear <= 2009) |>
+  count(genres) 
+
+
+tens <- solid_or_better |>
+  filter(startYear >= 2010 & startYear <= 2019) |>
+  count(genres) 
+
+twenties <- solid_or_better |>
+  filter(startYear >= 2020 & startYear <= 2029) |>
+  count(genres) 
+
+
+```
+
+40s - drama (1)
+50s - Crime (1)
+60s - adventure (2)
+70s - Drama (7) 
+80s - Action (8)
+90s - Drama (25)
+00s - Adventure (30)
+10s - Action (42)
+20s - Action (4) 
+
+
+
+
+
+```{r}
+colnames(forties)[colnames(forties) == "n"] <- "40s"
+colnames(fifties)[colnames(fifties) == "n"] <- "50s"
+colnames(sixties)[colnames(sixties) == "n"] <- "60s"
+colnames(seventies)[colnames(seventies) == "n"] <- "70s"
+colnames(eighties)[colnames(eighties) == "n"] <- "80s"
+colnames(nineties)[colnames(nineties) == "n"] <- "90s"
+colnames(thousands)[colnames(thousands) == "n"] <- "00s"
+colnames(tens)[colnames(tens) == "n"] <- "10s"
+colnames(twenties)[colnames(twenties) == "n"] <- "20s"
+colnames(decades_total)[colnames(decades_total) == "n"] <- "total"
+
+decades <- full_join(forties, fifties, join_by(genres))
+decades <- full_join(decades, sixties, join_by(genres))
+decades <- full_join(decades, seventies, join_by(genres))
+decades <- full_join(decades, eighties, join_by(genres))
+decades <- full_join(decades, nineties, join_by(genres))
+decades <- full_join(decades, thousands, join_by(genres))
+decades <- full_join(decades, tens, join_by(genres))
+decades <- full_join(decades, twenties, join_by(genres))
+decades <- full_join(decades, decades_total, join_by(genres))
+
+
+
+
+```
+
+
+Below is a table that shows all of the genres throughout the years. 
+
+
+```{r}
+
+library(DT)
+datatable(decades) 
+
+
+```
+
+Looking at the chart, it is clear to see that the genre with the most consistent successes each decade is Drama, as it is the only genre that had a least one success every decade from the forties until now. The genre that used to reliably produce successes, but has fallen out of favor is ???? COME BACK TO THIS
+
+
+The genre that has produced the most successes since 2010 is the Adventure drama with 15 successes. 
+
+
+```{r}
+
+decade2010_pop <- movie_ratings |>
+  filter(startYear >= 2010 & startYear <= 2019) |>
+  separate_longer_delim(genres, ",") |> 
+  group_by(genres) |>
+  summarize(totalPopularity = sum(popularity)) |>
+  arrange(desc(totalPopularity)) |>
+  slice(1:3)
+
+print(decade2010_pop)
+
+```
+
+
+
+
+```{r}
+
+decade2010_amount <- movie_ratings |>
+  filter(startYear >= 2010 & startYear <= 2019) |>
+  separate_longer_delim(genres, ",") |> 
+  count(genres) |>
+  arrange(desc(n)) |>
+  slice(1:9) 
+  
+
+print(decade2010_amount)
+
+```
+
+
+It ranked high on the total popularity, but in the middle on the amount of productions. 
+
+
+
+Looking again at the chart from earlier, we can see that the genre that became popular most frequently is the Action genre. It had its first successful movie in the 70s, eight the following year, to its max of 25 in the 2000s.  
+```{r}
+
+
+
+```
+
+Based on my findings, I decided to choose an Action genre, as while it is the fifth most produced in the last decade, it had the second highest popularity score, being one of two of the only genres to reach a success score of over a billion. The first was the drama genre, but it also leads the category with about 7,500 more movies than second place, and almost 13500 more than the action category. This shows me that they only have this high of a popularity due to the numerous successes that they had, which means each success had to average at the lower end of the success scale. On the other hand, with the action genre having less movies, but the second highest score, this shows me that each movie had to average at a high score on the success spectrum in order to secure this spot. 
+
+
+# Task 5
+
+
+
+
+```{r}
+
+alive_actors <- NAME_BASICS |>
+  filter(birthYear >= 1949 & birthYear <= 1984) |>
+  filter(is.na(deathYear)) |>
+  separate_longer_delim(primaryProfession, ",") |>
+  filter(primaryProfession == "actor") |>
+  separate_longer_delim(knownForTitles, ",") 
+
+solid_or_better2 <- movie_ratings |>
+  filter(popularity >= 5000000)
+
+successful_movies <- solid_or_better2 |>
+  select(tconst, genres, popularity) 
+
+colnames(successful_movies)[colnames(successful_movies) == "tconst"] <- "knownForTitles"
+
+
+successful_actors <- full_join(alive_actors, successful_movies, join_by(knownForTitles))
+
+successful_actors <- successful_actors |>
+  arrange(desc(popularity))
+
+successful_actors_average <-successful_actors |>
+  select(primaryName, popularity) |>
+  group_by(primaryName) |>
+  summarize(totalpopularity = sum(popularity, na.rm = TRUE)) |>
+  arrange(desc(totalpopularity))
+  
+  
+
+```
+
+
+
+
+```{r}
+
+Orlando_Bloom <- successful_actors |>
+  filter(primaryName == "Orlando Bloom")
+
+
+Hugo_Weaving <- successful_actors |>
+  filter(primaryName == "Hugo Weaving")
+
+Gary_Rizzo <- successful_actors |>
+  filter(primaryName == "Gary A. Rizzo")
+
+Leonardo_DiCaprio <- successful_actors |>
+  filter(primaryName == "Leonardo DiCaprio")
+
+
+```
+
+He had 4 successful movies, three of which were apart of the Lord of the Rings franchise, and one priates of the carribean. I want a more diverse actor. Hugo Weaving was similar, with three Lord of the Rings movies and one movie titled "V for Vendetta." Gary would have been perfect... until I researched and found out he was the music producer on these projects, and not an actor. 
+
+```{r}
+
+alive_actors_young <- NAME_BASICS |>
+  filter(birthYear >= 1995 & birthYear <= 2024) |>
+  filter(is.na(deathYear)) |>
+  separate_longer_delim(primaryProfession, ",") |>
+  filter(primaryProfession == "actor") |>
+  separate_longer_delim(knownForTitles, ",") 
+
+solid_or_better2 <- movie_ratings |>
+  filter(popularity >= 5000000)
+
+successful_movies <- solid_or_better2 |>
+  select(tconst, genres, popularity) 
+
+colnames(successful_movies)[colnames(successful_movies) == "tconst"] <- "knownForTitles"
+
+
+successful_actors_young <- full_join(alive_actors_young, successful_movies, join_by(knownForTitles))
+
+successful_actors_young <- successful_actors_young |>
+  arrange(desc(popularity))
+
+successful_actors_average_y <-successful_actors_young |>
+  select(primaryName, popularity) |>
+  group_by(primaryName) |>
+  summarize(totalpopularity = sum(popularity, na.rm = TRUE)) |>
+  arrange(desc(totalpopularity))
+
+
+Tony_Revolori <- successful_actors_young |>
+  filter(primaryName == "Tony Revolori")
+
+
+
+
+```
+
+
+
+```{r}
+
+alive_actress_young <- NAME_BASICS |>
+  filter(birthYear >= 1995 & birthYear <= 2024) |>
+  filter(is.na(deathYear)) |>
+  separate_longer_delim(primaryProfession, ",") |>
+  filter(primaryProfession == "actress") |>
+  separate_longer_delim(knownForTitles, ",") 
+
+
+successful_actress_young <- full_join(alive_actress_young, successful_movies, join_by(knownForTitles))
+
+successful_actress_average_y <-successful_actress_young |>
+  select(primaryName, popularity) |>
+  group_by(primaryName) |>
+  summarize(totalpopularity = sum(popularity, na.rm = TRUE)) |>
+  arrange(desc(totalpopularity))
+
+
+
+Taylor_Geare <- successful_actress_young |>
+  filter(primaryName == "Taylor Geare")
+
+```
+
+
+
+
+Using the same technique as above, I searched for the best fit director. 
+
+```{r}
+
+alive_directors <- NAME_BASICS |>
+  filter(is.na(deathYear)) |>
+  separate_longer_delim(primaryProfession, ",") |>
+  filter(primaryProfession == "director") |>
+  separate_longer_delim(knownForTitles, ",") 
+
+successful_directors <- full_join(alive_directors, successful_movies, join_by(knownForTitles))
+
+
+successful_directors2 <- successful_directors |>
+  group_by(primaryName) |>
+  summarize(totalpopularity = sum(popularity, na.rm = TRUE)) |>
+  arrange(desc(totalpopularity))
+
+Wally_Pfister <- successful_directors |>
+  filter(primaryName == "Wally Pfister")
+
+
+```
+
+Coming in second on the list, Wally Pfister easily proved to be the strongest candidate for this movie. 
+
+![](https://scontent-lga3-2.xx.fbcdn.net/v/t39.30808-6/451416842_7869837596419421_1636905889012195073_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=YGId1yKMN4gQ7kNvgHSjaBM&_nc_ht=scontent-lga3-2.xx&_nc_gid=AqElHomrnF_wG1FssPesi1O&oh=00_AYAd4cqYbWkCuz9zDoYnfXx-KR5XZC-y9Ki3MBc2NrLAiA&oe=671E3347)
+
+
+```{r}
+
+remakemovie <- movie_ratings |>
+  filter(startYear < 1999) |>
+  filter(averageRating >  8) |>
+  filter(numVotes > 20000) |>
+  arrange(desc(popularity))
+
+
+```
+
+Die hard is the best bet. 
+
+
+```{r}
+
+Die_Hard <- NAME_BASICS |>
+  separate_longer_delim(knownForTitles, ",") |>
+  filter(knownForTitles == "tt0083658") |>
+  filter(is.na(deathYear))
+
+```
+
+135 people from the original die hard is still alive. 
+
+
+```{r}
+
+
+
+```
+
+
+
+
+```{r}
+
+
+
+```
+
+
+
+
+```{r}
+
+
+
+```
+
+
+
+
+```{r}
+
+
+
+```
+
+
+
+
+```{r}
+
+
+
+```
+
+
