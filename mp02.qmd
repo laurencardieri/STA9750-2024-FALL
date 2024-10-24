@@ -240,7 +240,7 @@ print(Number_of_Episodes$Number)
 ```
 </details>
 
-After running the code above, I found that there was 74,051 movies, 11,545 TV shows, and 1,832,877 TV Episodes. 
+After running the code above, I found that there was 89,305 movies, 16,742 TV shows, and 3,026,526 TV Episodes. 
 
 
 **Secondly**, who is the oldest person in our data set? 
@@ -258,7 +258,7 @@ print(oldest_person)
 
 ```
 
-I quickly saw that the birth year of this person was 1811. So unless our oldest person is 213 years old, we need to put a restraint on how far back their birth year was, in case their death was not recorded. Since the oldest living person in the world is 116, the earliest possible birth year can be 1908. Many individuals came up for this birth year, however once I Google searched the ten oldest people in the world, none of them were on that list. I even saw that a few of these names did have deaths recorded on Google, but not on the database. Since there are only about 500,000 living individuals over the age of 100, which is only about .007% of the population, I decided to set my birth range to 100 years ago. Though someone *may* be slightly older than her and still alive, I thought this would be a safe bet to assume. 
+I quickly saw that the birth year of this person was 1836. So unless our oldest person is 188 years old, we need to put a restraint on how far back their birth year was, in case their death was not recorded. Since the oldest living person in the world is 116, the earliest possible birth year can be 1908. Many individuals came up for this birth year, however once I Google searched the ten oldest people in the world, none of them were on that list. I even saw that a few of these names did have deaths recorded on Google, but not on the database. Since there are only about 500,000 living individuals over the age of 100, which is only about .007% of the population, I decided to set my birth range to 100 years ago. Though someone *may* be slightly older than her and still alive, I thought this would be a safe bet to assume. 
 
 ```{r}
 
@@ -580,7 +580,7 @@ High_Grossing <- inner_join(movie_ratings, Highest_Grossing, join_by(tconst))
 ```
 </details>
 
-The chart below depicts two of the above movies. It is clear to see that the popularity score correlates with their gross, as both are high. This solidifies my success metric even further. 
+The chart below depicts three of the above movies. It is clear to see that the popularity score correlates with their gross, as both are high. This solidifies my success metric even further. 
 
 ```{r}
 datatable(High_Grossing)
@@ -598,7 +598,7 @@ solid_or_better <- movie_ratings |>
 
 ### Task 4: Trends in Success Over Time 
 
-**Firstly**, I want to discover which genre had teh most "successes" in each decade. 
+**Firstly**, I want to discover which genre had the most "successes" in each decade. 
 
 <details>
   <summary>**Click here to see the code**</summary> 
@@ -1083,7 +1083,7 @@ datatable(remakemovie)
 
 ```
 
-Coming in at number 14, I debating on remaking *Léon: The Professional*, however, when I looked up if fans wanted a remake they seemed entirely opposed. Many fans believe the film is perfect as is and it would not do any justice for it to be remade today. Thus, I decided to keep looking. 
+I want to look at what the top movies are in the action genre, however, I do want to stay away from any Star Wars remakes. Thus, coming in at number 14, I debating on remaking *Léon: The Professional*, however, when I looked up if fans wanted a remake they seemed entirely opposed. Many fans believe the film is perfect as is and it would not do any justice for it to be remade today. Thus, I decided to keep looking. 
 
 At number 31, I found *Die Hard*, a movie made in 1988 about an NYPD cop that has to take matters into his own hands when a group of robbers take control of the building he is in, holding everyone hostage except for him. 
 
