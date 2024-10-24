@@ -14,26 +14,27 @@ Firstly, I must download the data of Hollywood's history into my rstudio. Since 
 
 <details>
   <summary>**Click here to see how the data was downloaded**</summary>
+  
 ```{r}
 library(tidyverse)
 library(dplyr)
 
 
 get_imdb_file <- function(fname){
-    BASE_URL <- "https://datasets.imdbws.com/"
-    fname_ext <- paste0(fname, ".tsv.gz")
-    if(!file.exists(fname_ext)){
-        FILE_URL <- paste0(BASE_URL, fname_ext)
-        download.file(FILE_URL, 
-                      destfile = fname_ext)
-    }
-    as.data.frame(readr::read_tsv(fname_ext, lazy=FALSE))
+  BASE_URL <- "https://datasets.imdbws.com/"
+  fname_ext <- paste0(fname, ".tsv.gz")
+  if(!file.exists(fname_ext)){
+    FILE_URL <- paste0(BASE_URL, fname_ext)
+    download.file(FILE_URL, 
+                  destfile = fname_ext)
+  }
+  as.data.frame(readr::read_tsv(fname_ext, lazy=FALSE))
 }
 
-NAME_BASICS      <- get_imdb_file("name.basics") 
 
+NAME_BASICS      <- get_imdb_file("name.basics")
 
-#| cache: true
+#| cache: true 
 
 ```
 
@@ -41,7 +42,6 @@ NAME_BASICS      <- get_imdb_file("name.basics")
 ```{r}
 
 TITLE_BASICS     <- get_imdb_file("title.basics") 
-
 
 #| cache: true
 
@@ -55,6 +55,7 @@ TITLE_EPISODES   <- get_imdb_file("title.episode")
 
 #| cache: true
 
+
 ```
 
 
@@ -63,8 +64,9 @@ TITLE_EPISODES   <- get_imdb_file("title.episode")
 
 TITLE_RATINGS    <- get_imdb_file("title.ratings") 
 
-
 #| cache: true
+
+
 
 ```
 
@@ -74,8 +76,8 @@ TITLE_RATINGS    <- get_imdb_file("title.ratings")
 
 TITLE_CREW       <- get_imdb_file("title.crew") 
 
-#| cache: true
 
+#| cache: true
 
 ```
 
@@ -84,8 +86,8 @@ TITLE_CREW       <- get_imdb_file("title.crew")
 ```{r}
 
 TITLE_PRINCIPALS <- get_imdb_file("title.principals")
-#| cache: true
 
+#| cache: true
 
 ```
 
@@ -95,6 +97,7 @@ TITLE_PRINCIPALS <- get_imdb_file("title.principals")
 NAME_BASICS <- NAME_BASICS |> 
     filter(str_count(knownForTitles, ",") > 1)
 
+#| cache: true
 
 ```
 </details>
@@ -560,7 +563,7 @@ Hanks <- NAME_BASICS |>
 
 colnames(Hanks)[colnames(Hanks) == "knownForTitles"] <- "tconst"
 
-Hanks <- inner_join(Hanks, movie_ratings, join_by(tconst))
+Hanks <- inner_join(Hanks, movie_ratings, join_by(tconst)) 
 
 Leo_Hanks <- bind_rows(Leo, Hanks)
 
@@ -873,9 +876,15 @@ Here, we can see that it ranked first on the total popularity list, but ninth on
 Based on my findings, I decided to choose an Action genre, as while it is the fourth most produced in the last decade, it had the third highest popularity score. It almost surpasses the Drama genre on the list, which is big considering that the drama genre has **23** more successes than the action genre. This shows me that the drama genre only have this high of a popularity due to the numerous successes that they had, which means each success had to average at the lower end of the success scale. Though the adventure genre did very well on both of these lists, I decided not to choose it as I fear it may begin to get overplayed, much like the Drama genre. However, the Action genre seems to be an up-and-coming one, as it already has more successes than the Drama genre in the 2020s, and the same amount as the adventure genre. Thus, I believe this is our best bet for a successful movie. 
 
 
-# Task 5
+### Task 5: Key Personnel 
+
+Now that I have my target genre, I want to identify a few actors and one director to really anchor my project. To create a strong team, I want one prestigious actor who has many successes in many genres, and preferably at least one major success in the action genre. With this major name, I hope to bring in their major following and their broad skill set to perfect the movie. For my second actor, I want to pick someone who has been apart of a highly rated movie, but is still not widely recognized yet. I want someone who is up-and-coming, that can build a strong profile around being in this movie. Then, the connection with these two main leads should bring good publicity. 
 
 
+For my prestige actor, I want someone who has been in the industry for a good amount of time and that is older with some experience. Thus, I decided that I wanted my actor to be at least 40, but no older than 75. 
+
+<details>
+  <summary>**Click here to see how I filtered my data to show this**</summary>
 
 
 ```{r}
@@ -908,6 +917,17 @@ successful_actors_average <-successful_actors |>
   arrange(desc(totalpopularity))
   
   
+
+```
+</details>
+
+
+
+```{r}
+
+datatable(successful_actors_average)
+
+print(Leo)
 
 ```
 
