@@ -34,7 +34,6 @@ get_imdb_file <- function(fname){
 
 NAME_BASICS      <- get_imdb_file("name.basics")
 
-#| cache: true 
 
 ```
 
@@ -43,7 +42,7 @@ NAME_BASICS      <- get_imdb_file("name.basics")
 
 TITLE_BASICS     <- get_imdb_file("title.basics") 
 
-#| cache: true
+
 
 ```
 
@@ -53,7 +52,7 @@ TITLE_BASICS     <- get_imdb_file("title.basics")
 
 TITLE_EPISODES   <- get_imdb_file("title.episode") 
 
-#| cache: true
+
 
 
 ```
@@ -64,7 +63,6 @@ TITLE_EPISODES   <- get_imdb_file("title.episode")
 
 TITLE_RATINGS    <- get_imdb_file("title.ratings") 
 
-#| cache: true
 
 
 
@@ -77,17 +75,6 @@ TITLE_RATINGS    <- get_imdb_file("title.ratings")
 TITLE_CREW       <- get_imdb_file("title.crew") 
 
 
-#| cache: true
-
-```
-
-
-
-```{r}
-
-TITLE_PRINCIPALS <- get_imdb_file("title.principals")
-
-#| cache: true
 
 ```
 
@@ -97,7 +84,6 @@ TITLE_PRINCIPALS <- get_imdb_file("title.principals")
 NAME_BASICS <- NAME_BASICS |> 
     filter(str_count(knownForTitles, ",") > 1)
 
-#| cache: true
 
 ```
 </details>
@@ -164,12 +150,12 @@ TITLE_EPISODES <- bind_rows(TITLE_EPISODES_1,
                             TITLE_EPISODES_2) |>
     distinct()
 
-TITLE_PRINCIPALS <- TITLE_PRINCIPALS |>
-    semi_join(TITLE_RATINGS, join_by(tconst == tconst))
-
 
 rm(TITLE_EPISODES_1)
 rm(TITLE_EPISODES_2)
+
+#| cache: false
+
 
 ```
 
@@ -219,6 +205,8 @@ Now that the data tables are cleaned up and ready to be used, I can begin to exp
 **Firstly**, I want to find out how many movies are in our data set? How many TV series? And how many TV episodes? 
 
 
+<details>
+  <summary>**Click here to see the code**</summary> 
 ```{r}
 
 Number_of_Movies <- TITLE_BASICS |>
@@ -242,8 +230,6 @@ print(Number_of_TVshows$Number)
 ```
 
 
-
-
 ```{r}
 
 Number_of_Episodes <- TITLE_EPISODES |>
@@ -252,7 +238,9 @@ Number_of_Episodes <- TITLE_EPISODES |>
 print(Number_of_Episodes$Number)
 
 ```
+</details>
 
+After running the code above, I found that there was 74,051 movies, 11,545 TV shows, and 1,832,877 TV Episodes. 
 
 
 **Secondly**, who is the oldest person in our data set? 
@@ -270,7 +258,7 @@ print(oldest_person)
 
 ```
 
-I quickly saw that the birth year of this person was 1811. So unless our oldest person is 213 years old, we need to put a restraint on how far back their birth year was, in case their death was not recorded. Since the oldest living person in the world is 116, the earliest possible birth year can be 1908. Many individuals came up for this birth year, however once I google searched the ten oldest people in the world, none of them were on that list. I even saw that a few of these names did have deaths recorded on Google, but not on the database. Since there are only about 500,000 living individuals over the age of 100, which is only about .007% of the population, I decided to set my birth range to 100 years ago. Though someone *may* be slightly older than her and still alive, I thought this would be a safe bet to assume. 
+I quickly saw that the birth year of this person was 1811. So unless our oldest person is 213 years old, we need to put a restraint on how far back their birth year was, in case their death was not recorded. Since the oldest living person in the world is 116, the earliest possible birth year can be 1908. Many individuals came up for this birth year, however once I Google searched the ten oldest people in the world, none of them were on that list. I even saw that a few of these names did have deaths recorded on Google, but not on the database. Since there are only about 500,000 living individuals over the age of 100, which is only about .007% of the population, I decided to set my birth range to 100 years ago. Though someone *may* be slightly older than her and still alive, I thought this would be a safe bet to assume. 
 
 ```{r}
 
@@ -380,34 +368,17 @@ seriesaverage <- TVseries12 |>
   summarize(average_score = mean(averageRating, na.rm = TRUE)) |>
   arrange(desc(average_score))
 
-print(seriesaverage)
 
 
-```
-
-
-```{r}
-
-TITLE_BASICS |>
-  filter(tconst == "tt0409579") 
-
-TITLE_BASICS |>
-  filter(tconst == "tt0491739")
-
-TITLE_BASICS |>
-  filter(tconst == "tt11289784") 
-
-TITLE_BASICS |>
-  filter(tconst == "tt11363282") 
-
-TITLE_BASICS |>
-  filter(tconst == "tt21278628") 
 
 ```
+
 
 </details>
 
-**Lastly, I wanted to know more about the TV series Happy Days. The TV series Happy Days (1974-1984) gives us the common idiom “jump the shark”. The phrase comes from a controversial fifth season episode (aired in 1977) in which a lead character literally jumped over a shark on water skis. Idiomatically, it is used to refer to the moment when a once-great show becomes ridiculous and rapidly looses quality.
+Thus, I found out that 
+
+**Lastly**, I wanted to know more about the TV series Happy Days. The TV series Happy Days (1974-1984) gives us the common idiom “jump the shark”. The phrase comes from a controversial fifth season episode (aired in 1977) in which a lead character literally jumped over a shark on water skis. Idiomatically, it is used to refer to the moment when a once-great show becomes ridiculous and rapidly looses quality.
 
 I want to know if it is true that episodes from later seasons of Happy Days have lower average ratings than the early seasons?
 
@@ -783,6 +754,9 @@ twenties <- solid_or_better |>
   filter(startYear >= 2020 & startYear <= 2029) |>
   count(genres) 
 
+decades_total <- solid_or_better |>
+  count(genres) 
+
 colnames(forties)[colnames(forties) == "n"] <- "40s"
 colnames(fifties)[colnames(fifties) == "n"] <- "50s"
 colnames(sixties)[colnames(sixties) == "n"] <- "60s"
@@ -803,6 +777,7 @@ decades <- full_join(decades, thousands, join_by(genres))
 decades <- full_join(decades, tens, join_by(genres))
 decades <- full_join(decades, twenties, join_by(genres))
 decades <- full_join(decades, decades_total, join_by(genres))
+
 
 
 
@@ -1134,4 +1109,6 @@ Thus, 135 people from the original are still alive. Some actor and actresses are
 
 
 ### Task 7: Write and Deliver Your Pitch 
+
+For our next production, we should film a remake of the 1988 Die Hard, starring Leonardo Dicaprio, Taylor Speare, and Tony Revolori. It should be directed by Wally Pfister and have a guest appearance from Bruce Willis. From the 1990s to the 2000s, successful movies from the Action genre experience a 350% growth, becoming one of the most wanted genre in the industry. With Wally Pfister's mind
 
