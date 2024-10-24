@@ -1009,10 +1009,13 @@ print(Tony_Revolori)
 ```
 </details> 
 
-I quickly de
+I quickly decided upon Tony Revolori, as he was high on the list and was in a Spiderman movie recently that did fairly well. When I looked him up, he had some breakout awards and is expected to become a lot bigger in the upcoming years, especially as the projects he is currently working on begin to roll out.  
 
 
+At this point of the project, I realized that I had a slight oversight and did not include any female actresses into the mix. So, I decided to pick another younger actor to add to my team. 
 
+<details>
+  <summary>**Click here to see to see the code**</summary>
 ```{r}
 
 alive_actress_young <- NAME_BASICS |>
@@ -1037,11 +1040,12 @@ Taylor_Geare <- successful_actress_young |>
   filter(primaryName == "Taylor Geare")
 
 ```
+</details>
+
+By running this previous code, I found that Taylor Geare would be a perfect pick for the movie. Not only has she won one award and been in a few works recently, I discovered that she was *also* in Inception with Leonardo DiCaprio! At the time, she was five years old and she played Philipa, who was the daughter of DiCaprio's character. I believe that this pairing can bring *major* publicity to our work, as fans of Inception will get to see this duo back together, especially in a way that Geare will be able to display her skills. 
 
 
-
-
-Using the same technique as above, I searched for the best fit director. 
+Now, I must find a director for my move. Using the same technique as above, I began my search. 
 
 ```{r}
 
