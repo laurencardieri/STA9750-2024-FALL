@@ -929,10 +929,15 @@ datatable(successful_actors_average)
 
 print(Leo)
 
+TITLE_BASICS |>
+  filter(tconst == "tt1375666") 
+
 ```
 
+Then, one by one, I decided to go down the list of people to see what their top works were. This can be seen in the code below. 
 
-
+<details>
+  <summary>**Click here to see to see the code**</summary>
 
 ```{r}
 
@@ -951,8 +956,19 @@ Leonardo_DiCaprio <- successful_actors |>
 
 
 ```
+</details>
 
-He had 4 successful movies, three of which were apart of the Lord of the Rings franchise, and one priates of the carribean. I want a more diverse actor. Hugo Weaving was similar, with three Lord of the Rings movies and one movie titled "V for Vendetta." Gary would have been perfect... until I researched and found out he was the music producer on these projects, and not an actor. 
+I decided against Orlando Bloom, since he had 4 successful movies, three of which were apart of the Lord of the Rings franchise, and one Pirates of the Caribbean. I want a more diverse actor, rather than someone who mainly dominates the same universe.
+
+Hugo Weaving was similar, with three Lord of the Rings movies and one movie titled "V for Vendetta." Gary would have been perfect... until I researched and found out he was the music producer on these projects, and not an actor. 
+
+
+Finally, I got to my fourth person on the list, Leonardo DiCaprio. Not only did his top movies dominate different genres, including Crime, Drama, Thriller, Romance, Comedy, etc., his top movie was a Action/Adventure mixed genre. Also scoring highest on his list on the popularity scale, [Inception](https://www.imdb.com/title/tt1375666/) became the fourth highest-grossing movie of 2010, with DiCaprio as the star of the movie. Thus, it was clear that he was my first pick actor. 
+
+Next, I wanted to find someone younger and more up-and-coming. Thus, I chose to restrict the age gap to someone less than 30 years old. I did this with the following code: 
+
+<details>
+  <summary>**Click here to see to see the code**</summary>
 
 ```{r}
 
@@ -987,10 +1003,13 @@ successful_actors_average_y <-successful_actors_young |>
 Tony_Revolori <- successful_actors_young |>
   filter(primaryName == "Tony Revolori")
 
-
+print(Tony_Revolori)
 
 
 ```
+</details> 
+
+I quickly de
 
 
 
