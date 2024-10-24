@@ -1047,6 +1047,9 @@ By running this previous code, I found that Taylor Geare would be a perfect pick
 
 Now, I must find a director for my move. Using the same technique as above, I began my search. 
 
+<details>
+  <summary>**Click here to see to see the code**</summary>
+
 ```{r}
 
 alive_directors <- NAME_BASICS |>
@@ -1068,6 +1071,7 @@ Wally_Pfister <- successful_directors |>
 
 
 ```
+</details>
 
 Coming in second on the list, Wally Pfister easily proved to be the strongest candidate for this movie. 
 
