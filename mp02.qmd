@@ -4,7 +4,7 @@
 
 ## Introduction
 
-In this project, I will be utilizing data from the Internet Movie Database (IMDb) to discover what the next best movie is to produce. Before settling on my decision, I will dive into Hollywood's history to identify key characteristics of successful movies, identify successful directors and actors, and examine some of Hollywood's most famous flips. With all this information compiled together, I will pick a crew and a movie to remake, and then pitch the idea to the higher ups at my company. 
+In this project, I will be utilizing data from the Internet Movie Database (IMDb) to discover what the next best movie is to produce. Before settling on my decision, I will dive into Hollywood's history to identify key characteristics of successful movies, identify successful directors and actors, and examine some of Hollywood's most famous flops. With all this information compiled together, I will pick a crew and a movie to remake, and then pitch the idea to the higher ups at my company. 
      
      
      
@@ -89,7 +89,7 @@ NAME_BASICS <- NAME_BASICS |>
 </details>
 
 
-Now that I restricted the worker's data set, I am curious to see how many obscure movies are in my data, as I want to avoid creating a low selling movie. Below is a chart the depicts the number of titles in comparison to their number of IMDb ratings. 
+Now that I restricted the worker's data set, I am curious to see how many obscure movies are in my data, as I want to avoid creating a low selling movie. Below is a chart that depicts the number of titles in comparison to their number of IMDb ratings. 
 
 ```{r}
 
@@ -105,7 +105,7 @@ TITLE_RATINGS |>
 
 ```
 
-Here, we can see the a majority of the movies in this data set have less than 100 ratings. To limit my data set, I threw out any title that held less than 100 ratings. Looking at the quarterly ranges below, this shows that this drops about 75% of our data set. 
+Here, we can see the a majority of the movies in this data set have less than 100 ratings. To limit my data set further, I threw out any title that had less than 100 ratings. Looking at the quarterly ranges below, this shows that this drops about 75% of our data. 
 
 ```{r}
 
@@ -115,7 +115,7 @@ TITLE_RATINGS |>
 
 ```
 
-So, I performed this drop by using the following code: 
+So, I performed this drop by performing the following code: 
 
 
 ```{r}
@@ -125,7 +125,7 @@ TITLE_RATINGS <- TITLE_RATINGS |>
 
 ```
 
-We now want to do the same for our "Title" tables. 
+We now want to do the same for our "Title" tables, which can be seen below.  
 
 <details>
   <summary>**Click here to see how this was done**</summary> 
@@ -165,7 +165,7 @@ Now that our data has been significantly reduced, we can move on!
 
 ### Task 1: Column Type Correction
 
-After performing the glimpse function to examine each table, it was clear that some columns appeared as "character (string)" vectors, when they should be numeric. This is due to the null or N/A values that appear in the data sets. Since R cannot read these files as is, we must mutate the tables in a way that R can read them numerically. This is done with the following code: 
+After performing the glimpse function to examine each table, it was clear that some columns appeared as "character (string)" vectors, when they should be numeric. This is due to the null or N/A values that appears in the data sets. Since R cannot read these files as is, we must mutate the tables in a way that R can read them numerically. This is done with the following code: 
 
 <details>
   <summary>**Click here to see how this was done**</summary> 
@@ -240,10 +240,10 @@ print(Number_of_Episodes$Number)
 ```
 </details>
 
-After running the code above, I found that there was 89,305 movies, 16,742 TV shows, and 3,026,526 TV Episodes. 
+After running the code above, I found that there were 89,305 movies, 16,742 TV shows, and 3,026,526 TV Episodes. 
 
 
-**Secondly**, who is the oldest person in our data set? 
+**Secondly**, I want to know who the oldest person is in our data set? 
 
 To do this, I performed the following code: 
 
@@ -258,7 +258,7 @@ print(oldest_person)
 
 ```
 
-I quickly saw that the birth year of this person was 1836. So unless our oldest person is 188 years old, we need to put a restraint on how far back their birth year was, in case their death was not recorded. Since the oldest living person in the world is 116, the earliest possible birth year can be 1908. Many individuals came up for this birth year, however once I Google searched the ten oldest people in the world, none of them were on that list. I even saw that a few of these names did have deaths recorded on Google, but not on the database. Since there are only about 500,000 living individuals over the age of 100, which is only about .007% of the population, I decided to set my birth range to 100 years ago. Though someone *may* be slightly older than her and still alive, I thought this would be a safe bet to assume. 
+I quickly saw that the birth year of this person was 1836. So unless our oldest person is 188 years old, we need to put a restraint on how far back their birth year is, in case their death was not recorded. Since the oldest living person in the world is 116, the earliest possible birth year can be 1908. Many individuals came up for this birth year, however once I Google searched the ten oldest people in the world, none of them were on that list. I even saw that a few of these names did have deaths recorded on Google, but not on the database. Since there are only about 500,000 living individuals over the age of 100, which is only about .007% of the population, I decided to set my birth range to 100 years ago. Though someone *may* be slightly older than this and still alive, I thought this would be a safe bet to assume. 
 
 ```{r}
 
@@ -272,12 +272,12 @@ print(oldest_person)
 
 ```
 
-By doing this, I found that Eva Marie Saint is the oldest and *still alive* person in our database. Her career spanned over eighty years and she won numerous awards for her works. She was even born close to New York, in Newark, NJ! 
+Thus, I found that Eva Marie Saint is the oldest and *still alive* person in our database. Her career spanned over eighty years and she won numerous awards for her works. She was even born close to New York, in Newark, NJ! 
 
 
 **Thirdly**, there is one TV Episode in this data set with a perfect 10/10 rating and at least 200,000 IMDb ratings. I want to discover what episode this is and what show it belongs to.  
 
-To do this, I restricted my data to only show me
+To do this, I restricted my data to only show me these restraints. This can be seen in the following code: 
 
 <details>
   <summary>**Click here to see how this was done**</summary> 
@@ -307,11 +307,9 @@ print(Best_Episode_name)
 
 </details>
 
-From doing the commands above, I found that the only episode that reached these ratings were episode 14 of season 5 in Breaking Bad. Looking this up on Google, I found that the title of the episode was "Ozymandias." This episode is rated so highly due to the brilliance of how show runners depicted the main protagonist getting everything taken away from him. Pivotal events happen, including a main character's demise which became a significant turning point for the narrative. Over a decade later, this episode is still raved and talked about by fans. 
+From doing the commands above, I found that the only episode that reached these ratings was episode 14 of season 5 in Breaking Bad. Looking this up on Google, I found that the title of the episode was "Ozymandias." This episode is rated so highly due to the brilliance of how show runners depicted the main protagonist getting everything taken away from him. Pivotal events happen, including a main character's demise which became a significant turning point for the narrative. Over a decade later, this episode is still raved and talked about by fans. 
 
 **Fourthly**, what four projects is the actor Mark Hamill most known for? 
-
-What four projects is the actor Mark Hamill most known for?
 
 <details>
   <summary>**Click here to see how this was done**</summary> 
@@ -348,9 +346,9 @@ print(Mark_Hamill_Projects)
 
 Using the command above, I found that Mark Hamill was known for four Star Wars titles, including: *Star Wars: Episode IV - A New Hope*, *Star Wars: Episode VIII - The Last Jedi*, *Star Wars: Episode V - The Empire Strikes Back*, and *Star Wards: Episode VI - Return of the Jedi*. 
 
-**Fifthly**, I want to know What TV series, with more than 12 episodes, has the highest average rating?
+**Fifthly**, I want to know what TV series, with more than 12 episodes, has the highest average rating?
 
-To compute this, I had to restrict my data set to only show 
+To compute this, I did the following:
 
 <details>
   <summary>**Click here to see how this was done**</summary> 
@@ -391,7 +389,7 @@ Thus, I found out that Craft Games was the highest rated series with over 12 epi
 
 I want to know if it is true that episodes from later seasons of Happy Days have lower average ratings than the early seasons?
 
-To do this, I must restrict my data set to only show me information about Happy Days. At first, I only restricted this by the name, but I quickly realized that there were numerous projects with the same name. Because of this, I also added the restrictions of the start year and end year of the series. By doing the following code, I find the necessary tconst that identifies the series. 
+To do this, I must restrict my data set to only show me information about Happy Days. At first, I only restricted this by the name, but I quickly realized that there were numerous projects with the same name. Because of this, I also added the restrictions of the start year and end year of the series. By doing the following code, I find the necessary tconst that identifies the series. Then, I ran the following code to get the average rating of each season and compare them. 
 
 <details>
   <summary>**Click here to see how this was done**</summary> 
@@ -433,11 +431,11 @@ datatable(Happy_Days_Seasons)
 
 ```
 
-By looking at the scores above, we can see that the scores did in fact drop towards the later seasons, with Season 8 being the lowest scoring season. For the first half of the show, they average at a high 7 rating, but a downward decline began after season 3. Season 11, which was their final season, inevitably scored back in the 7 range, but the score still did not beat any from the first four seasons. 
+By looking at the table above, we can see that the scores did in fact drop towards the later seasons, with Season 8 being the lowest scoring season. For the first half of the show, they average at a high 7 rating, but a downward decline began after season 3. Season 11, which was their final season, inevitably scored back in the 7 range, but the score still did not beat any from the first four seasons. 
 
 ### Task 3: Custom Success Metric 
 
-For my success metric, I decided to create a scale that assess the total popularity of a work. To do this, I decided to multiply the average rating that it got by the number of votes. My logic is that a work cannot be successful without each of these metrics: a low scoring average with a lot of votes means that the movie flopped and a high scoring average with no votes means that the movie is too obscure. However, if a movie is averaged highly and has a lot of votes, this means that it is widely known and highly regarded. Thus, I believe that this is an accurate way to measure success. 
+For my success metric, I decided to create a scale that assesses the total popularity of a work. To do this, I decided to multiply the average rating that it got by the number of votes. My logic is that a work cannot be successful without each of these metrics: a low scoring average with a lot of votes means that the movie flopped and a high scoring average with no votes means that the movie is too obscure. However, if a movie is averaged highly and has a lot of votes, this means that it is widely known and highly regarded. Thus, I believe that this is an accurate way to measure success. 
 
 To test my theory, I will run some tests to see if it holds up against actually highly regarded movies and some of the more obscure ones in Hollywood. 
 
@@ -469,7 +467,7 @@ print(Top_ten)
 
 </details>
 
-The following are the top ten that were successes on my list: 
+The following are the top ten successes on my list: 
 
 
 1.  [The Shawshank Redemption](https://www.imdb.com/title/tt0111161/)
@@ -507,7 +505,7 @@ print(bottom_five)
 ```
 </details>
 
-The following are the 5 lowest rated on my list in regard to my metric:
+The following are the 5 lowest rated on my list:
 
 
 1. [Zwischen Glück und Krone](https://www.imdb.com/title/tt0498734/)
@@ -518,7 +516,7 @@ The following are the 5 lowest rated on my list in regard to my metric:
 
 These all proved to be more obscure and poorly-rated movies. Therefore, the metric does work both ways. 
 
-**Thirdly**, now I will choose a prestige actor and confirm that they have many projects that score highly on my metric. For this, I decided to look into Tom Hanks and Leonardo DiCaprio, as I belive they are two major actors in the industry currently.  
+**Thirdly**, now I will choose a prestige actor and confirm that they have many projects that score highly on my metric. For this, I decided to look into Tom Hanks and Leonardo DiCaprio, as I believe they are two major actors in the industry currently.  
 
 <details>
   <summary>**Click here to see how I filtered my data to show this**</summary> 
@@ -710,8 +708,8 @@ Thus, the most successes per decade is as follows:
 - 70s: Drama (7)
 - 80s: Action (8)
 - 90s: Drama (25)
-- 00s: Drama (30)
-- 10s: Adventure (13)
+- 00s: Drama/Adventure (30)
+- 10s: Action (21)
 - 20s: Action (2)
 
 
@@ -807,11 +805,11 @@ datatable(decades)
 
 Looking at the chart, it is clear to see that the genre with the most consistent successes each decade is Drama, as it is the only genre that had a least one success every decade from the forties until now. It also has gotten more successes recently, with its height being in the 2000s. 
 
-The genre that used to reliably produce successes, but has fallen out of favor is Crime, as it had many success from the 1970s to 2000s, entirely fell off in the 2010s with only one success. However, since the 2000s, the Drama genre definitely fell off the most, going from 30 success to 7 to 1 per decade. 
+The genre that used to reliably produce successes, but has fallen out of favor is Crime, as it had many success from the 1970s to 2000s, entirely fell off in the 2010s with only three successes. However, since the 2000s, the Drama genre definitely fell off the most, going from 30 success to 14 to 3 per decade. 
 
-**Thirdly**, I want to know what genre has produced the most successes since 2010. By looking at the chart above, it is clear to see the genre with the most successes since 2010 is Adventure with 15 successes. The Action genre is closely behind that, with 13 successes.  
+**Thirdly**, I want to know what genre has produced the most successes since 2010. By looking at the chart above, it is clear to see the genre with the most successes since 2010 is Action with 24 successes. The Adventure genre is closely behind that, with 21 successes.  
 
-However, I want to know if this genre has only produced the most successes because it genuinely has the highest rating, or if there were just an abundance of Adventure movies that have been created since then to contribute to the score. To do that, I used the following code: 
+However, I want to know if this genre has only produced the most successes because it genuinely has the highest rating, or if there were just an abundance of Action movies that have been created since then to contribute to the score. To do that, I used the following code: 
 
 <details>
   <summary>**Click here to see the code**</summary> 
@@ -851,13 +849,13 @@ print(decade2010_amount)
 ```
 
 
-Here, we can see that it ranked first on the total popularity list, but ninth on the amount of movies list. This shows that this genre just produces highly-rated movies, rather than just producing an abundance of them. 
+Here, we can see that it ranked first on the total popularity list, but third on the amount of movies list. This shows that while this genre produces highly-rated movies, there is also a good amount of them being made. However, the drama genre is the most produced and is still below the action genre on total popularity, so this shows that each movie is more successful than others. 
 
-**Lastly**, the genre that has become more popular in recent years is definitely the Action genre. It had its first successful movie in the 1970s, while ten other genres had earlier successes, and still skyrocketed in later decades to get 54 successes total. Only two genres are ahead of the action genre, which is drama with 77 successes and adventure with 60 successes. Since the 2000s, it is also tied for second with most "successes." 
+**Lastly**, the genre that has become more popular in recent years is definitely the Action genre. It had its first successful movie in the 1970s, while ten other genres had earlier successes, and still skyrocketed in later decades to get 66 total successes. Only two genres are ahead of the action genre, which is drama with 86 successes and adventure with 67 successes. However, since the 2000s, it has had 50 successes, which is only one behind the top spot for successes in that time frame, which is the adventure genre. 
 
 
 
-Based on my findings, I decided to choose an Action genre, as while it is the fourth most produced in the last decade, it had the third highest popularity score. It almost surpasses the Drama genre on the list, which is big considering that the drama genre has **23** more successes than the action genre. This shows me that the drama genre only have this high of a popularity due to the numerous successes that they had, which means each success had to average at the lower end of the success scale. Though the adventure genre did very well on both of these lists, I decided not to choose it as I fear it may begin to get overplayed, much like the Drama genre. However, the Action genre seems to be an up-and-coming one, as it already has more successes than the Drama genre in the 2020s, and the same amount as the adventure genre. Thus, I believe this is our best bet for a successful movie. 
+Based on my findings, I decided to choose an Action genre, as while it is the third most produced in the last decade, it had the highest popularity score. It surpasses the Drama genre on the list, which is big considering that the drama genre has **20** more successes than the action genre. This shows me that the drama genre only have this high of a popularity due to  successes that they had, which means each success had to average at the lower end of the success scale. Though the adventure genre also did very well on both of these lists, I decided not to choose it as I fear it may begin to get overplayed, much like the Drama genre. However, the Action genre seems to be an up-and-coming one, as it already has more successes than the Adventure genre in the 2020s, and the same amount as the Drama genre. Thus, I believe this is our best bet for a successful movie. 
 
 
 ### Task 5: Key Personnel 
@@ -913,7 +911,7 @@ datatable(successful_actors_average)
 
 ```
 
-Then, one by one, I decided to go down the list of people to see what their top works were. This can be seen in the code below. 
+One by one, I decided to go down the list of people to see what their top works were. This can be seen in the code below. 
 
 <details>
   <summary>**Click here to see to see the code**</summary>
@@ -923,6 +921,8 @@ Then, one by one, I decided to go down the list of people to see what their top 
 Orlando_Bloom <- successful_actors |>
   filter(primaryName == "Orlando Bloom")
 
+Hans_Zimmer <- successful_actors |>
+  filter(primaryName == "Orlando Bloom")
 
 Hugo_Weaving <- successful_actors |>
   filter(primaryName == "Hugo Weaving")
@@ -939,10 +939,10 @@ Leonardo_DiCaprio <- successful_actors |>
 
 I decided against Orlando Bloom, since he had 4 successful movies, three of which were apart of the Lord of the Rings franchise, and one Pirates of the Caribbean. I want a more diverse actor, rather than someone who mainly dominates the same universe.
 
-Hugo Weaving was similar, with three Lord of the Rings movies and one movie titled "V for Vendetta." Gary would have been perfect... until I researched and found out he was the music producer on these projects, and not an actor. 
+Hugo Weaving was similar, with three Lord of the Rings movies and one movie titled "V for Vendetta." Rizzo would have been perfect... until I researched and found out he was the music producer on these projects, and not an actor. Same with Zimmer. 
 
 
-Finally, I got to my seventh person on the list, Leonardo DiCaprio. Not only did his top movies dominate different genres, including Crime, Drama, Thriller, Romance, Comedy, etc., his top movie was a Action/Adventure mixed genre. Also scoring highest on his list on the popularity scale, [Inception](https://www.imdb.com/title/tt1375666/) became the fourth highest-grossing movie of 2010, with DiCaprio as the star of the movie. Thus, it was clear that he was my first pick actor. 
+Finally, I got to my seventh person on the list, Leonardo DiCaprio. Not only did his top movies dominate different genres, including Crime, Drama, Thriller, Romance, Comedy, etc., his top movie was an Action/Adventure mixed genre. Also scoring highest on his list on the popularity scale, [Inception](https://www.imdb.com/title/tt1375666/) became the fourth highest-grossing movie of 2010, with DiCaprio as the star of the movie. Thus, it was clear that he was my first pick actor. 
 
 Next, I wanted to find someone younger and more up-and-coming. Thus, I chose to restrict the age gap to someone less than 30 years old. I did this with the following code: 
 
@@ -982,11 +982,11 @@ successful_actors_average_y <-successful_actors_young |>
 Tony_Revolori <- successful_actors_young |>
   filter(primaryName == "Tony Revolori")
 
-print(Tony_Revolori)
 
 
 ```
 </details> 
+
 
 I quickly decided upon Tony Revolori, as he was high on the list and was in a Spiderman movie recently that did fairly well. When I looked him up, he had some breakout awards and is expected to become a lot bigger in the upcoming years, especially as the projects he is currently working on begin to roll out.  
 
@@ -1021,10 +1021,10 @@ Taylor_Geare <- successful_actress_young |>
 ```
 </details>
 
-By running this previous code, I found that Taylor Geare would be a perfect pick for the movie. Not only has she won one award and been in a few works recently, I discovered that she was *also* in Inception with Leonardo DiCaprio! At the time, she was five years old and she played Philipa, who was the daughter of DiCaprio's character. I believe that this pairing can bring *major* publicity to our work, as fans of Inception will get to see this duo back together, especially in a way that Geare will be able to display her skills. 
+By running this previous code, I found that Taylor Geare would be a perfect pick for the movie. Not only has she won one award and been in a few works recently, I discovered that she was *also* in *Inception* with Leonardo DiCaprio! At the time, she was five years old and she played Philipa, who was the daughter of DiCaprio's character. I believe that this pairing can bring *major* publicity to our work, as fans of *Inception* will get to see this duo back together, especially in a way that Geare will be able to display her skills as an adult. 
 
 
-Now, I must find a director for my move. Using the same technique as above, I began my search. 
+Now, I must find a director for my movie. Using the same technique as above, I began my search. 
 
 <details>
   <summary>**Click here to see to see the code**</summary>
@@ -1052,11 +1052,20 @@ Wally_Pfister <- successful_directors |>
 ```
 </details>
 
-Coming in second on the list, Wally Pfister easily proved to be the strongest candidate for this movie. Not only did he score incredibly highly on this list, he also worked on major movies such as The Dark Knight, The Prestige, Transcendence, and much more. However, most notebly, he *also* worked on Inception with Leonardo DiCaprio and Taylor Geare. A picture of DiCaprio and Pfister can be seen below. 
+
+
+```{r}
+
+datatable(successful_directors2)
+
+```
+
+
+Coming in second on the list, Wally Pfister easily proved to be the strongest candidate for this movie. Not only did he score incredibly highly on this list, he also worked on major movies such as *The Dark Knight*, *The Prestige*, *Transcendence*, and much more. However, most notably, he *also* worked on *Inception* with Leonardo DiCaprio and Taylor Geare. A picture of DiCaprio and Pfister can be seen below. 
 
 ![](https://scontent-lga3-2.xx.fbcdn.net/v/t39.30808-6/451416842_7869837596419421_1636905889012195073_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=YGId1yKMN4gQ7kNvgHSjaBM&_nc_ht=scontent-lga3-2.xx&_nc_gid=AqElHomrnF_wG1FssPesi1O&oh=00_AYAd4cqYbWkCuz9zDoYnfXx-KR5XZC-y9Ki3MBc2NrLAiA&oe=671E3347)
 
-Thus, not only have they all worked together in the past so they know each other, they were also able to create a masterpiece of a movie before in the same genre we are aspiring to. This could stir a lot of good media, as it not seen very often that three people from a very successful movie team up again to work on another. Thus, I feel very confident about the potential team I have found. 
+Thus, not only have they all worked together in the past so they know each other/have good chemistry, they were also able to create a masterpiece of a movie before in the same genre we are aspiring to. This could stir a lot of good media, as it not seen very often that three people from a very successful movie team up again to work on a remake of another successful movie. Thus, I feel very confident about the potential team I have put together. 
 
 ### Task 6: Finding a Classic Movie to Remake
 
@@ -1083,16 +1092,16 @@ datatable(remakemovie)
 
 ```
 
-I want to look at what the top movies are in the action genre, however, I do want to stay away from any Star Wars remakes. Thus, coming in at number 14, I debating on remaking *Léon: The Professional*, however, when I looked up if fans wanted a remake they seemed entirely opposed. Many fans believe the film is perfect as is and it would not do any justice for it to be remade today. Thus, I decided to keep looking. 
+I want to look at what the top movies are in the action genre, however, I also want to stay away from remaking any Star Wars movies. Thus, coming in at number 14, I debating on remaking *Léon: The Professional*, however, when I looked up if fans wanted a remake, they seemed entirely opposed. Many fans believe the film is perfect as is and it would not do any justice for it to be remade today. Thus, I decided to keep looking. 
 
 At number 31, I found *Die Hard*, a movie made in 1988 about an NYPD cop that has to take matters into his own hands when a group of robbers take control of the building he is in, holding everyone hostage except for him. 
 
-When I looked up if fans would want a remake of Die Hard, *numerous* articles came up showing great approval for this. I will link some of these articles below: 
+When I looked up if fans would want a remake of *Die Hard*, *numerous* articles came up showing great approval for this. Some of these are linked below: 
 
 - [Bleeding Cool News](https://bleedingcool.com/movies/die-hard-why-20th-century-studios-should-invest-in-a-remake-reboot/)
 - [Medium](https://jasoncherubini.medium.com/originality-is-overrated-using-the-die-hard-recipe-to-create-a-successful-indie-action-movie-244d4d214946)
 
-Thus, a Die Hard remake is the best bet for a successful action movie. 
+Thus, a *Die Hard* remake is the best bet for a successful action movie. 
 
 However, before we move further, our legal department must reach out to certain members of the original movie production to secure the rights for the project. So, let's find out who is still alive from the original. 
 
@@ -1111,12 +1120,12 @@ print(Die_Hard)
 ```
 </details>
 
-Thus, 135 people from the original are still alive. Some actor and actresses are still alive, so we may want to consider adding them in the plot as a "fan service," such as the main actor Bruce Willis.   
+Thus, 135 people from the original are still alive. Some actor and actresses are still alive as well, so we may want to consider adding them in the plot as a "fan service," such as the main actor Bruce Willis.   
 
 
 ### Task 7: Write and Deliver Your Pitch 
 
-For our next production, a remake of the 1988 Die Hard would be a strong competitor in the industry, starring Leonardo DiCaprio, Taylor Geare, and Tony Revolori. Directed by Academy Award winning Wally Pfister, the movie is bound to have an artistic expression like no other, similar to his eight other success. A guest appearance from Bruce Willis will have the fan base who are begging for a remake running to theaters. 
+For our next production, a remake of the 1988 *Die Hard* would be a strong competitor in the industry, starring Leonardo DiCaprio, Taylor Geare, and Tony Revolori. Directed by Academy Award winning Wally Pfister, the movie is bound to have an artistic expression like no other, similar to his eight other success. A guest appearance from Bruce Willis will have the fan base, who is practically begging for a remake, running to theaters. 
 
-From the 1990s to the 2000s, the Action genre experienced a 350% growth in successes, becoming one of the most wanted and rewarding genre in the industry. With beloved actor Leonardo Dicaprio combining forces with innovative director Pfister and up-and-coming Geare, we will give Inception fans a wanted reunion in this remake, growing our anticipated fan base even further. Lastly, including young actor Revolori with resonate with the younger generation, especially those tied to Marvel, as he is a fan favorite in that sphere. Thus, this combination would be an absolute recipe for success, especially since the action genre has the most successes in the 2020s thus far!
+From the 1990s to the 2000s, the Action genre experienced over a 350% growth in successes, becoming one of the most wanted and rewarding genre in the industry. With beloved actor Leonardo Dicaprio combining forces with innovative director Pfister and up-and-coming Geare, we will give *Inception* fans a wanted reunion in this remake, growing our anticipated fan base even further. Lastly, including young actor Revolori with resonate with the younger generation, especially those tied to Marvel, as he is a fan favorite in that sphere. Thus, this combination would be an absolute recipe for success, especially since the action genre has the most successes in the 2020s thus far! If we move forward with this plan, we can easily be the next success! 
 
