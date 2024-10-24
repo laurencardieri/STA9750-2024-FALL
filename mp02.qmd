@@ -358,17 +358,26 @@ To compute this, I had to restrict my data set to only show
 
 ```{r}
 
-twelve_episodes <- TITLE_EPISODES |> 
-  filter(episodeNumber > 12)  
 
-TVseries12 <- inner_join(twelve_episodes, TITLE_RATINGS, join_by(tconst))
+episode_amount <- TITLE_EPISODES |>
+    group_by(parentTconst) |>
+    summarise(total_episodes = n(), .groups = 'drop')
 
-seriesaverage <- TVseries12 |>
-  group_by(parentTconst) |>
-  summarize(average_score = mean(averageRating, na.rm = TRUE)) |>
-  arrange(desc(average_score))
+tv_ratings <- TITLE_BASICS |>
+    filter(titleType == "tvSeries") |>
+    inner_join(TITLE_RATINGS, by = "tconst") |>
+    inner_join(episode_amount, by = c("tconst" = "parentTconst"))
 
 
+highest_rating_series <- tv_ratings |>
+    filter(total_episodes > 12) |>
+    arrange(desc(averageRating)) |>
+    slice(1)
+
+highest_rating_series |>
+    select(primaryTitle, total_episodes, averageRating)
+
+print(highest_rating_series)
 
 
 ```
@@ -376,7 +385,7 @@ seriesaverage <- TVseries12 |>
 
 </details>
 
-Thus, I found out that 
+Thus, I found out that Craft Games was the highest rated series with over 12 episodes, with an average rating of 9.7. 
 
 **Lastly**, I wanted to know more about the TV series Happy Days. The TV series Happy Days (1974-1984) gives us the common idiom “jump the shark”. The phrase comes from a controversial fifth season episode (aired in 1977) in which a lead character literally jumped over a shark on water skis. Idiomatically, it is used to refer to the moment when a once-great show becomes ridiculous and rapidly looses quality.
 
@@ -902,11 +911,6 @@ successful_actors_average <-successful_actors |>
 
 datatable(successful_actors_average)
 
-print(Leo)
-
-TITLE_BASICS |>
-  filter(tconst == "tt1375666") 
-
 ```
 
 Then, one by one, I decided to go down the list of people to see what their top works were. This can be seen in the code below. 
@@ -938,7 +942,7 @@ I decided against Orlando Bloom, since he had 4 successful movies, three of whic
 Hugo Weaving was similar, with three Lord of the Rings movies and one movie titled "V for Vendetta." Gary would have been perfect... until I researched and found out he was the music producer on these projects, and not an actor. 
 
 
-Finally, I got to my fourth person on the list, Leonardo DiCaprio. Not only did his top movies dominate different genres, including Crime, Drama, Thriller, Romance, Comedy, etc., his top movie was a Action/Adventure mixed genre. Also scoring highest on his list on the popularity scale, [Inception](https://www.imdb.com/title/tt1375666/) became the fourth highest-grossing movie of 2010, with DiCaprio as the star of the movie. Thus, it was clear that he was my first pick actor. 
+Finally, I got to my seventh person on the list, Leonardo DiCaprio. Not only did his top movies dominate different genres, including Crime, Drama, Thriller, Romance, Comedy, etc., his top movie was a Action/Adventure mixed genre. Also scoring highest on his list on the popularity scale, [Inception](https://www.imdb.com/title/tt1375666/) became the fourth highest-grossing movie of 2010, with DiCaprio as the star of the movie. Thus, it was clear that he was my first pick actor. 
 
 Next, I wanted to find someone younger and more up-and-coming. Thus, I chose to restrict the age gap to someone less than 30 years old. I did this with the following code: 
 
@@ -1102,6 +1106,8 @@ Die_Hard <- NAME_BASICS |>
   filter(knownForTitles == "tt0083658") |>
   filter(is.na(deathYear))
 
+print(Die_Hard)
+
 ```
 </details>
 
@@ -1110,5 +1116,7 @@ Thus, 135 people from the original are still alive. Some actor and actresses are
 
 ### Task 7: Write and Deliver Your Pitch 
 
-For our next production, we should film a remake of the 1988 Die Hard, starring Leonardo Dicaprio, Taylor Speare, and Tony Revolori. It should be directed by Wally Pfister and have a guest appearance from Bruce Willis. From the 1990s to the 2000s, successful movies from the Action genre experience a 350% growth, becoming one of the most wanted genre in the industry. With Wally Pfister's mind
+For our next production, a remake of the 1988 Die Hard would be a strong competitor in the industry, starring Leonardo Dicaprio, Taylor Geare, and Tony Revolori. Directed by Academy Award winning Wally Pfister, the movie is bound to have an artistic expression like no other, similar to his eight other success. A guest appearance from Bruce Willis will have the fan base who are begging for a remake running to theaters. 
+
+From the 1990s to the 2000s, the Action genre experienced a 350% growth in successes, becoming one of the most wanted and rewarding genre in the industry. With beloved actor Leonardo Dicaprio combining forces with innovative director Pfister and up-and-coming Geare, we will give Inception fans a wanted reunion in this remake, growing our anticipated fan base even further. Lastly, including young actor Revolori with resonate with the younger generation, especially those tied to Marvel, as he is a fan favorite in that sphere. Thus, this combination would be an absolute recipe for success, especially since the action genre has the most successes in the 2020s thus far!
 
