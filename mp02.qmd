@@ -1073,11 +1073,18 @@ Wally_Pfister <- successful_directors |>
 ```
 </details>
 
-Coming in second on the list, Wally Pfister easily proved to be the strongest candidate for this movie. 
+Coming in second on the list, Wally Pfister easily proved to be the strongest candidate for this movie. Not only did he score incredibly highly on this list, he also worked on major movies such as The Dark Knight, The Prestige, Transcendence, and much more. However, most notebly, he *also* worked on Inception with Leonardo DiCaprio and Taylor Geare. A picture of DiCaprio and Pfister can be seen below. 
 
 ![](https://scontent-lga3-2.xx.fbcdn.net/v/t39.30808-6/451416842_7869837596419421_1636905889012195073_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=YGId1yKMN4gQ7kNvgHSjaBM&_nc_ht=scontent-lga3-2.xx&_nc_gid=AqElHomrnF_wG1FssPesi1O&oh=00_AYAd4cqYbWkCuz9zDoYnfXx-KR5XZC-y9Ki3MBc2NrLAiA&oe=671E3347)
 
+Thus, not only have they all worked together in the past so they know each other, they were also able to create a masterpiece of a movie before in the same genre we are aspiring to. This could stir a lot of good media, as it not seen very often that three people from a very successful movie team up again to work on another. Thus, I feel very confident about the potential team I have found. 
 
+### Task 6: Finding a Classic Movie to Remake
+
+Now, I must find a classic movie in this genre to remake. I want to find a movie that has not been remade in the past 25 years, has a large number of IMDb ratings, has a high average rating, and has a fan base that wants a remake to happen. To do this, I must first filter my data sets to give me a movie that fits these first three restraints. 
+
+<details>
+  <summary>**Click here to see to see the code**</summary>
 ```{r}
 
 remakemovie <- movie_ratings |>
@@ -1088,9 +1095,30 @@ remakemovie <- movie_ratings |>
 
 
 ```
+</details> 
 
-Die hard is the best bet. 
 
+```{r}
+
+datatable(remakemovie)
+
+```
+
+Coming in at number 14, I debating on remaking *Léon: The Professional*, however, when I looked up if fans wanted a remake they seemed entirely opposed. Many fans believe the film is perfect as is and it would not do any justice for it to be remade today. Thus, I decided to keep looking. 
+
+At number 31, I found *Die Hard*, a movie made in 1988 about an NYPD cop that has to take matters into his own hands when a group of robbers take control of the building he is in, holding everyone hostage except for him. 
+
+When I looked up if fans would want a remake of Die Hard, *numerous* articles came up showing great approval for this. I will link some of these articles below: 
+
+- [Bleeding Cool News](https://bleedingcool.com/movies/die-hard-why-20th-century-studios-should-invest-in-a-remake-reboot/)
+- [Medium](https://jasoncherubini.medium.com/originality-is-overrated-using-the-die-hard-recipe-to-create-a-successful-indie-action-movie-244d4d214946)
+
+Thus, a Die Hard remake is the best bet for a successful action movie. 
+
+However, before we move further, our legal department must reach out to certain members of the original movie production to secure the rights for the project. So, let's find out who is still alive from the original. 
+
+<details>
+  <summary>**Click here to see to see the code**</summary>
 
 ```{r}
 
@@ -1100,50 +1128,10 @@ Die_Hard <- NAME_BASICS |>
   filter(is.na(deathYear))
 
 ```
+</details>
 
-135 people from the original die hard is still alive. 
-
-
-```{r}
+Thus, 135 people from the original are still alive. Some actor and actresses are still alive, so we may want to consider adding them in the plot as a "fan service," such as the main actor Bruce Willis.   
 
 
-
-```
-
-
-
-
-```{r}
-
-
-
-```
-
-
-
-
-```{r}
-
-
-
-```
-
-
-
-
-```{r}
-
-
-
-```
-
-
-
-
-```{r}
-
-
-
-```
-
+### Task 7: Write and Deliver Your Pitch 
 
