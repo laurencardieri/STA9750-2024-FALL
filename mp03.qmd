@@ -1,14 +1,20 @@
+<div style="text-align: center;">
 # Mini-Project #03: Do Proportional Electoral College Allocations Yield a More Representative Presidency?
+</div>
 
+![](https://www.nbc.com/sites/nbcblog/files/styles/scale_862/public/2024/10/gettyimages-641457444.jpg)
+<div style="text-align: center;">
+## Introduction 
+</div>
 
-# Introduction 
+In this project, I will be writing a *political fact-check* and investigate the claim that the [US Electoral College](https://en.wikipedia.org/wiki/United_States_Electoral_College) systematically biases election results away from the popular vote. 
 
-Firstly, we need to download the code [here](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/IG0UN2) and [here](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/42MVDX). 
+Before we begin, we must download the code [here](https://www.nbc.com/sites/nbcblog/files/styles/scale_862/public/2024/10/gettyimages-641457444.jpg). This code shows us how many votes each candidate got througout the years, for both the Presidential Elections and the House of Representatives Elections. 
 
 
 
 <details>
-  <summary>**Click here to see how the data was downloaded**</summary>
+  <summary>**Click here to see how the data was downloaded into R**</summary>
 ```{r}
 library(tidyverse)
 library(readxl)
@@ -23,12 +29,329 @@ X1976_2020_president <- read_csv("1976-2020-president.csv")
 ```
 </details>
 
+Now, I must download all the shape files into R. 
 
-# Task 3: Exploration of Vote Count Data 
+<details>
+  <summary>**Click here to see how the data was downloaded into R**</summary>
+```{r, eval=FALSE, echo=TRUE}
 
-## Which states have gained and lost the most seats in the US House of Representatives between 1976 and 2022?
+zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts095.zip"
+
+zip95 <- "districts095.zip"
+
+download.file(zip_url, zip95, mode = "wb")
+
+zip95_contents <- unzip(zip95, list = TRUE)
+
+print(zip95_contents)
+
+district95 <- "districtShapes/districts095.shp"
+
+districts_folder <- "extracted_files"
+
+unzip(zip95, files = district95, exdir = districts_folder)
 
 
+zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts096.zip"
+
+zip96 <- "districts096.zip"
+
+download.file(zip_url, zip96, mode = "wb")
+
+zip96_contents <- unzip(zip96, list = TRUE)
+
+print(zip96_contents)
+
+district96 <- "districtShapes/districts096.shp"
+
+districts_folder <- "extracted_files"
+
+unzip(zip96, files = district96, exdir = districts_folder)
+
+
+
+
+zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts097.zip"
+
+zip97 <- "districts097.zip"
+
+download.file(zip_url, zip97, mode = "wb")
+
+zip97_contents <- unzip(zip97, list = TRUE)
+
+print(zip97_contents)
+
+district97 <- "districtShapes/districts097.shp"
+
+districts_folder <- "extracted_files"
+
+unzip(zip97, files = district97, exdir = districts_folder)
+
+
+
+zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts098.zip"
+
+zip <- "districts098.zip"
+
+download.file(zip_url, zip, mode = "wb")
+
+zip_contents <- unzip(zip, list = TRUE)
+
+print(zip_contents)
+
+district98 <- "districtShapes/districts098.shp"
+
+districts_folder <- "extracted_files"
+
+unzip(zip, files = district98, exdir = districts_folder)
+
+
+
+
+zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts099.zip"
+
+zip <- "districts099.zip"
+
+download.file(zip_url, zip, mode = "wb")
+
+zip_contents <- unzip(zip, list = TRUE)
+
+print(zip_contents)
+
+district99 <- "districtShapes/districts099.shp"
+
+districts_folder <- "extracted_files"
+
+unzip(zip, files = district99, exdir = districts_folder)
+
+
+
+zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts100.zip"
+
+zip <- "districts100.zip"
+
+download.file(zip_url, zip, mode = "wb")
+
+zip_contents <- unzip(zip, list = TRUE)
+
+print(zip_contents)
+
+district100 <- "districtShapes/districts100.shp"
+
+districts_folder <- "extracted_files"
+
+unzip(zip, files = district100, exdir = districts_folder)
+
+
+
+zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts101.zip"
+
+zip <- "districts101.zip"
+
+download.file(zip_url, zip, mode = "wb")
+
+zip_contents <- unzip(zip, list = TRUE)
+
+print(zip_contents)
+
+district101 <- "districtShapes/districts101.shp"
+
+districts_folder <- "extracted_files"
+
+unzip(zip, files = district101, exdir = districts_folder)
+
+
+zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts102.zip"
+
+zip <- "districts102.zip"
+
+download.file(zip_url, zip, mode = "wb")
+
+zip_contents <- unzip(zip, list = TRUE)
+
+print(zip_contents)
+
+district102 <- "districtShapes/districts102.shp"
+
+districts_folder <- "extracted_files"
+
+unzip(zip, files = district102, exdir = districts_folder)
+
+
+zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts103.zip"
+
+zip <- "districts103.zip"
+
+download.file(zip_url, zip, mode = "wb")
+
+zip_contents <- unzip(zip, list = TRUE)
+
+print(zip_contents)
+
+district103 <- "districtShapes/districts103.shp"
+
+districts_folder <- "extracted_files"
+
+unzip(zip, files = district103, exdir = districts_folder)
+
+
+
+zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts104.zip"
+
+zip <- "districts104.zip"
+
+download.file(zip_url, zip, mode = "wb")
+
+zip_contents <- unzip(zip, list = TRUE)
+
+print(zip_contents)
+
+district104 <- "districtShapes/districts104.shp"
+
+districts_folder <- "extracted_files"
+
+unzip(zip, files = district104, exdir = districts_folder)
+
+
+zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts105.zip"
+
+zip <- "districts105.zip"
+
+download.file(zip_url, zip, mode = "wb")
+
+zip_contents <- unzip(zip, list = TRUE)
+
+print(zip_contents)
+
+district105 <- "districtShapes/districts105.shp"
+
+districts_folder <- "extracted_files"
+
+unzip(zip, files = district105, exdir = districts_folder)
+
+
+
+zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts106.zip"
+
+zip <- "districts106.zip"
+
+download.file(zip_url, zip, mode = "wb")
+
+zip_contents <- unzip(zip, list = TRUE)
+
+print(zip_contents)
+
+district106 <- "districtShapes/districts106.shp"
+
+districts_folder <- "extracted_files"
+
+unzip(zip, files = district106, exdir = districts_folder)
+
+
+
+zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts107.zip"
+
+zip <- "districts107.zip"
+
+download.file(zip_url, zip, mode = "wb")
+
+zip_contents <- unzip(zip, list = TRUE)
+
+print(zip_contents)
+
+district107 <- "districtShapes/districts107.shp"
+
+districts_folder <- "extracted_files"
+
+unzip(zip, files = district107, exdir = districts_folder)
+
+
+
+
+zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts108.zip"
+
+zip <- "districts108.zip"
+
+download.file(zip_url, zip, mode = "wb")
+
+zip_contents <- unzip(zip, list = TRUE)
+
+print(zip_contents)
+
+district108 <- "districtShapes/districts108.shp"
+
+districts_folder <- "extracted_files"
+
+unzip(zip, files = district108, exdir = districts_folder)
+
+
+
+zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts109.zip"
+
+zip <- "districts109.zip"
+
+download.file(zip_url, zip, mode = "wb")
+
+zip_contents <- unzip(zip, list = TRUE)
+
+print(zip_contents)
+
+district109 <- "districtShapes/districts109.shp"
+
+districts_folder <- "extracted_files"
+
+unzip(zip, files = district109, exdir = districts_folder)
+
+
+zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts112.zip"
+
+zip <- "districts112.zip"
+
+download.file(zip_url, zip, mode = "wb")
+
+zip_contents <- unzip(zip, list = TRUE)
+
+print(zip_contents)
+
+district112 <- "districtShapes/districts112.shp"
+
+districts_folder <- "extracted_files"
+
+unzip(zip, files = district112, exdir = districts_folder)
+
+
+
+
+zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts113.zip"
+
+zip <- "districts113.zip"
+
+download.file(zip_url, zip, mode = "wb")
+
+zip_contents <- unzip(zip, list = TRUE)
+
+print(zip_contents)
+
+district113 <- "districtShapes/districts113.shp"
+
+districts_folder <- "extracted_files"
+
+unzip(zip, files = district113, exdir = districts_folder)
+
+
+```
+</details>
+
+<div style="text-align: center;">
+## Exploration of Vote Count Data 
+</div>
+
+##### Which states have gained and lost the most seats in the US House of Representatives between 1976 and 2022?
+
+Firstly, I want to find out which states have gained and lost the most seats in the US House of Representatives between 1976 and 2022. To do this, I need to filter the House Seats data set to only show 1976 and 2022, then group it by year and state. Once I do this, I can find out how many distinct districts are in each state. For the purpose of this project, I will asign *one* seat per district in each state. Then, I can use these numbers to find the difference between the two years. Since many states actually had no change in seat numbers, I decided to exlude them from the data set and only show the states we are interested in. Thus, below is a bar graph that depicts either the gain or loss of House Seats from 1976 to 2022, per state. 
+
+<details>
+  <summary>**Click here to see how the data was manipulated**</summary>
 ```{r}
 
 
@@ -57,16 +380,38 @@ ggplot(diff_seats, aes(x = state, y = difference, fill = difference > 0)) +
         axis.text.y = element_text(size = 8),
         plot.margin = margin(3, 3, 3))
 
-
+Difference_in_seats <- ggplot(diff_seats, aes(x = state, y = difference, fill = difference > 0)) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
+  scale_fill_manual(values = c("tomato", "springgreen2")) +
+  coord_flip() +
+  labs(title = "Each State's Gain/Loss of Seats in the US House of Representatives from 1976 - 2022", x = "State", y = "Difference of Seats") +
+  theme_minimal() +
+  theme(plot.title = element_text(size = 10),
+        axis.text.y = element_text(size = 8),
+        plot.margin = margin(3, 3, 3))
 
 
 
 ```
+</details>
+
+```{r}
+
+print(Difference_in_seats)
+
+```
+
+Looking at this graph, we can see that Texas has *gained* the most seats and New York has *lost* the most seats since 1976. Notably, Pennsylvania, Michigan, Ohio, and Illinois all also lost over 5 seats, while California, Florida, and Arizona gained 5 or more seats. It is also interesting to see that *more* states lost seats than states that *gained* seats, with 19 states losing seats and 15 states gaining seats. 
 
 
+##### Are there any elections in our data where the election would have had a different outcome if the “fusion” system was not used and candidates only received the votes their received from their “major party line” (Democrat or Republican) and not their total number of votes across all lines?
 
+Before computing this, we should understand what ["The Fusion System"](https://protectdemocracy.org/work/fusion-voting-explained/) is. This system means that one candidate is allowed to appear on multiple "lines" on a ballot and their *total* votes are counted, rather than just appearing once. This gives this candidate an advantage, as they are practically running against themselves in other parties, but their *total votes* is counted against other candidates. 
 
+Now, I want to know if there are any elections in our data set that would have had a different outcome had the "fusion system" not been used. To do this, I am going to evaluate our data set at two different points: the first being with each candidates total votes, and the second using only "major party lines," thus "DEMOCRAT" or "REPUBLICAN". Then, I will find the winner of each side, and see if they line up. If the do line up, then the candidate who won was the true winner of the election. However, if they do not, then the "fusion voting" is what helped this person win over their competitor. This can be seen in my code below. 
 
+<details>
+  <summary>**Click here to see how the data was manipulated**</summary>
 ```{r}
 
 fusion_voting <- X1976_2022_house |>
@@ -91,25 +436,46 @@ house_voting <- left_join(fusion_voting, no_fusion_voting, by = (c("state","dist
 
 
 house_voting <- fusion_voting |>
-  left_join(no_fusion_voting, by = c("year", "state", "district")) |>
+  left_join(no_fusion_voting, by = c("year", "state", "district", "candidate")) |>
   mutate(difference = (`total_fusion_votes` - `total_votes`)) |>
   filter(difference != 0) |>
   arrange(desc(difference))
 
 
-library(DT)
-datatable(house_voting) 
-
 instances <- nrow(house_voting)
-print(instances)
+
 
 
 ```
+</details>
 
 
+```{r}
+
+print(instances)
+
+```
+
+Before showing the table, I want to note that there were **689** instances where this occurred! That is a lot of times that the fusion vote aided in a candidate's win! 
+
+Below is a table that shows each of these instances. 
 
 
+```{r}
 
+library(DT)
+datatable(house_voting) 
+
+```
+
+In this table, you can see the the difference in votes span from 193,263 to 550 votes over the 689 instances. 
+
+
+##### Do presidential candidates tend to run ahead of or run behind congressional candidates in the same state? Does this trend differ over time? Does it differ across states or across parties? Are any presidents particularly more or less popular than their co-partisans?
+
+
+<details>
+  <summary>**Click here to see how the code was done**</summary>
 ```{r}
 
 house_candidates <- X1976_2022_house |>
@@ -136,7 +502,7 @@ Vote_difference <- president_candidates |>
   inner_join(house_candidates, by = c("year", "party")) |>
   mutate(difference = (president_votes - house_votes))
 
-ggplot(Vote_difference, aes (x = year, y = difference, color = party)) + 
+Overtime <- ggplot(Vote_difference, aes (x = year, y = difference, color = party)) + 
   geom_point() +
   geom_line(linewidth = .5) + 
   scale_color_manual(values = c("DEMOCRAT" = "royalblue2", "REPUBLICAN" = "firebrick2")) +
@@ -144,7 +510,13 @@ ggplot(Vote_difference, aes (x = year, y = difference, color = party)) +
   theme_minimal()
 
 ```
+</details>
 
+```{r}
+
+print(Overtime)
+
+```
 
 
 
