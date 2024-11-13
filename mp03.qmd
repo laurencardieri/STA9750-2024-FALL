@@ -176,17 +176,19 @@ president_2000 <- X1976_2020_president |>
   )
 
 
-Shape_2000 <- s.sf |>
+USA2000results <- s.sf |>
   mutate(STATENAME = toupper(trimws(STATENAME))) |>
-  left_join(president_2000, join_by(STATENAME == state))
+  left_join(president_2000, join_by(STATENAME == state)) 
 
-ggplot(Shape_2000, aes(geometry = geometry, fill = party),
-       color = "black") +
+USA2000Map <- ggplot(USA2000results, aes(geometry = geometry, fill = party),
+                     color = "black") +
   geom_sf() + 
   scale_fill_manual(values = c("REPUBLICAN" = "firebrick2", "DEMOCRAT" = "royalblue2")) +
   theme_minimal() +
+  coord_sf(xlim = c(-180, -50), ylim = c(10,80), expand = FALSE) +
   labs(title = "2000 Presidential Election Electoral College Results", fill = "Winning Party") 
 
+print(USA2000Map)
 
 
 
