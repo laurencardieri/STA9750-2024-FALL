@@ -151,6 +151,50 @@ ggplot(Vote_difference, aes (x = year, y = difference, color = party)) +
 
 
 
+```{r}
+
+install.packages('plyr', repos = "http://cran.us.r-project.org")
+
+options(repos = list(CRAN="http://cran.rstudio.com/"))
+
+library(utils)
+install.packages("sf")
+library(sf)
+
+library(sf)
+s.sf <- st_read("districtShapes/districts106.shp")
+head(s.sf, n=4)
+
+
+president_2000 <- X1976_2020_president |>
+  filter(year == '2000',
+         candidate %in% c("BUSH, GEORGE W.", "GORE, AL")) |>
+  group_by(state) |>
+  summarize(
+    highest_votes = max(candidatevotes),
+    party = party_detailed[which.max(candidatevotes)]
+  )
+
+
+Shape_2000 <- s.sf |>
+  mutate(STATENAME = toupper(trimws(STATENAME))) |>
+  left_join(president_2000, join_by(STATENAME == state))
+
+ggplot(Shape_2000, aes(geometry = geometry, fill = party),
+       color = "black") +
+  geom_sf() + 
+  scale_fill_manual(values = c("REPUBLICAN" = "firebrick2", "DEMOCRAT" = "royalblue2")) +
+  theme_minimal() +
+  labs(title = "2000 Presidential Election Electoral College Results", fill = "Winning Party") 
+
+
+
+
+```
+
+
+
+
 
 
 
