@@ -473,6 +473,46 @@ In this table, you can see the the difference in votes span from 193,263 to 550 
 
 ##### Do presidential candidates tend to run ahead of or run behind congressional candidates in the same state? Does this trend differ over time? Does it differ across states or across parties? Are any presidents particularly more or less popular than their co-partisans?
 
+<details>
+  <summary>**Click here to see how the code was done**</summary>
+```{r}
+
+house_candidates2 <- X1976_2022_house |>
+  filter(party %in% c("REPUBLICAN", "DEMOCRAT")) |>
+  group_by(year, state, party) |>
+  summarize(total_votes = sum(candidatevotes), .groups = 'drop') |>
+  group_by(year, state, party)
+
+
+president_candidates2 <- X1976_2020_president |>
+  filter(party_detailed %in% c("REPUBLICAN", "DEMOCRAT")) |>
+  group_by(year, state, party_detailed) |>
+  summarize(total_votes = sum(candidatevotes), .groups = 'drop') |>
+  group_by(year, state, party_detailed)
+
+colnames(president_candidates2)[colnames(president_candidates2) == "party_detailed"] <- "party"
+
+colnames(president_candidates2)[colnames(president_candidates2) == "total_votes"] <- "president_votes"
+
+colnames(house_candidates2)[colnames(house_candidates2) == "total_votes"] <- "house_votes"
+
+Vote_state_difference <- president_candidates2 |>
+  inner_join(house_candidates2, by = c("year", "state", "party")) |>
+  mutate(difference = (president_votes - house_votes))
+
+
+```
+</details>
+
+
+
+```{r}
+
+datatable(Vote_state_difference) 
+
+```
+
+Now, let's see if this trend differs overtime. To do this, I created a line graph to show the difference of votes between the President and the House, for both Republicans and Democrats. This can be seen below. 
 
 <details>
   <summary>**Click here to see how the code was done**</summary>
@@ -518,6 +558,7 @@ print(Overtime)
 
 ```
 
+Here, we can see that both parties has experience a large difference in votes. However, the Republican Party has tended to experience a higher support for their President over the House seats, while the Democratic Party has experienced both sides. Oddly enough, from about the 1990s - 2000s, the parties switched in their favor, with the House Republicans running more votes than the president and the Democrat President running more votes than the house. 
 
 
 
