@@ -1,0 +1,170 @@
+# Mini-Project #03: Do Proportional Electoral College Allocations Yield a More Representative Presidency?
+
+
+# Introduction 
+
+Firstly, we need to download the code [here](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/IG0UN2) and [here](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/42MVDX). 
+
+
+
+<details>
+  <summary>**Click here to see how the data was downloaded**</summary>
+```{r}
+library(tidyverse)
+library(readxl)
+library(readr)
+
+X1976_2022_house <- read_csv("1976-2022-house.csv")
+
+X1976_2020_president <- read_csv("1976-2020-president.csv")
+
+
+
+```
+</details>
+
+
+# Task 3: Exploration of Vote Count Data 
+
+## Which states have gained and lost the most seats in the US House of Representatives between 1976 and 2022?
+
+
+```{r}
+
+
+house_seats <- X1976_2022_house |>
+  filter(year %in% c(1976, 2022)) |>
+  group_by(year, state) |> 
+  summarize(seats=n_distinct(district))
+
+
+house_seats_spread <- house_seats |>
+  pivot_wider(names_from = year, values_from = seats) |>
+  mutate(difference = (`2022` - `1976`)) |>
+  filter(difference != 0)
+
+
+diff_seats <- house_seats_spread |>
+  select(state, difference)
+
+ggplot(diff_seats, aes(x = state, y = difference, fill = difference > 0)) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
+  scale_fill_manual(values = c("tomato", "springgreen2")) +
+  coord_flip() +
+  labs(title = "Each State's Gain/Loss of Seats in the US House of Representatives from 1976 - 2022", x = "State", y = "Difference of Seats") +
+  theme_minimal() +
+  theme(plot.title = element_text(size = 10),
+        axis.text.y = element_text(size = 8),
+        plot.margin = margin(3, 3, 3))
+
+
+
+
+
+```
+
+
+
+
+
+```{r}
+
+fusion_voting <- X1976_2022_house |>
+  group_by(year, state, district, candidate) |>
+  summarize(total_votes = sum(candidatevotes), .groups = 'drop') |>
+  group_by(year, state, district) |>
+  filter(total_votes == max(total_votes)) |>
+  ungroup()
+
+colnames(fusion_voting)[colnames(fusion_voting) == "total_votes"] <- "total_fusion_votes"
+
+
+no_fusion_voting <- X1976_2022_house |>
+  filter(party %in% c("REPUBLICAN", "DEMOCRAT")) |>
+  group_by(year, state, district, candidate) |>
+  summarize(total_votes = sum(candidatevotes), .groups = 'drop') |>
+  group_by(year, state, district) |>
+  filter(total_votes == max(total_votes)) |>
+  ungroup()
+
+house_voting <- left_join(fusion_voting, no_fusion_voting, by = (c("state","district")))
+
+
+house_voting <- fusion_voting |>
+  left_join(no_fusion_voting, by = c("year", "state", "district")) |>
+  mutate(difference = (`total_fusion_votes` - `total_votes`)) |>
+  filter(difference != 0) |>
+  arrange(desc(difference))
+
+
+library(DT)
+datatable(house_voting) 
+
+instances <- nrow(house_voting)
+print(instances)
+
+
+```
+
+
+
+
+
+```{r}
+
+house_candidates <- X1976_2022_house |>
+  filter(party %in% c("REPUBLICAN", "DEMOCRAT")) |>
+  group_by(year, party) |>
+  summarize(total_votes = sum(candidatevotes), .groups = 'drop') |>
+  group_by(year, party)
+
+
+president_candidates <- X1976_2020_president |>
+  filter(party_detailed %in% c("REPUBLICAN", "DEMOCRAT")) |>
+  group_by(year, party_detailed) |>
+  summarize(total_votes = sum(candidatevotes), .groups = 'drop') |>
+  group_by(year, party_detailed)
+
+
+colnames(president_candidates)[colnames(president_candidates) == "party_detailed"] <- "party"
+
+colnames(president_candidates)[colnames(president_candidates) == "total_votes"] <- "president_votes"
+
+colnames(house_candidates)[colnames(house_candidates) == "total_votes"] <- "house_votes"
+
+Vote_difference <- president_candidates |>
+  inner_join(house_candidates, by = c("year", "party")) |>
+  mutate(difference = (president_votes - house_votes))
+
+ggplot(Vote_difference, aes (x = year, y = difference, color = party)) + 
+  geom_point() +
+  geom_line(linewidth = .5) + 
+  scale_color_manual(values = c("DEMOCRAT" = "royalblue2", "REPUBLICAN" = "firebrick2")) +
+  labs(title = "Difference Between Presidential and House Votes Per Year", x = "Year", y = "Difference of Votes (President - House)") +
+  theme_minimal()
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
