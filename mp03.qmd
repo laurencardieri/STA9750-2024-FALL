@@ -35,308 +35,89 @@ Now, I must download all the shape files into R.
   <summary>**Click here to see how the data was downloaded into R**</summary>
 ```{r, eval=FALSE, echo=TRUE}
 
-zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts095.zip"
 
-zip95 <- "districts095.zip"
 
-download.file(zip_url, zip95, mode = "wb")
+download.file("https://cdmaps.polisci.ucla.edu/shp/districts097.zip", 
+              destfile = "districts097.zip" , mode='wb')
+unzip("districts097.zip", exdir = ".")
+file.remove("districts097.zip")
+district097 <- st_read("districtShapes/districts097.shp")
 
-zip95_contents <- unzip(zip95, list = TRUE)
+download.file("https://cdmaps.polisci.ucla.edu/shp/districts098.zip", 
+              destfile = "districts098.zip" , mode='wb')
+unzip("districts098.zip", exdir = ".")
+file.remove("districts098.zip")
+district098 <- st_read("districtShapes/districts098.shp")
 
-print(zip95_contents)
 
-district95 <- "districtShapes/districts095.shp"
+download.file("https://cdmaps.polisci.ucla.edu/shp/districts101.zip", 
+              destfile = "districts101.zip" , mode='wb')
+unzip("districts101.zip", exdir = ".")
+file.remove("districts101.zip")
+district101 <- st_read("districtShapes/districts101.shp")
 
-districts_folder <- "extracted_files"
 
-unzip(zip95, files = district95, exdir = districts_folder)
+download.file("https://cdmaps.polisci.ucla.edu/shp/districts102.zip", 
+              destfile = "districts102.zip" , mode='wb')
+unzip("districts102.zip", exdir = ".")
+file.remove("districts102.zip")
+district102 <- st_read("districtShapes/districts102.shp")
 
+download.file("https://cdmaps.polisci.ucla.edu/shp/districts103.zip", 
+              destfile = "districts103.zip" , mode='wb')
+unzip("districts103.zip", exdir = ".")
+file.remove("districts103.zip")
+district103 <- st_read("districtShapes/districts103.shp")
 
-zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts096.zip"
+download.file("https://cdmaps.polisci.ucla.edu/shp/districts106.zip", 
+              destfile = "districts106.zip" , mode='wb')
+unzip("districts106.zip", exdir = ".")
+file.remove("districts106.zip")
+district106 <- st_read("districtShapes/districts106.shp")
 
-zip96 <- "districts096.zip"
 
-download.file(zip_url, zip96, mode = "wb")
+download.file("https://cdmaps.polisci.ucla.edu/shp/districts108.zip", 
+              destfile = "districts108.zip" , mode='wb')
+unzip("districts108.zip", exdir = ".")
+file.remove("districts108.zip")
+district108 <- st_read("districtShapes/districts108.shp")
 
-zip96_contents <- unzip(zip96, list = TRUE)
 
-print(zip96_contents)
 
-district96 <- "districtShapes/districts096.shp"
+download.file("https://cdmaps.polisci.ucla.edu/shp/districts111.zip", 
+              destfile = "districts111.zip" , mode='wb')
+unzip("districts111.zip", exdir = ".")
+file.remove("districts111.zip")
+district111 <- st_read("districtShapes/districts111.shp")
 
-districts_folder <- "extracted_files"
 
-unzip(zip96, files = district96, exdir = districts_folder)
+download.file("https://cdmaps.polisci.ucla.edu/shp/districts112.zip", 
+              destfile = "districts112.zip" , mode='wb')
+unzip("districts112.zip", exdir = ".")
+file.remove("districts112.zip")
+district112 <- st_read("districtShapes/districts112.shp")
 
 
 
+download.file("https://cdmaps.polisci.ucla.edu/shp/districts106.zip", 
+              destfile = "districts106.zip" , mode='wb')
+unzip("districts106.zip", exdir = ".")
+file.remove("districts106.zip")
+district106 <- st_read("districtShapes/districts106.shp")
 
-zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts097.zip"
 
-zip97 <- "districts097.zip"
+download.file("https://www2.census.gov/geo/tiger/TIGER2020/CD/tl_2020_us_cd116.zip", 
+              destfile = "districts116.zip" , mode='wb')
+unzip("districts116.zip", exdir = ".")
+file.remove("districts116.zip")
+district116 <- st_read("tl_2020_us_cd116.shp")
 
-download.file(zip_url, zip97, mode = "wb")
 
-zip97_contents <- unzip(zip97, list = TRUE)
-
-print(zip97_contents)
-
-district97 <- "districtShapes/districts097.shp"
-
-districts_folder <- "extracted_files"
-
-unzip(zip97, files = district97, exdir = districts_folder)
-
-
-
-zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts098.zip"
-
-zip <- "districts098.zip"
-
-download.file(zip_url, zip, mode = "wb")
-
-zip_contents <- unzip(zip, list = TRUE)
-
-print(zip_contents)
-
-district98 <- "districtShapes/districts098.shp"
-
-districts_folder <- "extracted_files"
-
-unzip(zip, files = district98, exdir = districts_folder)
-
-
-
-
-zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts099.zip"
-
-zip <- "districts099.zip"
-
-download.file(zip_url, zip, mode = "wb")
-
-zip_contents <- unzip(zip, list = TRUE)
-
-print(zip_contents)
-
-district99 <- "districtShapes/districts099.shp"
-
-districts_folder <- "extracted_files"
-
-unzip(zip, files = district99, exdir = districts_folder)
-
-
-
-zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts100.zip"
-
-zip <- "districts100.zip"
-
-download.file(zip_url, zip, mode = "wb")
-
-zip_contents <- unzip(zip, list = TRUE)
-
-print(zip_contents)
-
-district100 <- "districtShapes/districts100.shp"
-
-districts_folder <- "extracted_files"
-
-unzip(zip, files = district100, exdir = districts_folder)
-
-
-
-zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts101.zip"
-
-zip <- "districts101.zip"
-
-download.file(zip_url, zip, mode = "wb")
-
-zip_contents <- unzip(zip, list = TRUE)
-
-print(zip_contents)
-
-district101 <- "districtShapes/districts101.shp"
-
-districts_folder <- "extracted_files"
-
-unzip(zip, files = district101, exdir = districts_folder)
-
-
-zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts102.zip"
-
-zip <- "districts102.zip"
-
-download.file(zip_url, zip, mode = "wb")
-
-zip_contents <- unzip(zip, list = TRUE)
-
-print(zip_contents)
-
-district102 <- "districtShapes/districts102.shp"
-
-districts_folder <- "extracted_files"
-
-unzip(zip, files = district102, exdir = districts_folder)
-
-
-zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts103.zip"
-
-zip <- "districts103.zip"
-
-download.file(zip_url, zip, mode = "wb")
-
-zip_contents <- unzip(zip, list = TRUE)
-
-print(zip_contents)
-
-district103 <- "districtShapes/districts103.shp"
-
-districts_folder <- "extracted_files"
-
-unzip(zip, files = district103, exdir = districts_folder)
-
-
-
-zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts104.zip"
-
-zip <- "districts104.zip"
-
-download.file(zip_url, zip, mode = "wb")
-
-zip_contents <- unzip(zip, list = TRUE)
-
-print(zip_contents)
-
-district104 <- "districtShapes/districts104.shp"
-
-districts_folder <- "extracted_files"
-
-unzip(zip, files = district104, exdir = districts_folder)
-
-
-zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts105.zip"
-
-zip <- "districts105.zip"
-
-download.file(zip_url, zip, mode = "wb")
-
-zip_contents <- unzip(zip, list = TRUE)
-
-print(zip_contents)
-
-district105 <- "districtShapes/districts105.shp"
-
-districts_folder <- "extracted_files"
-
-unzip(zip, files = district105, exdir = districts_folder)
-
-
-
-zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts106.zip"
-
-zip <- "districts106.zip"
-
-download.file(zip_url, zip, mode = "wb")
-
-zip_contents <- unzip(zip, list = TRUE)
-
-print(zip_contents)
-
-district106 <- "districtShapes/districts106.shp"
-
-districts_folder <- "extracted_files"
-
-unzip(zip, files = district106, exdir = districts_folder)
-
-
-
-zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts107.zip"
-
-zip <- "districts107.zip"
-
-download.file(zip_url, zip, mode = "wb")
-
-zip_contents <- unzip(zip, list = TRUE)
-
-print(zip_contents)
-
-district107 <- "districtShapes/districts107.shp"
-
-districts_folder <- "extracted_files"
-
-unzip(zip, files = district107, exdir = districts_folder)
-
-
-
-
-zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts108.zip"
-
-zip <- "districts108.zip"
-
-download.file(zip_url, zip, mode = "wb")
-
-zip_contents <- unzip(zip, list = TRUE)
-
-print(zip_contents)
-
-district108 <- "districtShapes/districts108.shp"
-
-districts_folder <- "extracted_files"
-
-unzip(zip, files = district108, exdir = districts_folder)
-
-
-
-zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts109.zip"
-
-zip <- "districts109.zip"
-
-download.file(zip_url, zip, mode = "wb")
-
-zip_contents <- unzip(zip, list = TRUE)
-
-print(zip_contents)
-
-district109 <- "districtShapes/districts109.shp"
-
-districts_folder <- "extracted_files"
-
-unzip(zip, files = district109, exdir = districts_folder)
-
-
-zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts112.zip"
-
-zip <- "districts112.zip"
-
-download.file(zip_url, zip, mode = "wb")
-
-zip_contents <- unzip(zip, list = TRUE)
-
-print(zip_contents)
-
-district112 <- "districtShapes/districts112.shp"
-
-districts_folder <- "extracted_files"
-
-unzip(zip, files = district112, exdir = districts_folder)
-
-
-
-
-zip_url <- "https://cdmaps.polisci.ucla.edu/shp/districts113.zip"
-
-zip <- "districts113.zip"
-
-download.file(zip_url, zip, mode = "wb")
-
-zip_contents <- unzip(zip, list = TRUE)
-
-print(zip_contents)
-
-district113 <- "districtShapes/districts113.shp"
-
-districts_folder <- "extracted_files"
-
-unzip(zip, files = district113, exdir = districts_folder)
+download.file("https://www2.census.gov/geo/tiger/TIGER2016/CD/tl_2016_us_cd115.zip", 
+              destfile = "districts115.zip" , mode='wb')
+unzip("districts115.zip", exdir = ".")
+file.remove("districts115.zip")
+district115 <- st_read("tl_2016_us_cd115.shp")
 
 
 ```
@@ -648,8 +429,48 @@ print(USA2000Map)
 ## Advanced Chloropleth Visualization of Electoral College Results
 </div>
 
+Below is a faceted map of the presidential party winners per state from 1976 to 2020. 
+
+<details>
+  <summary>**Click here to see how the map was made**</summary>
+```{r}
+
+election_results <- X1976_2020_president |>
+  filter(party_simplified %in% c("DEMOCRAT", "REPUBLICAN")) |>
+  group_by(year, state) |>
+  summarize(
+    highest_votes = max(candidatevotes),
+    party = party_simplified[which.max(candidatevotes)]
+  )
+
+state_2020 <- s.sf |>
+  mutate(NAME = toupper(STATENAME))
+
+election_outcomes <- left_join(state_2020, election_results, join_by("NAME" == "state"))
 
 
+```
+</details>
+
+```{r}
+election_outcomes |>
+  st_shift_longitude() |>
+  ggplot(aes(geometry = geometry,
+             fill = party)) +
+  geom_sf() +
+  coord_sf(xlim = c(170, 300)) +
+  scale_fill_manual(name = "Party", values = c("DEMOCRAT" = "royalblue2", "REPUBLICAN" = "firebrick2")) +
+  theme_bw() +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()) +
+  labs(title = "Presidential Election Outcomes, 1976-2020") +
+  facet_wrap(~year)
+
+```
 
 
 
