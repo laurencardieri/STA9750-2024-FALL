@@ -561,9 +561,32 @@ print(Overtime)
 Here, we can see that both parties has experience a large difference in votes. However, the Republican Party has tended to experience a higher support for their President over the House seats, while the Democratic Party has experienced both sides. Oddly enough, from about the 1990s - 2000s, the parties switched in their favor, with the House Republicans running more votes than the president and the Democrat President running more votes than the house. 
 
 
+To automate zip file extraction. 
+
+<details>
+  <summary>**Click here to see how the data was downloaded into R**</summary>
+```{r, eval=FALSE, echo=TRUE}
+
+td <- tempdir(); 
+zip_contents <- unzip("district095", 
+                      exdir = td)
+    
+fname_shp <- zip_contents[grepl("shp$", zip_contents)]
+district095 <- read_sf(fname_shp)
 
 
+```
+</details>
 
+
+<div style="text-align: center;">
+## Chloropleth Visualization
+</div>
+
+Now, I will make a Chloropleth Visualization of the 2000 Presidential Election Electoral College Results. 
+
+<details>
+  <summary>**Click here to see how the map was made**</summary>
 ```{r}
 
 install.packages('plyr', repos = "http://cran.us.r-project.org")
@@ -585,38 +608,181 @@ president_2000 <- X1976_2020_president |>
   group_by(state) |>
   summarize(
     highest_votes = max(candidatevotes),
-    party = party_detailed[which.max(candidatevotes)]
+    party = party_simplified[which.max(candidatevotes)]
   )
 
 
-USA2000results <- s.sf |>
+Shape_2000 <- s.sf |>
   mutate(STATENAME = toupper(trimws(STATENAME))) |>
   left_join(president_2000, join_by(STATENAME == state)) 
+  
 
-USA2000Map <- ggplot(USA2000results, aes(geometry = geometry, fill = party),
-                     color = "black") +
+USA2000Map <- ggplot(Shape_2000, aes(geometry = geometry, fill = party),
+       color = "black") +
   geom_sf() + 
   scale_fill_manual(values = c("REPUBLICAN" = "firebrick2", "DEMOCRAT" = "royalblue2")) +
   theme_minimal() +
   coord_sf(xlim = c(-180, -50), ylim = c(10,80), expand = FALSE) +
   labs(title = "2000 Presidential Election Electoral College Results", fill = "Winning Party") 
 
+
+```
+</details>
+
+```{r}
 print(USA2000Map)
-
-
 
 ```
 
 
+<div style="text-align: center;">
+## Advanced Chloropleth Visualization of Electoral College Results
+</div>
 
 
 
 
 
 
+<div style="text-align: center;">
+## Comparing the Effects of the ECV Allocation Rules 
+</div>
+
+Though things have changed over time due to amendment, statue, and technology, the basic outline of allocation has remained the same: 
+
+
+-  Each state gets R + 2 electoral college votes, where R is the number of Representatives that state has in the US House of Representatives. In this mini-project, you can use the number of districts in a state to determine the number of congressional representatives (one per district).
+-  States can allocate those votes however they wish
+-  The president is the candidate who receives a majority of electoral college votes
+
+Notably, the Constitution sets no rules on how the electoral college votes for a particular state is allocated. In the past, states have: 
+
+
+- Direct allocation of ECVs by state legislature (no vote)
+- Allocation of all ECVs to winner of state-wide popular vote
+- Allocation of all ECVs to winner of nation-wide popular vote 2
+- Allocation of R ECVs to popular vote winner by congressional district + allocation of remaining 2 ECVs to the state-wide popular vote winner
+
+To complete this fact check, we will compare the effects of all of the Electoral College Votes allocation rules. 
+
+First, let's see who actually won each election throughout the years and how many electoral college votes they received to get this win.
+
+<details>
+  <summary>**Click here to see how the code was done**</summary>
+```{r}
+
+actual_results <- data.frame(
+  year = c(1976, 1980, 1984, 1988, 1992, 1996, 2000, 2004, 2008, 2012, 2016, 2020),
+  president = c("CARTER, JIMMY", "REAGAN, RONALD", "REAGAN, RONALD", "BUSH, GEORGE H.W.",
+                "CLINTON, BILL", "CLINTON, BILL", "BUSH, GEORGE W.", "BUSH, GEORGE W.",
+                "OBAMA, BARACK H.", "OBAMA, BARACK H.", "TRUMP, DONALD J.", "BIDEN, JOSEPH R. JR"),
+  party = c("DEMOCRAT", "REPUBLICAN", "REPUBLICAN", "REPUBLICAN", "DEMOCRAT", "DEMOCRAT",
+            "REPUBLICAN", "REPUBLICAN", "DEMOCRAT", "DEMOCRAT", "REPUBLICAN", "DEMOCRAT"),
+  Electoral_college_votes = c(297, 489, 525, 426, 370, 379, 271, 286, 365, 332, 304, 306))
+
+```
+</details>
+
+
+```{r}
+datatable(actual_results)
+
+```
+
+<div style="text-align: center;">
+**Allocation of all ECVs to winner of state-wide popular vote**
+</div>
+
+A state-wide approach would be that all electoral college votes of each state goes to whoever has the popular vote within that state. 
+
+<details>
+  <summary>**Click here to see how the code was done**</summary>
+```{r}
+
+state_ecv_win <- X1976_2022_house |>
+  group_by(year, state) |>
+  summarize(housereps = n_distinct(district)) |>
+  mutate(ecv = ifelse(state == "DISTRICT OF COLUMBIA", 3, housereps + 2)) |>
+  select(year, state, ecv)
+
+state_winner<- X1976_2020_president |>
+    group_by(year, state, candidate) |>
+    summarize(votes_total = sum(candidatevotes)) |>
+    ungroup() |>
+    group_by(year, state) |>
+    slice_max(order_by = votes_total, n = 1, with_ties = FALSE) 
+
+winner_takeall<- state_winner |>
+  left_join(state_ecv_win, join_by(year, state))
+
+country_winner <- winner_takeall |>
+  group_by(year, candidate) |>
+  summarize(ecv_total = sum(ecv)) |>
+  slice_max(order_by = ecv_total, n = 1, with_ties = FALSE) |>
+  ungroup()
+
+```
+</details>
+
+```{r}
+datatable(country_winner)
+```
+
+Using this method, we can see that some elections would have turned out differently than what happened. For example, Gerald Ford would have won over Jimmy Carter in 1976, George H. W. Bush would have won over Bill Clinton in 1992, Robert Dole would have won over Bill Clinton in 1996, John McCain would have won over Barack Obama in 2008, and Mitt Romney would have won over Barack Obama in 2012. That is **five** elections over the past 46 years that would have been swayed due to this type of voting system. 
+
+I do not believe that this way of voting is fair, as it does not properly represent the voters of the minority party in each state. That is, if 51% of voters vote for Party A, while 49% vote for Party B, all of Party B's voices will not be heard. That is a large majority of people who are being misheard. Thus, let's go to the next voting option. 
+
+<div style="text-align: center;">
+**Allocation of all ECVs to winner of nation-wide popular vote 2**
+</div>
+
+For the second option, this means that all Electoral College Votes are given to whoever wins the popular vote of the *whole* country. 
+
+
+<details>
+  <summary>**Click here to see how the code was done**</summary>
+```{r}
+
+
+state_winner2 <- X1976_2020_president |>
+  group_by(year, candidate) |>
+  summarize(votes_total = sum(candidatevotes)) |>
+  ungroup() |>
+  group_by(year) |>
+  slice_max(order_by = votes_total, n = 1, with_ties = FALSE) 
+
+winner_country_takeall<- state_winner2 |>
+  left_join(state_ecv_win, join_by(year))
+
+country_winner2 <- winner_country_takeall |>
+  group_by(year, candidate) |>
+  summarize(ecv_total = sum(ecv)) |>
+  slice_max(order_by = ecv_total, n = 1, with_ties = FALSE) |>
+  ungroup()
+
+
+datatable(country_winner2)
+```
+</details>
+
+
+```{r}
+datatable(country_winner2)
+```
 
 
 
+<div style="text-align: center;">
+**Allocation of R ECVs to popular vote winner by congressional district + allocation of remaining 2 ECVs to the state-wide popular vote winner**
+</div>
+
+
+
+
+
+To do so, you should first determine which allocation scheme you consider “fairest”. You should then see which schemes give different results, if they ever do. To make your fact check more compelling, select one election where the ECV scheme had the largest impact–if one exists–and explain how the results would have been different under a different ECV scheme.
+
+As you perform your analysis, you may assume that the District of Columbia has three ECVs, which are allocated to the Democratic candidate under all schemes except possibly national popular vote.
 
 
 

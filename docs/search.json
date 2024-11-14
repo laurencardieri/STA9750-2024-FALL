@@ -200,7 +200,7 @@
     "href": "mp03.html",
     "title": "Mini-Project #03: Do Proportional Electoral College Allocations Yield a More Representative Presidency?",
     "section": "",
-    "text": "In this project, I will be writing a political fact-check and investigate the claim that the US Electoral College systematically biases election results away from the popular vote.\nBefore we begin, we must download the code here. This code shows us how many votes each candidate got througout the years, for both the Presidential Elections and the House of Representatives Elections.\nNow, I must download all the shape files into R."
+    "text": "In this project, I will be writing a political fact-check and investigate the claim that the US Electoral College systematically biases election results away from the popular vote.\nBefore we begin, we must download the code here. This code shows us how many votes each candidate got througout the years, for both the Presidential Elections and the House of Representatives Elections.\nNow, I must download all the shape files into R.\nNow, I will make a Chloropleth Visualization of the 2000 Presidential Election Electoral College Results.\nprint(USA2000Map)\nThough things have changed over time due to amendment, statue, and technology, the basic outline of allocation has remained the same:\nNotably, the Constitution sets no rules on how the electoral college votes for a particular state is allocated. In the past, states have:\nTo complete this fact check, we will compare the effects of all of the Electoral College Votes allocation rules.\nFirst, let’s see who actually won each election throughout the years and how many electoral college votes they received to get this win.\ndatatable(actual_results)\nA state-wide approach would be that all electoral college votes of each state goes to whoever has the popular vote within that state.\ndatatable(country_winner)\nUsing this method, we can see that some elections would have turned out differently than what happened. For example, Gerald Ford would have won over Jimmy Carter in 1976, George H. W. Bush would have won over Bill Clinton in 1992, Robert Dole would have won over Bill Clinton in 1996, John McCain would have won over Barack Obama in 2008, and Mitt Romney would have won over Barack Obama in 2012. That is five elections over the past 46 years that would have been swayed due to this type of voting system.\nI do not believe that this way of voting is fair, as it does not properly represent the voters of the minority party in each state. That is, if 51% of voters vote for Party A, while 49% vote for Party B, all of Party B’s voices will not be heard. That is a large majority of people who are being misheard. Thus, let’s go to the next voting option.\nFor the second option, this means that all Electoral College Votes are given to whoever wins the popular vote of the whole country.\ndatatable(country_winner2)\nTo do so, you should first determine which allocation scheme you consider “fairest”. You should then see which schemes give different results, if they ever do. To make your fact check more compelling, select one election where the ECV scheme had the largest impact–if one exists–and explain how the results would have been different under a different ECV scheme.\nAs you perform your analysis, you may assume that the District of Columbia has three ECVs, which are allocated to the Democratic candidate under all schemes except possibly national popular vote."
   },
   {
     "objectID": "mp03.html#which-states-have-gained-and-lost-the-most-seats-in-the-us-house-of-representatives-between-1976-and-2022",
@@ -222,5 +222,26 @@
     "title": "Mini-Project #03: Do Proportional Electoral College Allocations Yield a More Representative Presidency?",
     "section": "Introduction",
     "text": "Introduction"
+  },
+  {
+    "objectID": "mp03.html#chloropleth-visualization",
+    "href": "mp03.html#chloropleth-visualization",
+    "title": "Mini-Project #03: Do Proportional Electoral College Allocations Yield a More Representative Presidency?",
+    "section": "Chloropleth Visualization",
+    "text": "Chloropleth Visualization"
+  },
+  {
+    "objectID": "mp03.html#advanced-chloropleth-visualization-of-electoral-college-results",
+    "href": "mp03.html#advanced-chloropleth-visualization-of-electoral-college-results",
+    "title": "Mini-Project #03: Do Proportional Electoral College Allocations Yield a More Representative Presidency?",
+    "section": "Advanced Chloropleth Visualization of Electoral College Results",
+    "text": "Advanced Chloropleth Visualization of Electoral College Results"
+  },
+  {
+    "objectID": "mp03.html#comparing-the-effects-of-the-ecv-allocation-rules",
+    "href": "mp03.html#comparing-the-effects-of-the-ecv-allocation-rules",
+    "title": "Mini-Project #03: Do Proportional Electoral College Allocations Yield a More Representative Presidency?",
+    "section": "Comparing the Effects of the ECV Allocation Rules",
+    "text": "Comparing the Effects of the ECV Allocation Rules"
   }
 ]
