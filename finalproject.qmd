@@ -1,0 +1,114 @@
+
+Library
+
+<details>
+  <summary>**Click here to see how the data was downloaded into R**</summary>
+```{r}
+
+
+install.packages('plyr', repos = "http://cran.us.r-project.org")
+
+options(repos = list(CRAN="http://cran.rstudio.com/"))
+
+
+install.packages("tidycensus")
+library(tidycensus)
+install.packages("tidyverse")
+library(tidyverse)
+library(dplyr)
+library(stringr)
+library(DT)
+
+census_api_key('fd444ca335bf9020633084575dbe45c1529be65f', install = TRUE, overwrite = TRUE)
+
+```
+</details>
+
+Change of Variables 
+<details>
+  <summary>**Click here to see how the data was downloaded into R**</summary>
+```{r}
+
+vars_2018 <- load_variables(2018, "acs1", cache = TRUE)
+
+var_map <- c(
+  "B02001_001" = "Estimated Total",
+  "B02001_002" = "White Alone", 
+  "B02001_003" = "Black or African American Alone", 
+  "B02001_004" = "American Indian and Alaska Native Alone",
+  "B02001_005" = "Asian Alone", 
+  "B02001_006" = "Native Hawaiian and other Pacific Islander Alone",
+  "B02001_007" = "Some Other Race", 
+  "B02001_008" = "2 or more races"
+)
+
+```
+</details>
+
+Population Report for 2018, based on Races
+
+<details>
+  <summary>**Click here to see how the data was downloaded into R**</summary>
+```{r}
+
+population_1901_2018 <- get_acs(
+  geography = "county",
+  variables = c("B02001_001", "B02001_002", "B02001_003", "B02001_004", "B02001_005", "B02001_006", "B02001_007", "B02001_008"),
+  year = 2018,
+  survey = "acs1"
+)
+
+population_1901_2018 <- population_1901_2018 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(race = variable)
+
+
+population_1901_2018 <- population_1901_2018 |>
+  mutate(race = var_map[race])
+
+
+
+```
+</details>
+
+
+```{r}
+
+datatable(population_1901_2018)
+
+```
+
+
+
+
+```{r}
+
+population_2018 <- population_1901_2018 |>
+  group_by(NAME) |>
+  summarize(race = paste(race, collapse = ", "),
+            estimate = paste(estimate, collapse = ", "),
+            .groups = "drop")
+
+wide_population2018 <- population_1901_2018 |>
+  pivot_wider(
+    names_from = race,
+    values_from = estimate,
+    values_fill = list(count = 0)
+  )
+  
+
+datatable(wide_population2018)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+

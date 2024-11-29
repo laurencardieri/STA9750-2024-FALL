@@ -243,5 +243,26 @@
     "title": "Mini-Project #03: Do Proportional Electoral College Allocations Yield a More Representative Presidency?",
     "section": "Comparing the Effects of the ECV Allocation Rules",
     "text": "Comparing the Effects of the ECV Allocation Rules"
+  },
+  {
+    "objectID": "finalproject.html",
+    "href": "finalproject.html",
+    "title": "STA 9750 2024 Submission Material",
+    "section": "",
+    "text": "Library\n\n\nClick here to see how the data was downloaded into R\n\n\ninstall.packages('plyr', repos = \"http://cran.us.r-project.org\")\n\nInstalling package into 'C:/Users/laure/AppData/Local/R/win-library/4.4'\n(as 'lib' is unspecified)\n\n\npackage 'plyr' successfully unpacked and MD5 sums checked\n\nThe downloaded binary packages are in\n    C:\\Users\\laure\\AppData\\Local\\Temp\\RtmpG6uTeo\\downloaded_packages\n\noptions(repos = list(CRAN=\"http://cran.rstudio.com/\"))\n\n\ninstall.packages(\"tidycensus\")\n\nWarning: package 'tidycensus' is in use and will not be installed\n\nlibrary(tidycensus)\ninstall.packages(\"tidyverse\")\n\nWarning: package 'tidyverse' is in use and will not be installed\n\nlibrary(tidyverse)\nlibrary(dplyr)\nlibrary(stringr)\nlibrary(DT)\n\ncensus_api_key('fd444ca335bf9020633084575dbe45c1529be65f', install = TRUE, overwrite = TRUE)\n\nYour original .Renviron will be backed up and stored in your R HOME directory if needed.\n\n\nYour API key has been stored in your .Renviron and can be accessed by Sys.getenv(\"CENSUS_API_KEY\"). \nTo use now, restart R or run `readRenviron(\"~/.Renviron\")`\n\n\n[1] \"fd444ca335bf9020633084575dbe45c1529be65f\"\n\n\n\nChange of Variables\n\n\nClick here to see how the data was downloaded into R\n\n\nvars_2018 &lt;- load_variables(2018, \"acs1\", cache = TRUE)\n\nvar_map &lt;- c(\n  \"B02001_001\" = \"Estimated Total\",\n  \"B02001_002\" = \"White Alone\", \n  \"B02001_003\" = \"Black or African American Alone\", \n  \"B02001_004\" = \"American Indian and Alaska Native Alone\",\n  \"B02001_005\" = \"Asian Alone\", \n  \"B02001_006\" = \"Native Hawaiian and other Pacific Islander Alone\",\n  \"B02001_007\" = \"Some Other Race\", \n  \"B02001_008\" = \"2 or more races\"\n)\n\n\nPopulation Report for 2018, based on Races\n\n\nClick here to see how the data was downloaded into R\n\n\npopulation_1901_2018 &lt;- get_acs(\n  geography = \"county\",\n  variables = c(\"B02001_001\", \"B02001_002\", \"B02001_003\", \"B02001_004\", \"B02001_005\", \"B02001_006\", \"B02001_007\", \"B02001_008\"),\n  year = 2018,\n  survey = \"acs1\"\n)\n\nGetting data from the 2018 1-year ACS\n\n\nThe 1-year ACS provides data for geographies with populations of 65,000 and greater.\n\npopulation_1901_2018 &lt;- population_1901_2018 |&gt;\n  filter(str_detect(NAME, regex(\"New York\", ignore_case = TRUE))) |&gt;\n  rename(race = variable)\n\n\npopulation_1901_2018 &lt;- population_1901_2018 |&gt;\n  mutate(race = var_map[race])\n\n\n\ndatatable(population_1901_2018)\n\n\n\n\n\n\npopulation_2018 &lt;- population_1901_2018 |&gt;\n  group_by(NAME) |&gt;\n  summarize(race = paste(race, collapse = \", \"),\n            estimate = paste(estimate, collapse = \", \"),\n            .groups = \"drop\")\n\nwide_population2018 &lt;- population_1901_2018 |&gt;\n  pivot_wider(\n    names_from = race,\n    values_from = estimate,\n    values_fill = list(count = 0)\n  )\n  \n\ndatatable(wide_population2018)"
+  },
+  {
+    "objectID": "mp04.html#teachers-retirement-system-trs",
+    "href": "mp04.html#teachers-retirement-system-trs",
+    "title": "Mini-Project #04: Monte Carlo-Informed Selection of CUNY Retirement Plans",
+    "section": "Teachers Retirement System (TRS)",
+    "text": "Teachers Retirement System (TRS)"
+  },
+  {
+    "objectID": "mp04.html#optional-retirement-plan-orp",
+    "href": "mp04.html#optional-retirement-plan-orp",
+    "title": "Mini-Project #04: Monte Carlo-Informed Selection of CUNY Retirement Plans",
+    "section": "Optional Retirement Plan (ORP)",
+    "text": "Optional Retirement Plan (ORP)"
   }
 ]
