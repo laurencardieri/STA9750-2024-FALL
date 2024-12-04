@@ -77,7 +77,7 @@ The employer contribution is fixed at:
 - 10% for all years after 
 
 
-# Data Sources 
+# Data Acquisition  
 
 For this project, we will use data from two economic and financial data services. They are as follows: 
 
@@ -107,7 +107,7 @@ library(gtExtras)
 library(tidyr)
 library(ggplot2)
 library(stringr)
-
+library(DT)
 
 alpha_vantage_key <- "657RUGIZTAGDBDOF"
 fred_key <- "2220adc19cf9dd1075bb3d55cadc8031"
@@ -212,7 +212,7 @@ us_equity_data <- get_alpha_data("SPY", "TIME_SERIES_DAILY", alpha_vantage_key) 
 
 # International Stock Market Total Returns
 international_equity_data <- get_alpha_data("EFA", "TIME_SERIES_DAILY", alpha_vantage_key) |>
-  rename(intl_equity_return = monthly_return)
+  rename(international_equity_return = monthly_return)
 
 
 # 5. Bond Market Total Returns
@@ -227,12 +227,12 @@ bond_market_return <- get_fred_data("BAMLHYH0A3CMTRIV", fred_key) |>
 short_debt_data <- get_fred_data("DTB3", fred_key) |>
   mutate(month = format(date, "%Y-%m")) |>
   group_by(month) |>
-  summarize(short_term_rate = last(value), .groups = 'drop') |>
+  summarize(short_term_debt_rate = last(value), .groups = 'drop') |>
   mutate(date = as.Date(paste0(month, "-01"))) |>
-  select(date, short_term_rate)
+  select(date, short_term_debt_rate)
 
 # Merge All Data
-all_data <- list(
+data <- list(
   wage_growth,
   inflation,
   us_equity_data,
@@ -247,49 +247,74 @@ all_data <- list(
 ```
 </details>
 
+```{r}
+datatable(data)
+```
 
+# Initial Analysis 
 
 <details>
   <summary>**Click here to see how the data was manipulated**</summary>
 ```{r}
-correlation_matrix <- all_data %>%
-  select(-date) %>%
-  cor(use = "complete.obs")
 
-# 2. Summary Statistics Beautification
-summary_data <- all_data %>%
-  select(-date) %>%
-  summarize_all(list(mean = mean, var = var, sd = sd), na.rm = TRUE) %>%
-  pivot_longer(cols = everything(), names_to = "Variable_Stat", values_to = "Value") %>%
-  mutate(
-    Variable = str_extract(Variable_Stat, "^[^_]+"),
-    Stat = str_extract(Variable_Stat, "[^_]+$")
-  ) %>%
-  select(-Variable_Stat) %>%
-  pivot_wider(names_from = "Stat", values_from = "Value")
 
-summary_data_table <- summary_data %>%
-  gt() %>%
-  tab_header(
-    title = "Summary Statistics",
-    subtitle = "Mean, Variance, and Standard Deviation of Variables"
-  ) %>%
-  fmt_number(
-    columns = c(mean, var, sd),
-    decimals = 2
-  ) %>%
-  cols_label(
-    Variable = "Variable",
-    mean = "Mean",
-    var = "Variance",
-    sd = "Standard Deviation"
-  ) %>%
-  tab_options(
-    table.width = px(700),
-    column_labels.font.weight = "bold"
-  )
 ```
 </details>
+
+# Historical Comparison 
+
+To conduct this comparison, we must make some assumptions. Firstly, we will assume that we joined CUNY in the first month of the historical data, January 1, 2007, and retired in the final month of the data, October 1, 2024. Since the average salary in New York in 2007 was $58,094.40, we will assume a starting salary of $60,000. 
+
+
+### TRS: 
+
+Since 2007 to 2024 is only 17 years, we fall under the first bracket with the following equation: 1.75% * FAS * N, if N is equal to 20 years. 
+
+
+```{r}
+
+month_one_TRS <- (.0167 * 60000 * 17) / 12 
+
+print(month_one_TRS)
+
+```
+
+
+### ORP 
+
+```{r}
+
+overall_ORP <- ((60000 * .045 + 60000 * .08) * 7) + (((60000 * .045 + 60000 * .10) * 10))
+
+month_one_orp <- (overall_ORP * .04)/12
+
+print(month_one_orp)
+
+```
+
+
+# Fixed-Rate Analysis 
+
+
+
+
+
+
+# Monte Carlo Analysis
+
+
+
+
+
+
+# Data-Driven Decision Recommendation 
+
+
+
+
+
+
+
 
 
 
