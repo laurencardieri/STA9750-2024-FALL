@@ -5,7 +5,7 @@
 # Introduction
 
 
-Newly hired at CUNy, I have thirty days to choose between one of two retirement plans. These two plans can be viewed [here](https://www.cuny.edu/wp-content/uploads/sites/4/page-assets/about/administration/offices/hr/benefits/Benefits-Guide-Retirement-Plans-Final-HEO-and-ECP.pdf). This is an early choice for faculty and is important as it is essentially permanent and cannot be changed. In this project, I will use historical financial data and a bootstrap inference strategy to estimate the probability that one plan is better than the other. 
+Newly hired at CUNY, I have thirty days to choose between one of two retirement plans. These two plans can be viewed [here](https://www.cuny.edu/wp-content/uploads/sites/4/page-assets/about/administration/offices/hr/benefits/Benefits-Guide-Retirement-Plans-Final-HEO-and-ECP.pdf). This is an early choice for faculty and is important as it is essentially permanent and cannot be changed. In this project, I will use historical financial data and a bootstrap inference strategy to estimate the probability that one plan is better than the other. 
 
 The two plans are better explained below: 
 
@@ -88,41 +88,208 @@ To begin my Monte Carlo analysis, I will need historical data covering the follo
 
 - [Wage Growth](https://fred.stlouisfed.org/series/SMU36935610500000003)
 - [Inflation](https://fred.stlouisfed.org/series/CUURA101SA0)
-- [US Equity Market Total Returns](https://fred.stlouisfed.org/series/SP500)
-- [International Equity Market total returns](https://fred.stlouisfed.org/series/BAMLEMCBPITRIV)
-- Bond Market Total Returns
-- [Short-term debt returns](https://fred.stlouisfed.org/series/BOGZ1FL634022405Q) 
+- [US Equity Market Total Returns](https://www.alphavantage.co/documentation/)
+- [International Equity Market total returns](https://www.alphavantage.co/documentation/)
+- [Bond Market Total Returns](https://fred.stlouisfed.org/series/BAMLHYH0A3CMTRIV)
+- [Short-term debt returns](https://fred.stlouisfed.org/series/DTB3) 
+
+
+<details>
+  <summary>**Click here to see how to set up the pathway**</summary>
+```{r}
+
+library(httr2)
+library(jsonlite)
+library(tidyverse)
+library(gt)
+library(dplyr)
+library(gtExtras)
+library(tidyr)
+library(ggplot2)
+library(stringr)
+
+
+alpha_vantage_key <- "657RUGIZTAGDBDOF"
+fred_key <- "2220adc19cf9dd1075bb3d55cadc8031"
+
+
+get_alpha_data <- function(symbol, interval = "TIME_SERIES_DAILY", api_key) {
+  url <- paste0("https://www.alphavantage.co/query?function=", interval,
+                "&symbol=", symbol, "&apikey=", api_key, "&outputsize=full&datatype=json")
+  
+
+  response <- request(url) |> req_perform()
+  if (response |> resp_status() != 200) {
+    stop("Failed to retrieve Alpha Vantage data. HTTP Status: ", response |> resp_status())
+  }
+  
+  data <- fromJSON(response |> resp_body_string())
+  timeseries <- data[["Time Series (Daily)"]]
+  if (is.null(timeseries)) stop("Failed to retrieve Alpha Vantage data for symbol: ", symbol)
+  
+  df <- as.data.frame(do.call(rbind, timeseries))
+  df$date <- rownames(df)
+  rownames(df) <- NULL
+  
+  
+  df <- df |>
+    rename(close = `4. close`) |>
+    mutate(
+      date = as.Date(date),
+      close = as.numeric(close)
+    ) |>
+    arrange(date)
+  
+  df <- df |>
+    mutate(month = format(date, "%Y-%m")) |>
+    group_by(month) |>
+    summarize(
+      monthly_return = last(close) / first(close) - 1,
+      .groups = 'drop'
+    ) |>
+    mutate(date = as.Date(paste0(month, "-01"))) |>
+    select(date, monthly_return)
+  
+  return(df)
+}
+
+get_fred_data <- function(series_id, api_key) {
+  url <- paste0("https://api.stlouisfed.org/fred/series/observations?series_id=", 
+                series_id, "&api_key=", api_key, "&file_type=json")
+  
+
+  response <- request(url) |> req_perform()
+  if (response |> resp_status() != 200) {
+    stop("Failed to retrieve FRED data. HTTP Status: ", response |> resp_status())
+  }
+  
+ 
+  data <- fromJSON(response |> resp_body_string())
+  if (is.null(data$observations)) stop("No observations found for series: ", series_id)
+  
+
+  df <- as.data.frame(data$observations) |>
+    mutate(
+      date = as.Date(date),
+      value = suppressWarnings(as.numeric(value))
+    ) |>
+    filter(!is.na(value)) |>
+    select(date, value)
+  
+  return(df)
+}
+```
+</details>
+
 
 
 <details>
   <summary>**Click here to see how the data was downloaded into R**</summary>
 ```{r}
-library(readr)
-Estimated_mean_wages <- read_csv("mp4/Estimated_mean_wages.csv")
-View(Estimated_mean_wages)
+# Wage Growth 
+
+wage_growth <- get_fred_data("SMU36935610500000003", fred_key) |>
+  mutate(month = format(date, "%Y-%m")) |>
+  group_by(month) |>
+  summarize(wage_growth = last(value), .groups = 'drop') |>
+  mutate(date = as.Date(paste0(month, "-01"))) |>
+  select(date, wage_growth) |>
+  mutate(salary = wage_growth * 40 * 52)
 
 
-Hourly_Wages <- read_csv("mp4/Hourly_Wages.csv")
-View(Hourly_Wages)
-                
-ICE_BofA_US_High_Yield_Index_Total_Return_Index_Value <- read_csv("mp4/ICE BofA US High Yield Index Total Return Index Value.csv")
-View(ICE_BofA_US_High_Yield_Index_Total_Return_Index_Value)
+# Inflation  
+inflation <- get_fred_data("CUURA101SA0", fred_key) |>
+  mutate(month = format(date, "%Y-%m"))|>
+  group_by(month) |>
+  summarize(inflation = last(value), .groups = 'drop') |>
+  mutate(date = as.Date(paste0(month, "-01")))|>
+  select(date, inflation)
 
-money_market <- read_csv("mp4/money_market.csv")
-View(money_market)
+# U.S. Market Total Returns 
+us_equity_data <- get_alpha_data("SPY", "TIME_SERIES_DAILY", alpha_vantage_key) |>
+  rename(us_equity_return = monthly_return)
 
-nyc_inflation <- read_csv("mp4/nyc_inflation.csv")
-View(nyc_inflation)
 
-SP500 <- read_csv("mp4/SP500.csv")
-View(SP500)
+# International Stock Market Total Returns
+international_equity_data <- get_alpha_data("EFA", "TIME_SERIES_DAILY", alpha_vantage_key) |>
+  rename(intl_equity_return = monthly_return)
+
+
+# 5. Bond Market Total Returns
+bond_market_return <- get_fred_data("BAMLHYH0A3CMTRIV", fred_key) |>
+  mutate(month = format(date, "%Y-%m")) |>
+  group_by(month) |>
+  summarize(bond_return = last(value), .groups = 'drop') |>
+  mutate(date = as.Date(paste0(month, "-01"))) |>
+  select(date, bond_return)
+
+# Short-Term Debt Returns
+short_debt_data <- get_fred_data("DTB3", fred_key) |>
+  mutate(month = format(date, "%Y-%m")) |>
+  group_by(month) |>
+  summarize(short_term_rate = last(value), .groups = 'drop') |>
+  mutate(date = as.Date(paste0(month, "-01"))) |>
+  select(date, short_term_rate)
+
+# Merge All Data
+all_data <- list(
+  wage_growth,
+  inflation,
+  us_equity_data,
+  international_equity_data,
+  bond_market_return,
+  short_debt_data
+) |>
+  reduce(full_join, by = "date") |>
+  arrange(date) |>
+  drop_na()  
 
 ```
 </details>
 
 
 
+<details>
+  <summary>**Click here to see how the data was manipulated**</summary>
+```{r}
+correlation_matrix <- all_data %>%
+  select(-date) %>%
+  cor(use = "complete.obs")
 
+# 2. Summary Statistics Beautification
+summary_data <- all_data %>%
+  select(-date) %>%
+  summarize_all(list(mean = mean, var = var, sd = sd), na.rm = TRUE) %>%
+  pivot_longer(cols = everything(), names_to = "Variable_Stat", values_to = "Value") %>%
+  mutate(
+    Variable = str_extract(Variable_Stat, "^[^_]+"),
+    Stat = str_extract(Variable_Stat, "[^_]+$")
+  ) %>%
+  select(-Variable_Stat) %>%
+  pivot_wider(names_from = "Stat", values_from = "Value")
+
+summary_data_table <- summary_data %>%
+  gt() %>%
+  tab_header(
+    title = "Summary Statistics",
+    subtitle = "Mean, Variance, and Standard Deviation of Variables"
+  ) %>%
+  fmt_number(
+    columns = c(mean, var, sd),
+    decimals = 2
+  ) %>%
+  cols_label(
+    Variable = "Variable",
+    mean = "Mean",
+    var = "Variance",
+    sd = "Standard Deviation"
+  ) %>%
+  tab_options(
+    table.width = px(700),
+    column_labels.font.weight = "bold"
+  )
+```
+</details>
 
 
 
