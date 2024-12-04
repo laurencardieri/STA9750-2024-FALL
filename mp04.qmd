@@ -253,31 +253,148 @@ datatable(data)
 
 # Initial Analysis 
 
+First, I want to see the difference between certain aspects of our data. Firstly, I want to see the difference between the growth in hourly wage rate and inflation. This can help me anticipate how much the value of money will continue to be in the future compared to the price of goods. 
+
 <details>
-  <summary>**Click here to see how the data was manipulated**</summary>
+  <summary>**Click here to see how to make the line graph**</summary>
 ```{r}
 
+wage_vs_inflation <- list(
+  wage_growth,
+  inflation
+) |>
+  reduce(full_join, by = "date") |>
+  arrange(date) |>
+  drop_na() |>
+  select(-salary)
+
+Overtime <- ggplot(wage_vs_inflation, aes (x = date)) +
+  geom_line(aes(y = wage_growth, color = "Wage Growth Rate")) + 
+  geom_line(aes(y = inflation, color = "Inflation Growth Rate")) + 
+  scale_color_manual(values = c("Wage Growth Rate" = "chartreuse4", "Inflation Growth Rate" = "firebrick2")) +
+  labs(title = "The Growth Rate Between Wage Rate and Inflation Rate Overtime, 2007-2024", x = "Date", y = "Rate") +
+  theme_minimal()
+```
+</details>
+
+
+```{r}
+
+print(Overtime)
+
+```
+
+Below shows the difference between the United States Stockl Market Total Returns and the International Stock Market Total Returns. 
+<details>
+  <summary>**Click here to see how to make the line graph**</summary>
+```{r}
+US_vs_international <- list(
+  us_equity_data,
+  international_equity_data
+) |>
+  reduce(full_join, by = "date") |>
+  arrange(date) |>
+  drop_na() 
+
+Overtime2 <- ggplot(US_vs_international, aes (x = date)) +
+  geom_line(aes(y = us_equity_return, color = "US Stock Market Total Returns"), linewidth = 1) + 
+  geom_line(aes(y = international_equity_return, color = "International Stock Market Total Returns"), linewidth = 1) + 
+  scale_color_manual(values = c("US Stock Market Total Returns" = "darkseagreen", "International Stock Market Total Returns" = "darkorchid")) +
+  labs(title = "US Stock Market Total Returns vs International Stock Market Total Returns, 2007-2024", x = "Date", y = "Monthly Return") +
+  theme_minimal()
 
 ```
 </details>
+
+```{r}
+
+print(Overtime2)
+
+```
+
+The following graph shows the relationship between the Bond Market Total Returns and Short-Term Debt Returns. 
+
+<details>
+ <summary>**Click here to see how to make the line graph**</summary>
+```{r}
+
+Bondreturn_vs_shortdebt <- list(
+  bond_market_return,
+  short_debt_data
+) |>
+  reduce(full_join, by = "date") |>
+  arrange(date) |>
+  drop_na() 
+
+
+Overtime3 <- ggplot(Bondreturn_vs_shortdebt, aes (x = date)) +
+  geom_line(aes(y = bond_return, color = "Bond Market Total Return"), linewidth = 1) + 
+  geom_line(aes(y = short_term_debt_rate, color = "Short-Term Debt Returns"), linewidth = 1) + 
+  scale_color_manual(values = c("Bond Market Total Return" = "darkseagreen", "Short-Term Debt Returns" = "darkorchid")) +
+  labs(title = "Bond Market Total Return vs Short-Term Debt Returns, 2007-2024", x = "Date", y = "Monthly Returns") +
+  theme_minimal()
+
+```
+</details>
+
+```{r}
+
+print(Overtime3)
+
+```
+
 
 # Historical Comparison 
 
 To conduct this comparison, we must make some assumptions. Firstly, we will assume that we joined CUNY in the first month of the historical data, January 1, 2007, and retired in the final month of the data, October 1, 2024. Since the average salary in New York in 2007 was $58,094.40, we will assume a starting salary of $60,000. 
 
+```{r}
+January_salary <- wage_growth[format(wage_growth$date, "%m") == "01", ] |>
+  mutate(difference = salary - lag(salary))
+datatable(January_salary)
+
+```
+
+Here we can see the salary increase each January 1st from 2007 to 2024. To stay about average with the wage increase, I will assume that I get a raise every 5 years. The first raise will be $5,000, the second will be $7,000, and the final one will be $12,000. This will create the following salaries, per year: 
+
+- 2007 - 2011: $60,000
+- 2012 - 2016: $65,000
+- 2017 - 2021: $72,000
+- 2022 - 2024: $84,000
+
+Though these raises seem random, they are selected to put us near the New York salary average by 5-year increments. 
+
+Now, let's see how much money we put into the pension plan over our time as an employee. 
+
+```{r}
+
+years1_to_5 <- (.045 * 60000) * 5
+years6_to_10 <- (.045 * 65000) * 5
+years11_15 <- (.045 * 72000) * 5 
+years15_to_17 <- (.0575 * 84000) * 3
+
+total_paid <- (years1_to_5 + years6_to_10 + years11_15 + years15_to_17)
+
+print(total_paid)
+
+```
+
+Thus, over our career, we would have paid $58,815 worth of pension to the state. Now, let's see which option of retirement would be better for us to take. 
 
 ### TRS: 
 
 Since 2007 to 2024 is only 17 years, we fall under the first bracket with the following equation: 1.75% * FAS * N, if N is equal to 20 years. 
 
-
+Since we made $84,000 for our final three years, 2022, 2023, and 2024, our final average salary would be $84,000. 
 ```{r}
 
-month_one_TRS <- (.0167 * 60000 * 17) / 12 
+month_one_TRS <- (.0167 * 84000 * 17) / 12 
 
 print(month_one_TRS)
 
 ```
+
+Thus, our first month of retirement with this plan will leave us with $1,987.30. 
 
 
 ### ORP 
@@ -293,10 +410,22 @@ print(month_one_orp)
 ```
 
 
-# Fixed-Rate Analysis 
+# Long-Term Average Analysis
+
+We will assume that we pass away at 90 years old and that we retired at 65. That is 25 years of retirement. 
+
+### TRS: 
 
 
+```{r}
 
+total_pay_out <- (.0167 * 84000 * 17) * 25
+
+print(total_pay_out)
+
+```
+
+Thus, the total life-time pay out will be $596,190. 
 
 
 
