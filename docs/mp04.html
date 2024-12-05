@@ -499,17 +499,39 @@ Below shows the difference between the United States Stockl Market Total Returns
 </div>
 </div>
 </div>
+<details>
+<summary>
+<strong>Click here to see how the averages were calculated</strong>
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>averages <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Average =</span> <span class="fu">c</span>(<span class="st">"Wage_Average"</span>, <span class="st">"Inflation_Average"</span>, <span class="st">"US_Stock_Market_Return_Average"</span>, <span class="st">"International_Stock Market_Return_Average"</span>, <span class="st">"Bond_Market_Return_Average"</span>, <span class="st">"Short_Term_Debt_Return_Average"</span>),</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Value =</span> <span class="fu">c</span>(wage_average <span class="ot">&lt;-</span> <span class="fu">mean</span>(wage_growth<span class="sc">$</span>wage_growth), </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>            inflation_average <span class="ot">&lt;-</span> <span class="fu">mean</span>(inflation<span class="sc">$</span>inflation), </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>            US_Market_average <span class="ot">&lt;-</span> <span class="fu">mean</span>(us_equity_data<span class="sc">$</span>us_equity_return), </span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>            international_average <span class="ot">&lt;-</span> <span class="fu">mean</span>(international_equity_data<span class="sc">$</span>international_equity_return), </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>            bond_average <span class="ot">&lt;-</span> <span class="fu">mean</span>(bond_market_return<span class="sc">$</span>bond_return), </span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>            short_term_debt_average <span class="ot">&lt;-</span> <span class="fu">mean</span>(short_debt_data<span class="sc">$</span>short_term_debt_rate))) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">datatable</span>(averages)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-ab02a714900aa3c818b2" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-ab02a714900aa3c818b2">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6"],["Wage_Average","Inflation_Average","US_Stock_Market_Return_Average","International_Stock Market_Return_Average","Bond_Market_Return_Average","Short_Term_Debt_Return_Average"],[34.81644859813084,114.6510501858736,0.00411439049469483,null,276.5834421364985,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Average<\/th>\n      <th>Value<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Average","targets":1},{"name":"Value","targets":2}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
 </section>
 <section id="historical-comparison" class="level1">
 <h1>Historical Comparison</h1>
 <p>To conduct this comparison, we must make some assumptions. Firstly, we will assume that we joined CUNY in the first month of the historical data, January 1, 2007, and retired in the final month of the data, October 1, 2024. Since the average salary in New York in 2007 was $58,094.40, we will assume a starting salary of $60,000.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>January_salary <span class="ot">&lt;-</span> wage_growth[<span class="fu">format</span>(wage_growth<span class="sc">$</span>date, <span class="st">"%m"</span>) <span class="sc">==</span> <span class="st">"01"</span>, ] <span class="sc">|&gt;</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">difference =</span> salary <span class="sc">-</span> <span class="fu">lag</span>(salary))</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">datatable</span>(January_salary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>January_salary <span class="ot">&lt;-</span> wage_growth[<span class="fu">format</span>(wage_growth<span class="sc">$</span>date, <span class="st">"%m"</span>) <span class="sc">==</span> <span class="st">"01"</span>, ] <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">difference =</span> salary <span class="sc">-</span> <span class="fu">lag</span>(salary))</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">datatable</span>(January_salary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="datatables html-widget html-fill-item" id="htmlwidget-1421e9b4387d88fdd2d1" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-1421e9b4387d88fdd2d1">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18"],["2007-01-01","2008-01-01","2009-01-01","2010-01-01","2011-01-01","2012-01-01","2013-01-01","2014-01-01","2015-01-01","2016-01-01","2017-01-01","2018-01-01","2019-01-01","2020-01-01","2021-01-01","2022-01-01","2023-01-01","2024-01-01"],[27.93,30.19,30.15,30.46,30.95,31.68,32.14,32.17,33.6,33.86,35.12,35.81,37.39,38.3,40.3,41.86,42.43,42.5],[58094.4,62795.2,62712,63356.8,64376,65894.40000000001,66851.2,66913.60000000001,69888,70428.8,73049.59999999999,74484.8,77771.2,79664,83824,87068.8,88254.40000000001,88400],[null,4700.800000000003,-83.20000000000437,644.8000000000029,1019.199999999997,1518.400000000009,956.7999999999884,62.40000000000873,2974.399999999994,540.8000000000029,2620.799999999988,1435.200000000012,3286.399999999994,1892.800000000003,4160,3244.800000000003,1185.600000000006,145.5999999999913]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>date<\/th>\n      <th>wage_growth<\/th>\n      <th>salary<\/th>\n      <th>difference<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"date","targets":1},{"name":"wage_growth","targets":2},{"name":"salary","targets":3},{"name":"difference","targets":4}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-5f3dfe9ba0e3688c0ad9" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-5f3dfe9ba0e3688c0ad9">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18"],["2007-01-01","2008-01-01","2009-01-01","2010-01-01","2011-01-01","2012-01-01","2013-01-01","2014-01-01","2015-01-01","2016-01-01","2017-01-01","2018-01-01","2019-01-01","2020-01-01","2021-01-01","2022-01-01","2023-01-01","2024-01-01"],[27.93,30.19,30.15,30.46,30.95,31.68,32.14,32.17,33.6,33.86,35.12,35.81,37.39,38.3,40.3,41.86,42.43,42.5],[58094.4,62795.2,62712,63356.8,64376,65894.40000000001,66851.2,66913.60000000001,69888,70428.8,73049.59999999999,74484.8,77771.2,79664,83824,87068.8,88254.40000000001,88400],[null,4700.800000000003,-83.20000000000437,644.8000000000029,1019.199999999997,1518.400000000009,956.7999999999884,62.40000000000873,2974.399999999994,540.8000000000029,2620.799999999988,1435.200000000012,3286.399999999994,1892.800000000003,4160,3244.800000000003,1185.600000000006,145.5999999999913]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>date<\/th>\n      <th>wage_growth<\/th>\n      <th>salary<\/th>\n      <th>difference<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"date","targets":1},{"name":"wage_growth","targets":2},{"name":"salary","targets":3},{"name":"difference","targets":4}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <p>Here we can see the salary increase each January 1st from 2007 to 2024. To stay about average with the wage increase, I will assume that I get a raise every 5 years. The first raise will be $5,000, the second will be $7,000, and the final one will be $12,000. This will create the following salaries, per year:</p>
@@ -522,14 +544,14 @@ Below shows the difference between the United States Stockl Market Total Returns
 <p>Though these raises seem random, they are selected to put us near the New York salary average by 5-year increments.</p>
 <p>Now, let’s see how much money we put into the pension plan over our time as an employee.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>years1_to_5 <span class="ot">&lt;-</span> (.<span class="dv">045</span> <span class="sc">*</span> <span class="dv">60000</span>) <span class="sc">*</span> <span class="dv">5</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>years6_to_10 <span class="ot">&lt;-</span> (.<span class="dv">045</span> <span class="sc">*</span> <span class="dv">65000</span>) <span class="sc">*</span> <span class="dv">5</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>years11_15 <span class="ot">&lt;-</span> (.<span class="dv">045</span> <span class="sc">*</span> <span class="dv">72000</span>) <span class="sc">*</span> <span class="dv">5</span> </span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>years15_to_17 <span class="ot">&lt;-</span> (.<span class="dv">0575</span> <span class="sc">*</span> <span class="dv">84000</span>) <span class="sc">*</span> <span class="dv">3</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>total_paid <span class="ot">&lt;-</span> (years1_to_5 <span class="sc">+</span> years6_to_10 <span class="sc">+</span> years11_15 <span class="sc">+</span> years15_to_17)</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(total_paid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>years1_to_5 <span class="ot">&lt;-</span> (.<span class="dv">045</span> <span class="sc">*</span> <span class="dv">60000</span>) <span class="sc">*</span> <span class="dv">5</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>years6_to_10 <span class="ot">&lt;-</span> (.<span class="dv">045</span> <span class="sc">*</span> <span class="dv">65000</span>) <span class="sc">*</span> <span class="dv">5</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>years11_15 <span class="ot">&lt;-</span> (.<span class="dv">045</span> <span class="sc">*</span> <span class="dv">72000</span>) <span class="sc">*</span> <span class="dv">5</span> </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>years15_to_17 <span class="ot">&lt;-</span> (.<span class="dv">0575</span> <span class="sc">*</span> <span class="dv">84000</span>) <span class="sc">*</span> <span class="dv">3</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>total_paid <span class="ot">&lt;-</span> (years1_to_5 <span class="sc">+</span> years6_to_10 <span class="sc">+</span> years11_15 <span class="sc">+</span> years15_to_17)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(total_paid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 58815</code></pre>
 </div>
@@ -540,9 +562,9 @@ Below shows the difference between the United States Stockl Market Total Returns
 <p>Since 2007 to 2024 is only 17 years, we fall under the first bracket with the following equation: 1.75% * FAS * N, if N is equal to 20 years.</p>
 <p>Since we made $84,000 for our final three years, 2022, 2023, and 2024, our final average salary would be $84,000.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>month_one_TRS <span class="ot">&lt;-</span> (.<span class="dv">0167</span> <span class="sc">*</span> <span class="dv">84000</span> <span class="sc">*</span> <span class="dv">17</span>) <span class="sc">/</span> <span class="dv">12</span> </span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(month_one_TRS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>month_one_TRS <span class="ot">&lt;-</span> (.<span class="dv">0167</span> <span class="sc">*</span> <span class="dv">84000</span> <span class="sc">*</span> <span class="dv">17</span>) <span class="sc">/</span> <span class="dv">12</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(month_one_TRS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1987.3</code></pre>
 </div>
@@ -551,39 +573,211 @@ Below shows the difference between the United States Stockl Market Total Returns
 </section>
 <section id="orp" class="level3">
 <h3 class="anchored" data-anchor-id="orp">ORP</h3>
+<p>For this plan, it is recommended that you only take 4% out a year. Thus, once we get our total, we will divide it by four.</p>
+<details>
+<summary>
+<strong>Click here to see how the math was calculated</strong>
+</summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>overall_ORP <span class="ot">&lt;-</span> ((<span class="dv">60000</span> <span class="sc">*</span> .<span class="dv">045</span> <span class="sc">+</span> <span class="dv">60000</span> <span class="sc">*</span> .<span class="dv">08</span>) <span class="sc">*</span> <span class="dv">7</span>) <span class="sc">+</span> (((<span class="dv">60000</span> <span class="sc">*</span> .<span class="dv">045</span> <span class="sc">+</span> <span class="dv">60000</span> <span class="sc">*</span> .<span class="dv">10</span>) <span class="sc">*</span> <span class="dv">10</span>))</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>month_one_orp <span class="ot">&lt;-</span> (overall_ORP <span class="sc">*</span> .<span class="dv">04</span>)<span class="sc">/</span><span class="dv">12</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(month_one_orp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>overall_ORP <span class="ot">&lt;-</span> ((<span class="dv">60000</span> <span class="sc">*</span> .<span class="dv">045</span> <span class="sc">+</span> <span class="dv">60000</span> <span class="sc">*</span> .<span class="dv">08</span>) <span class="sc">*</span> <span class="dv">5</span>) <span class="sc">+</span> ((<span class="dv">65000</span> <span class="sc">*</span> .<span class="dv">045</span> <span class="sc">+</span> <span class="dv">65000</span> <span class="sc">*</span> .<span class="dv">08</span>) <span class="sc">*</span> <span class="dv">2</span>) <span class="sc">+</span> ((<span class="dv">65000</span> <span class="sc">*</span> .<span class="dv">045</span> <span class="sc">+</span> <span class="dv">60000</span> <span class="sc">*</span> .<span class="dv">1</span>) <span class="sc">*</span> <span class="dv">3</span>) <span class="sc">+</span>  (((<span class="dv">72000</span> <span class="sc">*</span> .<span class="dv">045</span> <span class="sc">+</span> <span class="dv">72000</span> <span class="sc">*</span> .<span class="dv">10</span>) <span class="sc">*</span> <span class="dv">5</span>) <span class="sc">+</span> ((<span class="dv">84000</span> <span class="sc">*</span> .<span class="dv">045</span> <span class="sc">+</span> <span class="dv">84000</span> <span class="sc">*</span> .<span class="dv">1</span>) <span class="sc">*</span> <span class="dv">2</span>))</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>Age43_to_49 <span class="ot">&lt;-</span> ((<span class="dv">60000</span> <span class="sc">*</span> .<span class="dv">045</span> <span class="sc">+</span> <span class="dv">60000</span> <span class="sc">*</span> .<span class="dv">08</span>) <span class="sc">*</span> <span class="dv">5</span>) <span class="sc">+</span> ((<span class="dv">65000</span> <span class="sc">*</span> .<span class="dv">045</span> <span class="sc">+</span> <span class="dv">65000</span> <span class="sc">*</span> .<span class="dv">08</span>) <span class="sc">*</span> <span class="dv">1</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>US_Equities_1 <span class="ot">&lt;-</span> Age43_to_49 <span class="sc">*</span> .<span class="dv">54</span> <span class="sc">*</span> <span class="fl">1.004</span> </span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>Int_Equities_1 <span class="ot">&lt;-</span> Age43_to_49 <span class="sc">*</span> .<span class="dv">36</span> <span class="sc">*</span> .<span class="dv">996</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>bond_1 <span class="ot">&lt;-</span> Age43_to_49 <span class="sc">*</span> .<span class="dv">1</span> <span class="sc">*</span> <span class="fl">1.77</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>total_1 <span class="ot">&lt;-</span> US_Equities_1 <span class="sc">+</span> Int_Equities_1 <span class="sc">+</span> bond_1 </span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>Age_50_to_60 <span class="ot">&lt;-</span> ((<span class="dv">65000</span> <span class="sc">*</span> .<span class="dv">045</span> <span class="sc">+</span> <span class="dv">65000</span> <span class="sc">*</span> .<span class="dv">08</span>) <span class="sc">*</span> <span class="dv">1</span>) <span class="sc">+</span> ((<span class="dv">65000</span> <span class="sc">*</span> .<span class="dv">045</span> <span class="sc">+</span> <span class="dv">60000</span> <span class="sc">*</span> .<span class="dv">1</span>) <span class="sc">*</span> <span class="dv">3</span>) <span class="sc">+</span>  (((<span class="dv">72000</span> <span class="sc">*</span> .<span class="dv">045</span> <span class="sc">+</span> <span class="dv">72000</span> <span class="sc">*</span> .<span class="dv">10</span>) <span class="sc">*</span> <span class="dv">5</span>) <span class="sc">+</span> ((<span class="dv">84000</span> <span class="sc">*</span> .<span class="dv">045</span> <span class="sc">+</span> <span class="dv">84000</span> <span class="sc">*</span> .<span class="dv">1</span>) <span class="sc">*</span> <span class="dv">2</span>))</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>US_Equities_2 <span class="ot">&lt;-</span> Age_50_to_60  <span class="sc">*</span> .<span class="dv">47</span> <span class="sc">*</span> <span class="fl">1.004</span> </span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>Int_Equities_2 <span class="ot">&lt;-</span> Age_50_to_60  <span class="sc">*</span> .<span class="dv">32</span> <span class="sc">*</span> .<span class="dv">996</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>bond_2 <span class="ot">&lt;-</span> Age_50_to_60  <span class="sc">*</span> .<span class="dv">21</span> <span class="sc">*</span> <span class="fl">1.77</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>total_2 <span class="ot">&lt;-</span> US_Equities_2 <span class="sc">+</span> Int_Equities_2 <span class="sc">+</span> bond_2 </span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>total_ORP <span class="ot">&lt;-</span> total_1 <span class="sc">+</span> total_2 </span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>month_one_orp <span class="ot">&lt;-</span> (total_ORP <span class="sc">*</span> .<span class="dv">04</span>)<span class="sc">/</span><span class="dv">12</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(month_one_orp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 465</code></pre>
+<pre><code>[1] 595.7364</code></pre>
 </div>
 </div>
+<p>To find the total amount, I used the average of each return to calculate the total built up overtime. Thus, the first monthly takeaway will be $595.74.</p>
 </section>
 </section>
 <section id="long-term-average-analysis" class="level1">
 <h1>Long-Term Average Analysis</h1>
-<p>We will assume that we pass away at 90 years old and that we retired at 65. That is 25 years of retirement.</p>
+<p>We will assume that we began working at 43, retired at 60, and pass away at 90 years old. That is 30 years of retirement.</p>
 <section id="trs-1" class="level3">
 <h3 class="anchored" data-anchor-id="trs-1">TRS:</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>total_pay_out <span class="ot">&lt;-</span> (.<span class="dv">0167</span> <span class="sc">*</span> <span class="dv">84000</span> <span class="sc">*</span> <span class="dv">17</span>) <span class="sc">*</span> <span class="dv">25</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(total_pay_out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>total_pay_out <span class="ot">&lt;-</span> (.<span class="dv">0167</span> <span class="sc">*</span> <span class="dv">84000</span> <span class="sc">*</span> <span class="dv">17</span>) <span class="sc">*</span> <span class="dv">30</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(total_pay_out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 596190</code></pre>
+<pre><code>[1] 715428</code></pre>
 </div>
 </div>
-<p>Thus, the total life-time pay out will be $596,190.</p>
+<p>Thus, the total life-time pay out will be $715,428.</p>
+</section>
+<section id="orp-1" class="level3">
+<h3 class="anchored" data-anchor-id="orp-1">ORP:</h3>
+<details>
+<summary>
+<strong>Click here to see how the math was calculated</strong>
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>V1 <span class="ot">&lt;-</span> ((<span class="fl">178720.9</span> <span class="sc">-</span> (<span class="fl">178720.9</span> <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>V2 <span class="ot">&lt;-</span> ((V1 <span class="sc">-</span> (V1 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>V3 <span class="ot">&lt;-</span> ((V2 <span class="sc">-</span> (V2 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>V4 <span class="ot">&lt;-</span> ((V3 <span class="sc">-</span> (V3 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>V5 <span class="ot">&lt;-</span> ((V4 <span class="sc">-</span> (V4 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>V6 <span class="ot">&lt;-</span> ((V5 <span class="sc">-</span> (V5 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>V7 <span class="ot">&lt;-</span> ((V6 <span class="sc">-</span> (V6 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>V8 <span class="ot">&lt;-</span> ((V7 <span class="sc">-</span> (V7 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>V9 <span class="ot">&lt;-</span> ((V8 <span class="sc">-</span> (V8 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>V10 <span class="ot">&lt;-</span> ((V9 <span class="sc">-</span> (V9 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>V11 <span class="ot">&lt;-</span> ((V10 <span class="sc">-</span> (V10 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>V12 <span class="ot">&lt;-</span> ((V11 <span class="sc">-</span> (V11 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>V13 <span class="ot">&lt;-</span> ((V12 <span class="sc">-</span> (V12 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>V14 <span class="ot">&lt;-</span> ((V13 <span class="sc">-</span> (V13 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>V15 <span class="ot">&lt;-</span> ((V14 <span class="sc">-</span> (V14 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>V16 <span class="ot">&lt;-</span> ((V15 <span class="sc">-</span> (V15 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>V17 <span class="ot">&lt;-</span> ((V16 <span class="sc">-</span> (V16 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>V18 <span class="ot">&lt;-</span> ((V17 <span class="sc">-</span> (V17 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>V19 <span class="ot">&lt;-</span> ((V18 <span class="sc">-</span> (V18 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>V20 <span class="ot">&lt;-</span> ((V19 <span class="sc">-</span> (V19 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>V21 <span class="ot">&lt;-</span> ((V20 <span class="sc">-</span> (V20 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>V22 <span class="ot">&lt;-</span> ((V21 <span class="sc">-</span> (V21 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>V23 <span class="ot">&lt;-</span> ((V22 <span class="sc">-</span> (V22 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>V24 <span class="ot">&lt;-</span> ((V23 <span class="sc">-</span> (V23 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>V25 <span class="ot">&lt;-</span> ((V24 <span class="sc">-</span> (V24 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>V26 <span class="ot">&lt;-</span> ((V25 <span class="sc">-</span> (V25 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>V27 <span class="ot">&lt;-</span> ((V26 <span class="sc">-</span> (V26 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>V28 <span class="ot">&lt;-</span> ((V27 <span class="sc">-</span> (V27 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>V29 <span class="ot">&lt;-</span> ((V28 <span class="sc">-</span> (V28 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>) </span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>V30 <span class="ot">&lt;-</span> ((V29 <span class="sc">-</span> (V29 <span class="sc">*</span> .<span class="dv">04</span>)) <span class="sc">*</span> <span class="fl">1.07</span>)</span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a>orp_calculation <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">Retirement_Year =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>),</span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">Value =</span> <span class="fu">c</span>(V1, V2, V3, V4, V5, V6, V7, V8, V9, V10, V11, V12, V13, V14, V15, V16, V17, V18, V19, V20, V21, V22, V23, V24, V25, V26, V27, V28, V29, V30))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">datatable</span>(orp_calculation)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-8d738dc88c4e2df9b88d" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-8d738dc88c4e2df9b88d">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30"],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],[177577.08624,176440.592888064,175311.3730935803,174189.3803057814,173074.5682718244,171966.8910348847,170866.3029322614,169772.7585934949,168686.2129384966,167606.6211756902,166533.9388001658,165468.1215918447,164409.1256136569,163356.9072097295,162311.4230035872,161272.6298963642,160240.4850650275,159214.9459606113,158195.9703064634,157183.516096502,156177.5415934844,155178.0053272861,154184.8660931915,153198.082950195,152217.6152193138,151243.4224819102,150275.4645780259,149313.7016047265,148358.0939144563,147408.6021134037]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Retirement_Year<\/th>\n      <th>Value<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Retirement_Year","targets":1},{"name":"Value","targets":2}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>In this ORP calculation, I do not run out of funds. Since I have an increase about 7% a year due to a good stock market, my money only goes down about $30,000. In this calculation, the monthly average ranges from $500 to $1000, which is much less than the TRS plan. This is due to the differing stock market returns.</p>
+<p>Thus, after passing away, you will still have $147,408.60 to give to your children.</p>
+<p>Looking at the long term benefits, I believe that it would be more beneficial to go for TRS plan, as you will receive more money in the long run.</p>
 </section>
 </section>
 <section id="monte-carlo-analysis" class="level1">
 <h1>Monte Carlo Analysis</h1>
+<details>
+<summary>
+<strong>Click here to see how the Monte Carlo was calculated</strong>
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>monte_carlo <span class="ot">&lt;-</span> <span class="cf">function</span>(num_simulations, </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>                        starting_balance, </span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>                        monthly_trs_pension, </span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>                        fixed_withdrawal_rate, </span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>                        inflation_rate, </span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>                        market_return_data) {</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">simulation_id =</span> <span class="fu">numeric</span>(), </span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">month =</span> <span class="fu">numeric</span>(), </span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">trs_income =</span> <span class="fu">numeric</span>(),</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>                    <span class="at">orp_income =</span> <span class="fu">numeric</span>(), </span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>                    <span class="at">orp_balance =</span> <span class="fu">numeric</span>())</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (sim <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>num_simulations) {</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set.seed</span>(sim)</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>    sampled_returns <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">us_equity_return =</span> <span class="fu">sample</span>(market_return_data<span class="sc">$</span>us_equity_return, </span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>                                <span class="at">size =</span> <span class="fu">nrow</span>(market_return_data), </span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>                                <span class="at">replace =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>    trs_income_stream <span class="ot">&lt;-</span> <span class="fu">simulate_trs</span>(</span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">monthly_pension =</span> monthly_trs_pension,</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">retirement_years =</span> retirement_years,</span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">inflation_rate =</span> inflation_rate)</span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>    orp_simulation <span class="ot">&lt;-</span> <span class="fu">simulate_orp</span>(</span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>      <span class="at">account_balance =</span> starting_balance,</span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">retirement_years =</span> retirement_years,</span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">fixed_withdrawal_rate =</span> fixed_withdrawal_rate,</span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>      <span class="at">market_return_rate =</span> sampled_returns<span class="sc">$</span>us_equity_return)</span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>    orp_income_stream <span class="ot">&lt;-</span> orp_simulation<span class="sc">$</span>withdrawal</span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>    orp_balance_stream <span class="ot">&lt;-</span> orp_simulation<span class="sc">$</span>balance</span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a>    results <span class="ot">&lt;-</span> results <span class="sc">|&gt;</span></span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a>      <span class="fu">bind_rows</span>(<span class="fu">tibble</span>(<span class="at">simulation_id =</span> sim,</span>
+<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a>                       <span class="at">month =</span> <span class="dv">1</span><span class="sc">:</span>(retirement_years <span class="sc">*</span> <span class="dv">12</span>),</span>
+<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a>                       <span class="at">trs_income =</span> trs_income_stream,</span>
+<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a>                       <span class="at">orp_income =</span> orp_income_stream,</span>
+<span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a>                       <span class="at">orp_balance =</span> orp_balance_stream))}</span>
+<span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(results)}</span>
+<span id="cb24-39"><a href="#cb24-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-40"><a href="#cb24-40" aria-hidden="true" tabindex="-1"></a>simulate_trs <span class="ot">&lt;-</span> <span class="cf">function</span>(monthly_pension, </span>
+<span id="cb24-41"><a href="#cb24-41" aria-hidden="true" tabindex="-1"></a>                         retirement_years, </span>
+<span id="cb24-42"><a href="#cb24-42" aria-hidden="true" tabindex="-1"></a>                         inflation_rate) {</span>
+<span id="cb24-43"><a href="#cb24-43" aria-hidden="true" tabindex="-1"></a>  pension <span class="ot">&lt;-</span> <span class="fu">numeric</span>(retirement_years <span class="sc">*</span> <span class="dv">12</span>)</span>
+<span id="cb24-44"><a href="#cb24-44" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(pension)) {</span>
+<span id="cb24-45"><a href="#cb24-45" aria-hidden="true" tabindex="-1"></a>    inflation_adjustment <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(i <span class="sc">%%</span> <span class="dv">12</span> <span class="sc">==</span> <span class="dv">1</span>, </span>
+<span id="cb24-46"><a href="#cb24-46" aria-hidden="true" tabindex="-1"></a>                                   (<span class="dv">1</span> <span class="sc">+</span> inflation_rate) <span class="sc">-</span> <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb24-47"><a href="#cb24-47" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (i <span class="sc">==</span> <span class="dv">1</span>) {pension[i] <span class="ot">&lt;-</span> monthly_pension} </span>
+<span id="cb24-48"><a href="#cb24-48" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> {pension[i] <span class="ot">&lt;-</span> pension[i <span class="sc">-</span> <span class="dv">1</span>] <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> inflation_adjustment)}}</span>
+<span id="cb24-49"><a href="#cb24-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(pension)}</span>
+<span id="cb24-50"><a href="#cb24-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-51"><a href="#cb24-51" aria-hidden="true" tabindex="-1"></a>simulate_orp <span class="ot">&lt;-</span> <span class="cf">function</span>(account_balance, </span>
+<span id="cb24-52"><a href="#cb24-52" aria-hidden="true" tabindex="-1"></a>                         retirement_years, </span>
+<span id="cb24-53"><a href="#cb24-53" aria-hidden="true" tabindex="-1"></a>                         fixed_withdrawal_rate, </span>
+<span id="cb24-54"><a href="#cb24-54" aria-hidden="true" tabindex="-1"></a>                         market_return_rate) {</span>
+<span id="cb24-55"><a href="#cb24-55" aria-hidden="true" tabindex="-1"></a>  withdrawal <span class="ot">&lt;-</span> <span class="fu">numeric</span>(retirement_years <span class="sc">*</span> <span class="dv">12</span>)</span>
+<span id="cb24-56"><a href="#cb24-56" aria-hidden="true" tabindex="-1"></a>  balance <span class="ot">&lt;-</span> <span class="fu">numeric</span>(retirement_years <span class="sc">*</span> <span class="dv">12</span>)</span>
+<span id="cb24-57"><a href="#cb24-57" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(retirement_years <span class="sc">*</span> <span class="dv">12</span>)) {</span>
+<span id="cb24-58"><a href="#cb24-58" aria-hidden="true" tabindex="-1"></a>    market_return <span class="ot">&lt;-</span> market_return_rate[i <span class="sc">%%</span> <span class="fu">length</span>(market_return_rate) <span class="sc">+</span> <span class="dv">1</span>]</span>
+<span id="cb24-59"><a href="#cb24-59" aria-hidden="true" tabindex="-1"></a>    account_balance <span class="ot">&lt;-</span> account_balance <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> market_return)</span>
+<span id="cb24-60"><a href="#cb24-60" aria-hidden="true" tabindex="-1"></a>    withdrawal_amount <span class="ot">&lt;-</span> account_balance <span class="sc">*</span> fixed_withdrawal_rate <span class="sc">/</span> <span class="dv">12</span></span>
+<span id="cb24-61"><a href="#cb24-61" aria-hidden="true" tabindex="-1"></a>    withdrawal[i] <span class="ot">&lt;-</span> <span class="fu">min</span>(account_balance, withdrawal_amount)</span>
+<span id="cb24-62"><a href="#cb24-62" aria-hidden="true" tabindex="-1"></a>    account_balance <span class="ot">&lt;-</span> account_balance <span class="sc">-</span> withdrawal[i]</span>
+<span id="cb24-63"><a href="#cb24-63" aria-hidden="true" tabindex="-1"></a>    balance[i] <span class="ot">&lt;-</span> account_balance}</span>
+<span id="cb24-64"><a href="#cb24-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">withdrawal =</span> withdrawal, <span class="at">balance =</span> balance))}</span>
+<span id="cb24-65"><a href="#cb24-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-66"><a href="#cb24-66" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)  </span>
+<span id="cb24-67"><a href="#cb24-67" aria-hidden="true" tabindex="-1"></a>num_simulations <span class="ot">&lt;-</span> <span class="dv">200</span></span>
+<span id="cb24-68"><a href="#cb24-68" aria-hidden="true" tabindex="-1"></a>starting_balance <span class="ot">&lt;-</span> <span class="dv">179000</span></span>
+<span id="cb24-69"><a href="#cb24-69" aria-hidden="true" tabindex="-1"></a>monthly_trs_pension <span class="ot">&lt;-</span> <span class="dv">1987</span></span>
+<span id="cb24-70"><a href="#cb24-70" aria-hidden="true" tabindex="-1"></a>fixed_withdrawal_rate <span class="ot">&lt;-</span> <span class="fl">0.04</span></span>
+<span id="cb24-71"><a href="#cb24-71" aria-hidden="true" tabindex="-1"></a>inflation_rate <span class="ot">&lt;-</span> <span class="fl">0.15</span></span>
+<span id="cb24-72"><a href="#cb24-72" aria-hidden="true" tabindex="-1"></a>retirement_years <span class="ot">&lt;-</span> <span class="dv">30</span></span>
+<span id="cb24-73"><a href="#cb24-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-74"><a href="#cb24-74" aria-hidden="true" tabindex="-1"></a>market_return_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb24-75"><a href="#cb24-75" aria-hidden="true" tabindex="-1"></a>  <span class="at">us_equity_return =</span> <span class="fu">rnorm</span>(<span class="dv">360</span>, <span class="at">mean =</span> <span class="fl">0.05</span> <span class="sc">/</span> <span class="dv">12</span>, <span class="at">sd =</span> <span class="fl">0.06</span>))</span>
+<span id="cb24-76"><a href="#cb24-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-77"><a href="#cb24-77" aria-hidden="true" tabindex="-1"></a>simulation_results <span class="ot">&lt;-</span> <span class="fu">monte_carlo</span> (</span>
+<span id="cb24-78"><a href="#cb24-78" aria-hidden="true" tabindex="-1"></a>  <span class="at">num_simulations =</span> num_simulations,</span>
+<span id="cb24-79"><a href="#cb24-79" aria-hidden="true" tabindex="-1"></a>  <span class="at">starting_balance =</span> starting_balance,</span>
+<span id="cb24-80"><a href="#cb24-80" aria-hidden="true" tabindex="-1"></a>  <span class="at">monthly_trs_pension =</span> monthly_trs_pension,</span>
+<span id="cb24-81"><a href="#cb24-81" aria-hidden="true" tabindex="-1"></a>  <span class="at">fixed_withdrawal_rate =</span> fixed_withdrawal_rate,</span>
+<span id="cb24-82"><a href="#cb24-82" aria-hidden="true" tabindex="-1"></a>  <span class="at">inflation_rate =</span> inflation_rate,</span>
+<span id="cb24-83"><a href="#cb24-83" aria-hidden="true" tabindex="-1"></a>  <span class="at">market_return_data =</span> market_return_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
 </section>
 <section id="data-driven-decision-recommendation" class="level1">
 <h1>Data-Driven Decision Recommendation</h1>
+<p>Based on the Data, I believe that it is better to go with the TRS option for retirement. Overall, you will get more bang for your buck than the ORP, and can inevitably save money for your family after you pass. However, if you do choose to go with the ORP plan, there is very little risk. Both options are viable.</p>
 
 
 </section>
