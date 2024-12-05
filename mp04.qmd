@@ -2,14 +2,17 @@
 # Mini-Project #04: Monte Carlo-Informed Selection of CUNY Retirement Plans
 </div>
 
-# Introduction
+![](https://www.marinerwealthadvisors.com/wp-content/uploads/2020/05/Retirement-Savings-750x500.jpg)
 
+<div style="text-align: center;">
+# Introduction
+</div>
 
 Newly hired at CUNY, I have thirty days to choose between one of two retirement plans. These two plans can be viewed [here](https://www.cuny.edu/wp-content/uploads/sites/4/page-assets/about/administration/offices/hr/benefits/Benefits-Guide-Retirement-Plans-Final-HEO-and-ECP.pdf). This is an early choice for faculty and is important as it is essentially permanent and cannot be changed. In this project, I will use historical financial data and a bootstrap inference strategy to estimate the probability that one plan is better than the other. 
 
 The two plans are better explained below: 
 
-## Teachers Retirement System (TRS)
+### Teachers Retirement System (TRS)
 
 The TRS plan is a traditional pension plan: after retirement, the employer continues to pay employees a fraction of their salary until death. This type of plan is called a “defined-benefit” because the retirement pay is fixed a priori and the employer takes the market risk. If the market under performs expectations, CUNY has to make up the gap; if the market over performs expectations, CUNY pockets the excess balance.
 
@@ -36,7 +39,7 @@ The benefit is increased annually by 50% of the CPI, rounded up to the nearest t
 The inflation adjustment is effective each September and the CPI used is the aggregate monthly CPI of the previous 12 months; so the September 2024 adjustment depends on the CPI from September 2023 to August 2024.
 
 
-## Optional Retirement Plan (ORP)
+### Optional Retirement Plan (ORP)
 
 The ORP plan is more similar to a 401(k) plan offered by a private employer. The employee and the employer both make contributions to a retirement account which is then invested in the employee’s choice of mutual funds. Those investments grow “tax-free” until the employee begins to withdraw them upon retirement. If the employee does not use up the funds, they are passed down to that employee’s spouse, children, or other heirs; if the employee uses the funds too quickly and zeros out the account balance, no additional retirement funds are available. This type of plan is called a defined-contribution plan as only the contributions to the retirement account are fixed by contract: the final balance depends on market factors outside of the employee’s control.
 
@@ -76,8 +79,9 @@ The employer contribution is fixed at:
 - 8% for the first seven years of employment at CUNY
 - 10% for all years after 
 
-
+<div style="text-align: center;">
 # Data Acquisition  
+</div>
 
 For this project, we will use data from two economic and financial data services. They are as follows: 
 
@@ -251,7 +255,9 @@ data <- list(
 datatable(data)
 ```
 
+<div style="text-align: center;">
 # Initial Analysis 
+</div>
 
 First, I want to see the difference between certain aspects of our data. Firstly, I want to see the difference between the growth in hourly wage rate and inflation. This can help me anticipate how much the value of money will continue to be in the future compared to the price of goods. 
 
@@ -299,8 +305,8 @@ US_vs_international <- list(
   drop_na() 
 
 Overtime2 <- ggplot(US_vs_international, aes (x = date)) +
-  geom_line(aes(y = us_equity_return, color = "US Stock Market Total Returns"), linewidth = 1) + 
-  geom_line(aes(y = international_equity_return, color = "International Stock Market Total Returns"), linewidth = 1) + 
+  geom_line(aes(y = us_equity_return, color = "US Stock Market Total Returns"), linewidth = .5) + 
+  geom_line(aes(y = international_equity_return, color = "International Stock Market Total Returns"), linewidth = .5) + 
   scale_color_manual(values = c("US Stock Market Total Returns" = "darkseagreen", "International Stock Market Total Returns" = "darkorchid")) +
   labs(title = "US Stock Market Total Returns vs International Stock Market Total Returns, 2007-2024", x = "Date", y = "Monthly Return") +
   theme_minimal()
@@ -370,8 +376,9 @@ datatable(averages)
 
 ```
 
-
+<div style="text-align: center;">
 # Historical Comparison 
+</div>
 
 To conduct this comparison, we must make some assumptions. Firstly, we will assume that we joined CUNY in the first month of the historical data, January 1, 2007, and retired in the final month of the data, October 1, 2024. Since the average salary in New York in 2007 was $58,094.40, we will assume a starting salary of $60,000. 
 
@@ -468,13 +475,15 @@ print(month_one_orp)
 
 To find the total amount, I used the average of each return to calculate the total built up overtime. Thus, the first monthly takeaway will be $595.74. 
 
-
+<div style="text-align: center;">
 # Long-Term Average Analysis
+</div>
 
 We will assume that we began working at 43, retired at 60, and pass away at 90 years old. That is 30 years of retirement. 
 
 ### TRS: 
 
+Let's see how much money we will get before we pass, if we were to use the TRS method. 
 
 ```{r}
 
@@ -490,6 +499,7 @@ Thus, the total life-time pay out will be $715,428.
 
 ### ORP: 
 
+Let's see how much money we will get before we pass, if we were to use the ORP method. 
 
 <details>
  <summary>**Click here to see how the math was calculated**</summary>
@@ -543,14 +553,14 @@ datatable(orp_calculation)
   
 
 ```
-In this ORP calculation, I do not run out of funds. Since I have an increase about 7% a year due to a good stock market, my money only goes down about $30,000. In this calculation, the monthly average ranges from $500 to $1000, which is much less than the TRS plan. This is due to the differing stock market returns. 
 
-Thus, after passing away, you will still have $147,408.60 to give to your children. 
+In this ORP calculation, I do not run out of funds. Since I have an increase about 7% a year due to a good stock market, my money only goes down about $30,000. In this calculation, the monthly average ranges from $500 to $1000, which is much less than the TRS plan. This is due to the differing stock market returns and the only 4% per year take home.  
 
-Looking at the long term benefits, I believe that it would be more beneficial to go for TRS plan, as you will receive more money in the long run. 
+Thus, after passing away, you will still have $147,408.60 to give to your family.  
 
-
+<div style="text-align: center;">
 # Monte Carlo Analysis
+</div>
 
 Below is the Monte Carlo Analysis. 
 <details>
@@ -669,12 +679,13 @@ We also can see that the probability of an ORP employee having a higher monthly 
 I would recommend more than a 4% withdrawal rate. Sticking with the 4%, there will be a lot of money left in your account after death and you will only be living on about $500 - $900 a month, which is unrealistic, especially in relation to the inflation rate increase. 
 
 
-
+<div style="text-align: center;">
 # Data-Driven Decision Recommendation 
+</div>
 
-Based on the Data, I believe that it is better to go with the TRS option for retirement. Overall, you will get more bang for your buck than the ORP, and can inevitably save money for your family after you pass. However, if you do choose to go with the ORP plan, there is very little risk. Both options are viable. 
+Based on the Data, I believe that it is better to go with the TRS option for retirement. Overall, you will get more bang for your buck than the ORP, and can inevitably save money for your family after you pass. In this time, you get almost $550,00 more dollars by just taking the fixed monthly amount. However, if you do choose to go with the ORP plan, there is very little risk, and you have the ability to make a lot of money if the stock market has major successes. Both options are viable. 
 
-I did my analysis for an employee of less than 20 years. However, I believe if you compute an employee that worked longer, the results might differ. Nevertheless, I still believe that the TRS option is better, as it is the more stable one of the two. 
+Also, I did my analysis for an employee of less than 20 years. I believe if you compute this for an employee that worked longer, the results might differ. Nevertheless, I still believe that the TRS option is better, as it is the more stable one of the two. 
 
 
 
