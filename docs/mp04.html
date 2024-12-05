@@ -240,6 +240,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><a href="https://fred.stlouisfed.org/series/BAMLHYH0A3CMTRIV">Bond Market Total Returns</a></li>
 <li><a href="https://fred.stlouisfed.org/series/DTB3">Short-term debt returns</a></li>
 </ul>
+First, we must set up the pathways to these sites to get the data.
 <details>
 <summary>
 <strong>Click here to see how to set up the pathway</strong>
@@ -327,6 +328,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </details>
+<p>Now, we must retrieve the data from these sites.</p>
 <details>
 <summary>
 <strong>Click here to see how the data was downloaded into R</strong>
@@ -434,7 +436,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-Below shows the difference between the United States Stockl Market Total Returns and the International Stock Market Total Returns.
+<p>Below shows the difference between the United States Stock Market Total Returns and the International Stock Market Total Returns. This can show me how well the United States’ stock market is doing compared to the rest of the world.</p>
 <details>
 <summary>
 <strong>Click here to see how to make the line graph</strong>
@@ -499,6 +501,7 @@ Below shows the difference between the United States Stockl Market Total Returns
 </div>
 </div>
 </div>
+<p>Now, I want to know the average monthly average of each of these data points. The following can be seen below.</p>
 <details>
 <summary>
 <strong>Click here to see how the averages were calculated</strong>
@@ -684,6 +687,7 @@ Below shows the difference between the United States Stockl Market Total Returns
 </section>
 <section id="monte-carlo-analysis" class="level1">
 <h1>Monte Carlo Analysis</h1>
+Below is the Monte Carlo Analysis.
 <details>
 <summary>
 <strong>Click here to see how the Monte Carlo was calculated</strong>
@@ -771,13 +775,38 @@ Below shows the difference between the United States Stockl Market Total Returns
 <span id="cb24-80"><a href="#cb24-80" aria-hidden="true" tabindex="-1"></a>  <span class="at">monthly_trs_pension =</span> monthly_trs_pension,</span>
 <span id="cb24-81"><a href="#cb24-81" aria-hidden="true" tabindex="-1"></a>  <span class="at">fixed_withdrawal_rate =</span> fixed_withdrawal_rate,</span>
 <span id="cb24-82"><a href="#cb24-82" aria-hidden="true" tabindex="-1"></a>  <span class="at">inflation_rate =</span> inflation_rate,</span>
-<span id="cb24-83"><a href="#cb24-83" aria-hidden="true" tabindex="-1"></a>  <span class="at">market_return_data =</span> market_return_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-83"><a href="#cb24-83" aria-hidden="true" tabindex="-1"></a>  <span class="at">market_return_data =</span> market_return_data)</span>
+<span id="cb24-84"><a href="#cb24-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-85"><a href="#cb24-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-86"><a href="#cb24-86" aria-hidden="true" tabindex="-1"></a>orp_depletion_probability <span class="ot">&lt;-</span> simulation_results <span class="sc">%&gt;%</span></span>
+<span id="cb24-87"><a href="#cb24-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(orp_balance <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb24-88"><a href="#cb24-88" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">prob =</span> <span class="fu">n_distinct</span>(simulation_id) <span class="sc">/</span> num_simulations) <span class="sc">%&gt;%</span></span>
+<span id="cb24-89"><a href="#cb24-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(prob)</span>
+<span id="cb24-90"><a href="#cb24-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-91"><a href="#cb24-91" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Probability of ORP funds depletion: "</span>, <span class="fu">round</span>(orp_depletion_probability <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">2</span>), <span class="st">"%</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Probability of ORP funds depletion:  0 %</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>orp_better_than_trs_probability <span class="ot">&lt;-</span> simulation_results <span class="sc">%&gt;%</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(simulation_id) <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">orp_better =</span> <span class="fu">mean</span>(orp_income <span class="sc">&gt;</span> trs_income)) <span class="sc">%&gt;%</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">prob =</span> <span class="fu">mean</span>(orp_better <span class="sc">&gt;</span> <span class="fl">0.5</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(prob) </span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Probability ORP income exceeds TRS income: "</span>, <span class="fu">round</span>(orp_better_than_trs_probability <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">2</span>), <span class="st">"%</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Probability ORP income exceeds TRS income:  0 %</code></pre>
+</div>
 </div>
 </details>
+<p>After completing this analysis, we can see that the probability of the ORP funds depleting before death is 0%. This matches up with our analysis from earlier, as we saw that by age 90, we still had about $140,000 left in our account.</p>
+<p>We also can see that the probability of an ORP employee having a higher monthly income than a TRS employee is only 2.5%, which is quite low.</p>
+<p>I would recommend more than a 4% withdrawal rate. Sticking with the 4%, there will be a lot of money left in your account after death and you will only be living on about $500 - $900 a month, which is unrealistic, especially in relation to the inflation rate increase.</p>
 </section>
 <section id="data-driven-decision-recommendation" class="level1">
 <h1>Data-Driven Decision Recommendation</h1>
 <p>Based on the Data, I believe that it is better to go with the TRS option for retirement. Overall, you will get more bang for your buck than the ORP, and can inevitably save money for your family after you pass. However, if you do choose to go with the ORP plan, there is very little risk. Both options are viable.</p>
+<p>I did my analysis for an employee of less than 20 years. However, I believe if you compute an employee that worked longer, the results might differ. Nevertheless, I still believe that the TRS option is better, as it is the more stable one of the two.</p>
 
 
 </section>

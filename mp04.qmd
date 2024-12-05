@@ -93,7 +93,7 @@ To begin my Monte Carlo analysis, I will need historical data covering the follo
 - [Bond Market Total Returns](https://fred.stlouisfed.org/series/BAMLHYH0A3CMTRIV)
 - [Short-term debt returns](https://fred.stlouisfed.org/series/DTB3) 
 
-
+First, we must set up the pathways to these sites to get the data. 
 <details>
   <summary>**Click here to see how to set up the pathway**</summary>
 ```{r}
@@ -181,7 +181,7 @@ get_fred_data <- function(series_id, api_key) {
 ```
 </details>
 
-
+Now, we must retrieve the data from these sites. 
 
 <details>
   <summary>**Click here to see how the data was downloaded into R**</summary>
@@ -284,7 +284,9 @@ print(Overtime)
 
 ```
 
-Below shows the difference between the United States Stockl Market Total Returns and the International Stock Market Total Returns. 
+Below shows the difference between the United States Stock Market Total Returns and the International Stock Market Total Returns. This can show me how well the United States' stock market is doing compared to the rest of the world.  
+
+
 <details>
   <summary>**Click here to see how to make the line graph**</summary>
 ```{r}
@@ -343,6 +345,7 @@ print(Overtime3)
 
 ```
 
+Now, I want to know the average monthly average of each of these data points. The following can be seen below. 
 
 <details>
  <summary>**Click here to see how the averages were calculated**</summary>
@@ -366,7 +369,6 @@ averages <- data.frame(
 datatable(averages)
 
 ```
-
 
 
 # Historical Comparison 
@@ -550,6 +552,7 @@ Looking at the long term benefits, I believe that it would be more beneficial to
 
 # Monte Carlo Analysis
 
+Below is the Monte Carlo Analysis. 
 <details>
  <summary>**Click here to see how the Monte Carlo was calculated**</summary>
 ```{r}
@@ -639,16 +642,39 @@ simulation_results <- monte_carlo (
   inflation_rate = inflation_rate,
   market_return_data = market_return_data)
 
+
+orp_depletion_probability <- simulation_results %>%
+  filter(orp_balance == 0) %>%
+  summarize(prob = n_distinct(simulation_id) / num_simulations) %>%
+  pull(prob)
+
+cat("Probability of ORP funds depletion: ", round(orp_depletion_probability * 100, 2), "%\n")
+
+
+orp_better_than_trs_probability <- simulation_results %>%
+  group_by(simulation_id) %>%
+  summarize(orp_better = mean(orp_income > trs_income)) %>%
+  summarize(prob = mean(orp_better > 0.5)) %>%
+  pull(prob) 
+
+cat("Probability ORP income exceeds TRS income: ", round(orp_better_than_trs_probability * 100, 2), "%\n")
 ```
 </details>
 
 
+After completing this analysis, we can see that the probability of the ORP funds depleting before death is 0%. This matches up with our analysis from earlier, as we saw that by age 90, we still had about $140,000 left in our account. 
+
+We also can see that the probability of an ORP employee having a higher monthly income than a TRS employee is only 2.5%, which is quite low. 
+
+I would recommend more than a 4% withdrawal rate. Sticking with the 4%, there will be a lot of money left in your account after death and you will only be living on about $500 - $900 a month, which is unrealistic, especially in relation to the inflation rate increase. 
 
 
 
 # Data-Driven Decision Recommendation 
 
 Based on the Data, I believe that it is better to go with the TRS option for retirement. Overall, you will get more bang for your buck than the ORP, and can inevitably save money for your family after you pass. However, if you do choose to go with the ORP plan, there is very little risk. Both options are viable. 
+
+I did my analysis for an employee of less than 20 years. However, I believe if you compute an employee that worked longer, the results might differ. Nevertheless, I still believe that the TRS option is better, as it is the more stable one of the two. 
 
 
 
