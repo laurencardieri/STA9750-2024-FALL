@@ -17,6 +17,10 @@ library(tidyverse)
 library(dplyr)
 library(stringr)
 library(DT)
+library(tigris)
+library(ggplot2)
+library(sf)
+
 
 census_api_key('fd444ca335bf9020633084575dbe45c1529be65f', install = TRUE, overwrite = TRUE)
 
@@ -25,7 +29,7 @@ census_api_key('fd444ca335bf9020633084575dbe45c1529be65f', install = TRUE, overw
 
 Change of Variables 
 <details>
-  <summary>**Click here to see how the variables were changed*</summary>
+  <summary>**Click here to see how the variables were changed**</summary>
 ```{r}
 
 vars_2018 <- load_variables(2018, "acs1", cache = TRUE)
@@ -44,7 +48,7 @@ var_map <- c(
 ```
 </details>
 
-Population Report for 2018 - 2023, based on Races
+Population Report for 2018 - 2023, based on Race
 
 <details>
   <summary>**Click here to see how the data was downloaded into R**</summary>
@@ -175,10 +179,29 @@ datatable(total_population_race)
 ```
 
 
+Get NY State map by county 
+
+<details>
+  <summary>**Click here to see how this was done**</summary>
+```{r}
+
+ny_counties <- counties(state = "NY", cb = TRUE)
+
+ny_counties_sf <- st_as_sf(ny_counties)
+
+```
+</details>
 
 
+```{r}
 
+ggplot(data = ny_counties_sf) +
+  geom_sf() +
+  theme_minimal() +
+  labs(title = "Counties of New York State",
+       caption = "Source: US Census Bureau")
 
+```
 
 
 
