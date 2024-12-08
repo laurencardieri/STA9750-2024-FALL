@@ -9,10 +9,7 @@ install.packages('plyr', repos = "http://cran.us.r-project.org")
 
 options(repos = list(CRAN="http://cran.rstudio.com/"))
 
-
-install.packages("tidycensus")
 library(tidycensus)
-install.packages("tidyverse")
 library(tidyverse)
 library(dplyr)
 library(stringr)
@@ -20,6 +17,9 @@ library(DT)
 library(tigris)
 library(ggplot2)
 library(sf)
+library(plotly)
+library(gganimate)
+library(viridis)
 
 
 census_api_key('fd444ca335bf9020633084575dbe45c1529be65f', install = TRUE, overwrite = TRUE)
@@ -206,6 +206,51 @@ ggplot(data = ny_counties_sf) +
 
 
 
+<details>
+  <summary>**Click here to see how this was done**</summary>
+```{r}
+
+# Only total population 
+
+estimated_total <- total_population_race |>
+  filter(grepl("Estimated Total", race))
+
+            
+estimated_total_long <- estimated_total |>
+  pivot_longer(cols = starts_with("y"),
+               names_to = "year",
+               values_to = "population") |>
+  mutate(year = as.numeric(gsub("y", "", year))) |>
+  select(-race, -NAME)
+
+
+NY_pop_long <- ny_counties_sf |>
+  left_join(estimated_total_long, by = "GEOID")
+            
+
+library(gganimate)
+library(gifski)
+library(magick)
+
+p <- ggplot(NY_pop_long) +
+  geom_sf(aes(fill = population), color = "white") +  
+  scale_fill_viridis(name = "population", option = "C", trans = "log") + 
+  theme_minimal() +
+  labs(title = "Population by County in New York ({frame_time})",  # Add the title and year
+       subtitle = "Year: {frame_time}",
+       caption = "Source: Your Dataset") +
+  theme(legend.position = "right") +
+  transition_time(year) +  
+  ease_aes('linear') 
+
+
+
+```
+</details>
+
+```{r}
+
+```
 
 
 
