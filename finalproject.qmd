@@ -602,6 +602,196 @@ datatable(total_mean_incomes_long)
 
 
 
+Occupation type by county (population)
+
+
+
+
+<details>
+  <summary>**Click here to see how the data was downloaded into R**</summary>
+```{r}
+var_map4 <- c(
+  "S2402_C01_001" = "Total Employed Full-Time",
+  "S2402_C01_002" = "Management, Business, Science, Arts", 
+  "S2402_C01_018" = "Service",
+  "S2402_C01_026" = "Sales and Office", 
+  "S2402_C01_029" = "Natural Resources, Construction, Maintenance",
+  "S2402_C01_033" = "Production, Transportation, Material Moving"
+)
+
+# Occupation 2018
+
+
+main_occupation_2018 <- get_acs(
+  geography = "county",
+  variables = c("S2402_C01_001", "S2402_C01_002", "S2402_C01_018", "S2402_C01_026", "S2402_C01_029", "S2402_C01_033"),
+  year = 2018,
+  survey = "acs1"
+)
+
+main_occupation_2018 <- main_occupation_2018 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(job_type = variable) |>
+  rename(y2018 = estimate) |>
+  select(-moe)
+
+
+main_occupation_2018 <- main_occupation_2018 |>
+  mutate(job_type = var_map4[job_type])
+
+
+# Occupation 2019
+
+
+main_occupation_2019 <- get_acs(
+  geography = "county",
+  variables = c("S2402_C01_001", "S2402_C01_002", "S2402_C01_018", "S2402_C01_026", "S2402_C01_029", "S2402_C01_033"),
+  year = 2019,
+  survey = "acs1"
+)
+
+main_occupation_2019 <- main_occupation_2019 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(job_type = variable) |>
+  rename(y2019 = estimate) |>
+  select(-moe)
+
+
+main_occupation_2019 <- main_occupation_2019 |>
+  mutate(job_type = var_map4[job_type])
+
+
+# Occupation 2021
+
+
+main_occupation_2021 <- get_acs(
+  geography = "county",
+  variables = c("S2402_C01_001", "S2402_C01_002", "S2402_C01_018", "S2402_C01_026", "S2402_C01_029", "S2402_C01_033"),
+  year = 2021,
+  survey = "acs1"
+)
+
+main_occupation_2021 <- main_occupation_2021 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(job_type = variable) |>
+  rename(y2021 = estimate) |>
+  select(-moe)
+
+
+main_occupation_2021 <- main_occupation_2021 |>
+  mutate(job_type = var_map4[job_type])
+
+# Occupation 2022
+
+
+main_occupation_2022 <- get_acs(
+  geography = "county",
+  variables = c("S2402_C01_001", "S2402_C01_002", "S2402_C01_018", "S2402_C01_026", "S2402_C01_029", "S2402_C01_033"),
+  year = 2022,
+  survey = "acs1"
+)
+
+main_occupation_2022 <- main_occupation_2022 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(job_type = variable) |>
+  rename(y2022 = estimate) |>
+  select(-moe)
+
+
+main_occupation_2022 <- main_occupation_2022 |>
+  mutate(job_type = var_map4[job_type])
+
+
+# Occupation 2023
+
+
+main_occupation_2023 <- get_acs(
+  geography = "county",
+  variables = c("S2402_C01_001", "S2402_C01_002", "S2402_C01_018", "S2402_C01_026", "S2402_C01_029", "S2402_C01_033"),
+  year = 2023,
+  survey = "acs1"
+)
+
+main_occupation_2023 <- main_occupation_2023 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(job_type = variable) |>
+  rename(y2023 = estimate) |>
+  select(-moe)
+
+
+main_occupation_2023 <- main_occupation_2023 |>
+  mutate(job_type = var_map4[job_type])
+
+
+
+```
+</details>
+
+
+Data table that shows all the job types population throughout the years 
+
+<details>
+  <summary>**Click here to see how this was done**</summary>
+```{r}
+
+# Join tables
+
+total_occupations <- main_occupation_2018 |>
+  left_join(select(main_occupation_2019, y2019, GEOID, job_type), by = c("GEOID", "job_type")) |>
+  left_join(select(main_occupation_2021, y2021, GEOID, job_type), by = c("GEOID", "job_type")) |>
+  left_join(select(main_occupation_2022, y2022, GEOID, job_type), by = c("GEOID", "job_type")) |>
+  left_join(select(main_occupation_2023, y2023, GEOID, job_type), by = c("GEOID", "job_type")) 
+
+```
+</details>
+
+
+```{r}
+
+datatable(total_occupations)
+
+```
+
+
+long version: 
+
+```{r}
+
+total_occupations_long <- total_occupations |>
+  pivot_longer(cols = starts_with("y"),
+               names_to = "year",
+               values_to = "population") |>
+  mutate(year = as.numeric(gsub("y", "", year))) 
+
+            
+
+```
+
+
+```{r}
+
+datatable(total_occupations_long)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

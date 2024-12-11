@@ -15,3 +15,6 @@ format:
   html:
     theme: Minty
     toc: false
+    
+execute: 
+  cache: true
