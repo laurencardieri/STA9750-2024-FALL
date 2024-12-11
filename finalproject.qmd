@@ -416,3 +416,199 @@ datatable(total_income_household_long)
 
 ```
 
+
+
+Mean Income per capita per race by county: 
+
+
+
+
+<details>
+  <summary>**Click here to see how the data was downloaded into R**</summary>
+```{r}
+
+
+# Mean Incomes per capita 
+
+var_map3 <- c(
+  "S1902_C03_001" = "All Household Income Mean",
+  "S1902_C03_020" = "White Alone", 
+  "S1902_C03_021" = "Black or African American Alone", 
+  "S1902_C03_022" = "American Indian and Alaska Native Alone",
+  "S1902_C03_023" = "Asian Alone", 
+  "S1902_C03_024" = "Native Hawaiian and other Pacific Islander Alone",
+  "S1902_C03_025" = "Some Other Race", 
+  "S1902_C03_026" = "2 or more races"
+)
+
+# Get 2018
+
+mean_income_2018 <- get_acs(
+  geography = "county",
+  variables = c("S1902_C03_001E", "S1902_C03_020E", "S1902_C03_021E", "S1902_C03_022E", "S1902_C03_023E", "S1902_C03_024E", "S1902_C03_025E", "S1902_C03_026E"),
+  year = 2018,
+  survey = "acs1"
+)
+
+mean_income_2018 <- mean_income_2018 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(race = variable) |>
+  rename(y2018 = estimate) |>
+  select(-moe)
+
+
+mean_income_2018 <- mean_income_2018 |>
+  mutate(race = var_map3[race])
+
+
+  
+
+
+# Get 2019
+
+mean_income_2019 <- get_acs(
+  geography = "county",
+  variables = c("S1902_C03_001E", "S1902_C03_020E", "S1902_C03_021E", "S1902_C03_022E", "S1902_C03_023E", "S1902_C03_024E", "S1902_C03_025E", "S1902_C03_026E"),
+  year = 2019,
+  survey = "acs1"
+)
+
+mean_income_2019 <- mean_income_2019 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(race = variable) |>
+  rename(y2019 = estimate) |>
+  select(-moe)
+
+
+mean_income_2019 <- mean_income_2019 |>
+  mutate(race = var_map3[race])
+
+
+
+# Get 2021
+
+mean_income_2021 <- get_acs(
+  geography = "county",
+  variables = c("S1902_C03_001E", "S1902_C03_020E", "S1902_C03_021E", "S1902_C03_022E", "S1902_C03_023E", "S1902_C03_024E", "S1902_C03_025E", "S1902_C03_026E"),
+  year = 2021,
+  survey = "acs1"
+)
+
+mean_income_2021 <- mean_income_2021 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(race = variable) |>
+  rename(y2021 = estimate) |>
+  select(-moe)
+
+
+mean_income_2021 <- mean_income_2021 |>
+  mutate(race = var_map3[race])
+
+
+# Get 2022
+
+mean_income_2022 <- get_acs(
+  geography = "county",
+  variables = c("S1902_C03_001E", "S1902_C03_020E", "S1902_C03_021E", "S1902_C03_022E", "S1902_C03_023E", "S1902_C03_024E", "S1902_C03_025E", "S1902_C03_026E"),
+  year = 2022,
+  survey = "acs1"
+)
+
+mean_income_2022 <- mean_income_2022 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(race = variable) |>
+  rename(y2022 = estimate) |>
+  select(-moe)
+
+
+mean_income_2022 <- mean_income_2022 |>
+  mutate(race = var_map3[race])
+
+
+
+# Get 2023
+
+mean_income_2023 <- get_acs(
+  geography = "county",
+  variables = c("S1902_C03_001E", "S1902_C03_020E", "S1902_C03_021E", "S1902_C03_022E", "S1902_C03_023E", "S1902_C03_024E", "S1902_C03_025E", "S1902_C03_026E"),
+  year = 2023,
+  survey = "acs1"
+)
+
+mean_income_2023 <- mean_income_2023 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(race = variable) |>
+  rename(y2023 = estimate) |>
+  select(-moe)
+
+
+mean_income_2023 <- mean_income_2023 |>
+  mutate(race = var_map3[race])
+
+
+```
+</details>
+
+
+Data table that shows all of the households from 2018-2023, by income and county. 
+
+<details>
+  <summary>**Click here to see how this was done**</summary>
+```{r}
+
+# Join tables
+
+total_mean_incomes <- mean_income_2018 |>
+  left_join(select(mean_income_2019, y2019, GEOID, race), by = c("GEOID", "race")) |>
+  left_join(select(mean_income_2021, y2021, GEOID, race), by = c("GEOID", "race")) |>
+  left_join(select(mean_income_2022, y2022, GEOID, race), by = c("GEOID", "race")) |>
+  left_join(select(mean_income_2023, y2023, GEOID, race), by = c("GEOID", "race")) 
+
+
+```
+</details>
+
+
+```{r}
+
+datatable(total_mean_incomes)
+
+```
+
+
+long version: 
+
+```{r}
+
+total_mean_incomes_long <- total_mean_incomes |>
+  pivot_longer(cols = starts_with("y"),
+               names_to = "year",
+               values_to = "mean_income") |>
+  mutate(year = as.numeric(gsub("y", "", year))) 
+            
+
+```
+
+
+```{r}
+
+datatable(total_mean_incomes_long)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
