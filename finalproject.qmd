@@ -20,6 +20,7 @@ library(sf)
 library(plotly)
 library(gganimate)
 library(viridis)
+library(scales)
 
 
 census_api_key('fd444ca335bf9020633084575dbe45c1529be65f', install = TRUE, overwrite = TRUE)
