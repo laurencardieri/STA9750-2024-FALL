@@ -829,6 +829,14 @@ For my third plot, I looked into the total loan types over time. I wanted to see
   <summary>**Click here to see how this was done**</summary>
 ```{r}
 
+total_mean_incomes_long22 <- total_mean_incomes_long |>
+  rename(county_code = GEOID) |>
+  select(-race) |>
+  mutate(year = as.numeric(year),
+         county_code = as.numeric(county_code)) |>
+  group_by(county_code, NAME, year) |>
+  summarize(mean_income = sum(mean_income, na.rm = TRUE)) 
+
 pop_loan <- combined_data |>
   select(activity_year, county_code, loan_type) |>
   group_by(county_code, activity_year) |>
@@ -840,30 +848,26 @@ pop_loan_count <- pop_loan |>
   summarize(count = n(), na.rm = TRUE, .groups = 'drop') |>
   rename(year = activity_year)
 
+
 count_loan_mean_income <- total_mean_incomes_long22 |>
   inner_join(pop_loan_count, by = c("county_code", "year"))
-
 
 top_loan <- count_loan_mean_income |>
   group_by(county_code, NAME, year) |>
   arrange(desc(count))
 
 
-total_pop_loan_count <- pop_loan_count |>
-  group_by(year, loan_type) |>
-  summarize(count = sum(count, na.rm = TRUE)) 
+sum_loans <- top_loan |>
+  group_by(loan_type, year) |>
+  summarize(total_count = sum(count), .groups = "drop")
 
-total_pop_loan_count <- pop_loan_count |>
-  group_by(year, loan_type) |>
-  summarize(count = sum(count, na.rm = TRUE)) 
-
-
-top_loan_plot <- ggplot(total_pop_loan_count, aes(x = year, y = count, color = loan_type, group = loan_type)) +
+top_loan_plot <- ggplot(sum_loans, aes(x = year, y = total_count, color = loan_type, group = loan_type)) +
   geom_line(size = 1) +
   geom_point(size = 3) +
-  labs(title = "Total Amount of Loan Types Across the NY Counties, 2018 - 2023", x = "Year", y = "Loan Type") +
-  theme_minimal() +
+  labs(title = "Total Amount of Loan Types Across the NY Counties, 2018 - 2023" , x = "Year", y = "Loan Type") +
+  theme_minimal() + 
   scale_y_continuous(labels = label_comma())
+
 
 
 ```
@@ -894,7 +898,11 @@ occupations_plot <- ggplot(occupations, aes(x = NAME, y = population, fill = job
   facet_wrap(~year) +
   coord_flip() + 
   labs(title = "Occupations by Population Per County, 2018 - 2023 (Excluding 2020)", y = "County", x = "Population") +
-  theme(legend.position = "bottom") +
+  theme(legend.position = "bottom", 
+        plot.title = element_text(size = 8),
+        axis.text.y = element_text(size = 4, vjust = 0, margin = margin(r = 1)),
+        axis.text.x = element_text(size = 3),
+        plot.margin = margin(3, 3, 3)) + 
   scale_fill_brewer(palette = "Set3") +
   scale_y_continuous(labels = label_comma()) 
 ```
