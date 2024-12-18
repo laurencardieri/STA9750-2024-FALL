@@ -319,13 +319,27 @@
     "href": "Team9Final.html#analytical-stage-two",
     "title": "Mortgages: What’s the Big Deal",
     "section": "Analytical Stage Two",
-    "text": "Analytical Stage Two"
+    "text": "Analytical Stage Two\nNext, we wanted to understand our data on a demographic level. Thus, we wanted to answer questions such as the following:\n\nWhat is the loan product types by race?\nWhat is the total loan amount by race?\n\nWhat is the average percentage interest rate by race?\n\nFrom these questions, the following graphs were created.\n\nLoan Product Types by Race\n\n\nWhat loan Type is most popular among race? Does one benefit more than others?\nMost popular loan = Conventional First Lien , White race benefits more.\n\n\n\nTotal Loan Amount by Race\n\n\nWho has the greatest loan $ by race? Does one benefit more than others?\nWhite, Asian, Black/African America, 2 or more minority race at bottom\n\n\n\nAverage Percentage Interst Rate by Race\n\n\nWhat are the interest rates by race? Does one benefit more than the others?\nAsian, White, Black/African American\n\n\n\nAverage Income Distribution by Race: Thousand $\n\n\nWhat are the average income distributions by race? Does one benefit more than the others?\nPre - 2 or more minority races highest average White, Asian, During White, Asian, Black/African American Post White, Asian, American Indian Alaskan Natives"
   },
   {
     "objectID": "Team9Final.html#analytical-stage-three",
     "href": "Team9Final.html#analytical-stage-three",
     "title": "Mortgages: What’s the Big Deal",
     "section": "Analytical Stage Three",
-    "text": "Analytical Stage Three"
+    "text": "Analytical Stage Three\n\nIncome and Mortgage Rates\n\n\nAre people with higher incomes more likely to get lower mortgage rates during the pandemic? Do higher incomes affect mortgage rates during the pandemic?\nThe graph shows that before the pandemic, high-income earners had slightly lower loan rates compared to other income groups, with lower-middle-income earners facing the highest rates. During the pandemic, rates dropped for all groups and became almost equal. Post-pandemic, rates for high, upper-middle, and low-income groups equalized, while lower-middle-income earners faced higher rates.\n\n\n\nLoan Approvals in New York State\n\n\nHow did loan applications and approval rates vary across Pre-Pandemic, Pandemic, and Post-Pandemic periods?\nThe plot shows that post-pandemic, loan applications decreased to levels lower than pre-pandemic. During the pandemic, applications significantly increased, likely due to lower interest rates, while approval rates remained consistent across all three periods.\n\n\n\nJobs and Mortgages Rates, NYC vs State\n\n\n\nDo certain jobs in a county affect mortgage rates during the pandemic?\n\nThe plots reveal that: Loan rates between NYC and the rest of the state showed no significant differences during all three periods: pre-pandemic, pandemic, and post-pandemic - likely due to a comparable distribution of job types. Among NYC’s five boroughs, Manhattan consistently had the lowest loan rates during all three periods. This may be attributed to a higher proportion of Management, Business, Science, and Arts jobs in Manhattan compared to other boroughs."
+  },
+  {
+    "objectID": "Team9Final.html#conclusion",
+    "href": "Team9Final.html#conclusion",
+    "title": "Mortgages: What’s the Big Deal",
+    "section": "Conclusion",
+    "text": "Conclusion\nThe counties with the higher mean incomes tend to have more total loans while the lower incomes have less, proving income does affect the amount of mortgage loans given. The data confirms that White race, followed by Asian and then black/African American have greater mortgage loan types, loan $ and better rates. However there seems to be demand shifts throughout the three stages. More loans were given out during covid and has been decreasing after Covid."
+  },
+  {
+    "objectID": "Team9Final.html#group-members",
+    "href": "Team9Final.html#group-members",
+    "title": "Mortgages: What’s the Big Deal",
+    "section": "Group Members",
+    "text": "Group Members"
   }
 ]
