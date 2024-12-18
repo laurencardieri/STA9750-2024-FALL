@@ -1,0 +1,125 @@
+<div style="text-align: center;">
+# Mortgages: What's the Big Deal 
+
+By Lauren Cardieri, Maria Jerez, and Ayrat Aymetov
+
+
+![](https://www.pymnts.com/wp-content/uploads/2018/11/home-mortgage-alt-lending-bank-loans.jpg)
+**How does county, income, and demographics affect mortgage loans and rates through the three stages of Covid (2018 - 2023)?**
+</div>
+--- 
+
+## Introduction 
+
+To combat rising inflation, it is no secret that mortgage rates have been climbing continuously, even surging to the highest it has been in decades. While the current rates are not the highest, as in 1981 the rate for a 30-year fixed mortgage hit around 18.45%, our current rate of 7% - 8% is the highest it has been in recent years. Following the 2008 recession, mortgage rates hit a historic low of around 3% - 4%, dude to the Federal Reserve taking aggressive steps to stimulate the economy. This creates the question as to what happened within the last 16 years to cause this rise? 
+
+We figured that the Covid-19 pandemic could have played a factor, but we were unsure if this was causation, *or* correlation that does not imply causation. Thus, this is the reasoning we picked the five years of data that we did. 
+
+However, we also wanted to go on a more in-depth level. This is when we decided to see if income and demographics truly play a role in the mortgage rate bestowed upon you by the bank. We wanted to see if there was a true bias or if everyone was on the same playing field to begin. Choosing the geographic scale we wanted to asses our data on was difficult at first, as we originally intended to analyse this data on a borough level. After consideration, we realized we would have more data to draw conclusions basing our research on a New York State County level, which is the route we inevitably decided to go down. 
+
+Finally, we decided our goal; we wanted to dive into the shift of mortgages Pre, During, and Post Pandemic based on the following three metrics: Geography, Demographics, and Economics. 
+
+## Data Sources 
+
+For our research, we decided on two major data sources to provide our information. They were the following: 
+
+1. [Consumer Finance Protection Bureau- HMDA Data](https://www.consumerfinance.gov/data-research/hmda/)
+
+The Home Mortgage Disclosure Act allows for the data collection from financial institutions that disclose mortgage loan information. From this site, we retrieved the following data: year, interest rate, loan term, loan type, loan purpose, state code, county code, and much more. 
+
+
+2. [United States Census Bureau](https://data.census.gov/profile/New_York?g=040XX00US36)
+
+The Census Bureau records data about people and its economy, and collects/records the data from a population. From this data, we retrieved data such as: income, employment, year, total income, industry, occupation, employment status, zip code, and much more. 
+
+We used two files to get the necessary data we needed:
+
+
+1. [S1901 Income in the Past 12 Months (in 2022 Inflation-Adjusted Dollars)](https://data.census.gov/table/ACSST5Y2022.S1901?q=Income%20by%20county&g=040XX00US36,36$0500000)
+
+
+     - Income by household type: Family, Married, Nonfamily, etc.
+     - Mean and Median income per household type
+     - Estimate of how many people per $50,000 increments 
+     
+     
+2. [S2401Occupation by Sex for the Civilian Employed Population 16 Years and Over](https://data.census.gov/table/ACSST5Y2022.S2401?q=Employment%20by%20county&g=040XX00US36,36$0500000)
+
+
+     - Total employment per county in New York
+     - Gives the population of each job type 
+
+## Analytical Stage One 
+
+To begin our analysis, we wanted to understand our data on a geographic level. Thus, we wanted to answer questions such as the following: 
+
+1. What is the mean income amount by county? 
+2. What is the total loan amount by county? 
+3. What are the main jobs/occupations by county? 
+
+With these three questions in mind, we began our analysis. From it, the following four graphs were created. 
+
+### Mean Income Amount by County 
+[![image.png](https://i.postimg.cc/L64DnSXT/image.png)](https://postimg.cc/JtgZ29jD)
+
+Above is a graph we derived that shows the mean income by county. The green bars represent the three highest counties and the red represents the three lowest. It is clear that the three top counties did not change overtime. For the converse, the lowest counties did change, but they remained consistent. 
+
+
+### Total Loan Amount by County 
+[![image.png](https://i.postimg.cc/T3FJ7Wc7/image.png)](https://postimg.cc/21dW3yMh)
+Above is a graph that shows the total loan amount by county. Similar to the prior graph, the green and red bars represent the same ideas. Here, we can see that beside the first year of 2018, the highest counties remained the same. On the other hand, while the lowest counties did not remain the same, they remained consistent. It is also important to notice that the counties that have the highest income from the last graph tend to have a higher total loan amount on this graph. The same can also be said about the lowest counties. 
+
+
+### Total Loan Types Overtime 
+[![image.png](https://i.postimg.cc/BQgqBTJ3/image.png)](https://postimg.cc/HVrDp7Jv)
+In this graph, the four types of loans are compared over the years, with lines representing the total from every county. Here, it can be seen that loan type 1 is *by far* the most frequent loan type of the four. We can also see that after the height of Covid struck in 2021, each loan type experienced a drop, with loan type one experiencing the most dramatic drop. 
+
+
+### Occupation by County 
+[![](https://i.postimg.cc/50v7qmdS/Occupations-graph.png)](https://postimg.cc/hzD1KTGX)
+
+Above is a graph we derived from our data to show occupation by county. Interestingly enough, we can see that the "Management, Business, Science, Arts" category *dominated* the four other categories in every single county. 
+
+### Overall Stage One Findings: 
+
+1. Does the county you live in affect how much money you make? 
+
+     Yes, the county you live in does affect how much you make, as some make progressively more than others
+     
+2. Does the mean income that a county makes correlate with the total amount of loans a county receives?
+
+     Yes, they do correlate. The counties that tended to have lower mean incomes, had less total loans. The ones that had a higher mean income, had more total loans. 
+     
+3. Did any change occur with mean income and total loans before, during, and after COVID? 
+
+     Mean income seemed to get higher after COVID in each county, while the Total Loans seemed to get lower. For both, the highest counties remained the same while the lowest counties varied throughout the years. 
+     
+4. Was there a loan type that prevailed over the others, and did the total loans given change overtime?
+
+     Yes, Loan Type 1, Conventional Loans, was the highest in each county by far. After 2021, each loan type experienced a dramatic drop.
+     
+5. Was there a job category that prevailed in each county overtime?
+
+     Yes, the Management, Business, Science, Art category prevailed in each county overtime by far.
+
+## Analytical Stage Two
+
+
+
+## Analytical Stage Three 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

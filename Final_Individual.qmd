@@ -1,0 +1,936 @@
+# STA 9750 Final Project Individual - Lauren
+
+<div style="text-align: center;">
+## Broker T's: Mortgages: What's the Big Deal?
+</div>
+
+
+### Preface
+
+In this project, my team decided to deep dive into the mortgage rates in New York pre, during, and post pandemic of the Covid-19 Virus. We aimed to see that if the county you live in, income you make, and demographics you identify with affect mortgage loans and rates through these stages. 
+
+To do this, we narrowed down our resources to two main data sources. 
+
+First, we decided to pull data from the [Consumer Finance Protection Bureau- HMDA Data](https://www.consumerfinance.gov/data-research/hmda/). From this data, we retrieved the loan type, loan amount, interest rate, and much more. Alex retrieved this data. 
+
+
+Second, we decided to pull data from the [United States Census Bureau](https://data.census.gov/). From this data, we retrieved mean income, population by race, job distribution, and much more. I was in charge of retrieving this data, and I will explain how I did so below. 
+
+
+### My Contribution 
+
+My contribution to this project began with retrieving data from the Census Bureau. The first thing I had to do was retrieve a personal key to access the database. Then, I downloaded the tidycensus library into my Rstudio, as well as the following libraries. 
+
+<details>
+  <summary>**Click here to see how the libraries were downloaded**</summary>
+```{r}
+
+
+install.packages('plyr', repos = "http://cran.us.r-project.org")
+
+options(repos = list(CRAN="http://cran.rstudio.com/"))
+
+library(tidycensus)
+library(tidyverse)
+library(dplyr)
+library(stringr)
+library(DT)
+library(tigris)
+library(ggplot2)
+library(sf)
+library(plotly)
+library(gganimate)
+library(viridis)
+library(scales)
+
+
+census_api_key('fd444ca335bf9020633084575dbe45c1529be65f', install = TRUE, overwrite = TRUE)
+
+# Combined_Data can be found on Ayrat's Repo and be readily downloaded. 
+
+combined_data <- readRDS("C:/Users/laure/OneDrive/Desktop/combined_data.rds")
+
+```
+</details>
+
+After this, I began to download the data in the following manners. 
+
+#### Downloading & Cleaning the Data
+
+First, to clean the data, I created a table to change the variables to make the data easier to read. 
+
+<details>
+  <summary>**Click here to see how the variables were changed**</summary>
+```{r}
+
+vars_2018 <- load_variables(2018, "acs1", cache = TRUE)
+
+var_map <- c(
+  "B02001_001" = "Estimated Total",
+  "B02001_002" = "White Alone", 
+  "B02001_003" = "Black or African American Alone", 
+  "B02001_004" = "American Indian and Alaska Native Alone",
+  "B02001_005" = "Asian Alone", 
+  "B02001_006" = "Native Hawaiian and other Pacific Islander Alone",
+  "B02001_007" = "Some Other Race", 
+  "B02001_008" = "2 or more races"
+)
+
+```
+</details>
+
+Then, I downloaded all of the data into my R, from 2018 - 2023. Notice that the data from 2020 is unavailable. This is due to the pandemic not giving reliable data, so the Census does not readily offer it in the same fashion. 
+
+
+<details>
+  <summary>**Click here to see how the population data was downloaded into R**</summary>
+```{r}
+# Getting 2018: 
+
+population_1901_2018 <- get_acs(
+  geography = "county",
+  variables = c("B02001_001", "B02001_002", "B02001_003", "B02001_004", "B02001_005", "B02001_006", "B02001_007", "B02001_008"),
+  year = 2018,
+  survey = "acs1"
+)
+
+population_1901_2018 <- population_1901_2018 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(race = variable) |>
+  rename(y2018 = estimate) |>
+  select(-moe)
+
+
+population_1901_2018 <- population_1901_2018 |>
+  mutate(race = var_map[race])
+
+# Getting 2019
+
+population_1901_2019 <- get_acs(
+  geography = "county",
+  variables = c("B02001_001", "B02001_002", "B02001_003", "B02001_004", "B02001_005", "B02001_006", "B02001_007", "B02001_008"),
+  year = 2019,
+  survey = "acs1"
+)
+
+population_1901_2019 <- population_1901_2019 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(race = variable) |>
+  rename(y2019 = estimate) |>
+  select(-moe)
+
+
+population_1901_2019 <- population_1901_2019 |>
+  mutate(race = var_map[race])
+
+
+# Getting 2021
+
+population_1901_2021 <- get_acs(
+  geography = "county",
+  variables = c("B02001_001", "B02001_002", "B02001_003", "B02001_004", "B02001_005", "B02001_006", "B02001_007", "B02001_008"),
+  year = 2021,
+  survey = "acs1"
+)
+
+population_1901_2021 <- population_1901_2021 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(race = variable) |>
+  rename(y2021 = estimate) |>
+  select(-moe)
+
+
+population_1901_2021 <- population_1901_2021 |>
+  mutate(race = var_map[race])
+
+
+# Getting 2022
+
+
+population_1901_2022 <- get_acs(
+  geography = "county",
+  variables = c("B02001_001", "B02001_002", "B02001_003", "B02001_004", "B02001_005", "B02001_006", "B02001_007", "B02001_008"),
+  year = 2022,
+  survey = "acs1"
+)
+
+population_1901_2022 <- population_1901_2022 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(race = variable) |>
+  rename(y2022 = estimate) |>
+  select(-moe)
+
+
+population_1901_2022 <- population_1901_2022 |>
+  mutate(race = var_map[race])
+
+
+# Getting 2023
+
+population_1901_2023 <- get_acs(
+  geography = "county",
+  variables = c("B02001_001", "B02001_002", "B02001_003", "B02001_004", "B02001_005", "B02001_006", "B02001_007", "B02001_008"),
+  year = 2023,
+  survey = "acs1"
+)
+
+population_1901_2023 <- population_1901_2023 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(race = variable) |>
+  rename(y2023 = estimate) |>
+  select(-moe)
+
+
+population_1901_2023 <- population_1901_2023 |>
+  mutate(race = var_map[race]) 
+
+```
+</details>
+
+
+Lastly, I decided to create a table to show all of the populations through the years, by race and county. I joined the table with the code below. 
+
+<details>
+  <summary>**Click here to see how the data was joined**</summary>
+```{r}
+
+total_population_race <- population_1901_2018 |>
+  left_join(select(population_1901_2019, y2019, GEOID, race), by = c("GEOID", "race")) |>
+  left_join(select(population_1901_2021, y2021, GEOID, race), by = c("GEOID", "race")) |>
+  left_join(select(population_1901_2022, y2022, GEOID, race), by = c("GEOID", "race")) |>
+  left_join(select(population_1901_2023, y2023, GEOID, race), by = c("GEOID", "race")) 
+            
+```
+</details>
+
+
+The data can be viewed below. 
+
+```{r}
+
+datatable(total_population_race)
+
+```
+
+Next, I downloaded the data that shows the mean household income. This can be seen below. 
+
+
+<details>
+  <summary>**Click here to see how the data was downloaded into R and cleaned**</summary>
+```{r}
+var_map2 <- c(
+  "S1901_C01_001" = "Total Households",
+  "S1901_C01_002" = "Income < $10,000", 
+  "S1901_C01_003" = "Income $10,000 - $14,999", 
+  "S1901_C01_004" = "Income $15,000 - $24,999",
+  "S1901_C01_005" = "Income $25,000 - $34,999", 
+  "S1901_C01_006" = "Income $35,000 - $49,999",
+  "S1901_C01_007" = "Income $50,000 - $74,999", 
+  "S1901_C01_008" = "Income $75,000 - $99,999",
+  "S1901_C01_009" = "Income $100,000 - $149,999",
+  "S1901_C01_010" = "Income $150,000 - $199,999",
+  "S1901_C01_011" = "Income > $200,000"
+)
+
+# Income 2018
+Income_2018 <- get_acs(
+  geography = "county",
+  variables = c("S1901_C01_001E", "S1901_C01_002E", "S1901_C01_003E", "S1901_C01_004E", "S1901_C01_005E", "S1901_C01_006E", "S1901_C01_007E", "S1901_C01_008E", "S1901_C01_009E", "S1901_C01_010E", "S1901_C01_011E"),
+  year = 2018,
+  survey = "acs1"
+)
+
+Income_2018 <- Income_2018 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(income = variable) |>
+  rename(y2018 = estimate) |>
+  select(-moe)
+
+
+Income_2018 <- Income_2018 |>
+  mutate(income = var_map2[income])
+
+# Income 2019
+
+Income_2019 <- get_acs(
+  geography = "county",
+  variables = c("S1901_C01_001E", "S1901_C01_002E", "S1901_C01_003E", "S1901_C01_004E", "S1901_C01_005E", "S1901_C01_006E", "S1901_C01_007E", "S1901_C01_008E", "S1901_C01_009E", "S1901_C01_010E", "S1901_C01_011E"),
+  year = 2019,
+  survey = "acs1"
+)
+
+Income_2019 <- Income_2019 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(income = variable) |>
+  rename(y2019 = estimate) |>
+  select(-moe)
+
+
+Income_2019 <- Income_2019 |>
+  mutate(income = var_map2[income])
+
+# Get 2021
+
+Income_2021 <- get_acs(
+  geography = "county",
+  variables = c("S1901_C01_001E", "S1901_C01_002E", "S1901_C01_003E", "S1901_C01_004E", "S1901_C01_005E", "S1901_C01_006E", "S1901_C01_007E", "S1901_C01_008E", "S1901_C01_009E", "S1901_C01_010E", "S1901_C01_011E"),
+  year = 2021,
+  survey = "acs1"
+)
+
+Income_2021 <- Income_2021 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(income = variable) |>
+  rename(y2021 = estimate) |>
+  select(-moe)
+
+
+Income_2021 <- Income_2021 |>
+  mutate(income = var_map2[income])
+
+
+# Get 2022
+
+Income_2022 <- get_acs(
+  geography = "county",
+  variables = c("S1901_C01_001E", "S1901_C01_002E", "S1901_C01_003E", "S1901_C01_004E", "S1901_C01_005E", "S1901_C01_006E", "S1901_C01_007E", "S1901_C01_008E", "S1901_C01_009E", "S1901_C01_010E", "S1901_C01_011E"),
+  year = 2022,
+  survey = "acs1"
+)
+
+Income_2022 <- Income_2022 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(income = variable) |>
+  rename(y2022 = estimate) |>
+  select(-moe)
+
+
+Income_2022 <- Income_2022 |>
+  mutate(income = var_map2[income])
+
+# Get 2023
+
+Income_2023 <- get_acs(
+  geography = "county",
+  variables = c("S1901_C01_001E", "S1901_C01_002E", "S1901_C01_003E", "S1901_C01_004E", "S1901_C01_005E", "S1901_C01_006E", "S1901_C01_007E", "S1901_C01_008E", "S1901_C01_009E", "S1901_C01_010E", "S1901_C01_011E"),
+  year = 2023,
+  survey = "acs1"
+)
+
+Income_2023 <- Income_2023 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(income = variable) |>
+  rename(y2023 = estimate) |>
+  select(-moe)
+
+
+Income_2023 <- Income_2023 |>
+  mutate(income = var_map2[income])
+
+
+```
+</details>
+
+
+Then, I created a data table to show all of the households from 2018-2023, by income and county. 
+
+<details>
+  <summary>**Click here to see how this was done**</summary>
+```{r}
+
+# Join tables
+
+total_income_household <- Income_2018 |>
+  left_join(select(Income_2019, y2019, GEOID, income), by = c("GEOID", "income")) |>
+  left_join(select(Income_2021, y2021, GEOID, income), by = c("GEOID", "income")) |>
+  left_join(select(Income_2022, y2022, GEOID, income), by = c("GEOID", "income")) |>
+  left_join(select(Income_2023, y2023, GEOID, income), by = c("GEOID", "income")) 
+
+            
+```
+</details>
+
+This data table can be viewed below. 
+
+```{r}
+
+datatable(total_income_household)
+
+```
+
+Third, I downloaded the mean income per captita per race by county. 
+
+<details>
+  <summary>**Click here to see how the data was downloaded into R and cleaned**</summary>
+```{r}
+
+
+# Mean Incomes per capita 
+
+var_map3 <- c(
+  "S1902_C03_001" = "All Household Income Mean",
+  "S1902_C03_020" = "White Alone", 
+  "S1902_C03_021" = "Black or African American Alone", 
+  "S1902_C03_022" = "American Indian and Alaska Native Alone",
+  "S1902_C03_023" = "Asian Alone", 
+  "S1902_C03_024" = "Native Hawaiian and other Pacific Islander Alone",
+  "S1902_C03_025" = "Some Other Race", 
+  "S1902_C03_026" = "2 or more races"
+)
+
+# Get 2018
+
+mean_income_2018 <- get_acs(
+  geography = "county",
+  variables = c("S1902_C03_001E", "S1902_C03_020E", "S1902_C03_021E", "S1902_C03_022E", "S1902_C03_023E", "S1902_C03_024E", "S1902_C03_025E", "S1902_C03_026E"),
+  year = 2018,
+  survey = "acs1"
+)
+
+mean_income_2018 <- mean_income_2018 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(race = variable) |>
+  rename(y2018 = estimate) |>
+  select(-moe)
+
+
+mean_income_2018 <- mean_income_2018 |>
+  mutate(race = var_map3[race])
+
+
+  
+
+
+# Get 2019
+
+mean_income_2019 <- get_acs(
+  geography = "county",
+  variables = c("S1902_C03_001E", "S1902_C03_020E", "S1902_C03_021E", "S1902_C03_022E", "S1902_C03_023E", "S1902_C03_024E", "S1902_C03_025E", "S1902_C03_026E"),
+  year = 2019,
+  survey = "acs1"
+)
+
+mean_income_2019 <- mean_income_2019 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(race = variable) |>
+  rename(y2019 = estimate) |>
+  select(-moe)
+
+
+mean_income_2019 <- mean_income_2019 |>
+  mutate(race = var_map3[race])
+
+
+
+# Get 2021
+
+mean_income_2021 <- get_acs(
+  geography = "county",
+  variables = c("S1902_C03_001E", "S1902_C03_020E", "S1902_C03_021E", "S1902_C03_022E", "S1902_C03_023E", "S1902_C03_024E", "S1902_C03_025E", "S1902_C03_026E"),
+  year = 2021,
+  survey = "acs1"
+)
+
+mean_income_2021 <- mean_income_2021 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(race = variable) |>
+  rename(y2021 = estimate) |>
+  select(-moe)
+
+
+mean_income_2021 <- mean_income_2021 |>
+  mutate(race = var_map3[race])
+
+
+# Get 2022
+
+mean_income_2022 <- get_acs(
+  geography = "county",
+  variables = c("S1902_C03_001E", "S1902_C03_020E", "S1902_C03_021E", "S1902_C03_022E", "S1902_C03_023E", "S1902_C03_024E", "S1902_C03_025E", "S1902_C03_026E"),
+  year = 2022,
+  survey = "acs1"
+)
+
+mean_income_2022 <- mean_income_2022 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(race = variable) |>
+  rename(y2022 = estimate) |>
+  select(-moe)
+
+
+mean_income_2022 <- mean_income_2022 |>
+  mutate(race = var_map3[race])
+
+
+
+# Get 2023
+
+mean_income_2023 <- get_acs(
+  geography = "county",
+  variables = c("S1902_C03_001E", "S1902_C03_020E", "S1902_C03_021E", "S1902_C03_022E", "S1902_C03_023E", "S1902_C03_024E", "S1902_C03_025E", "S1902_C03_026E"),
+  year = 2023,
+  survey = "acs1"
+)
+
+mean_income_2023 <- mean_income_2023 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(race = variable) |>
+  rename(y2023 = estimate) |>
+  select(-moe)
+
+
+mean_income_2023 <- mean_income_2023 |>
+  mutate(race = var_map3[race])
+
+
+```
+</details>
+
+
+Data table that shows all of the households from 2018-2023, by income and county. 
+
+<details>
+  <summary>**Click here to see how this was done**</summary>
+```{r}
+
+# Join tables
+
+total_mean_incomes <- mean_income_2018 |>
+  left_join(select(mean_income_2019, y2019, GEOID, race), by = c("GEOID", "race")) |>
+  left_join(select(mean_income_2021, y2021, GEOID, race), by = c("GEOID", "race")) |>
+  left_join(select(mean_income_2022, y2022, GEOID, race), by = c("GEOID", "race")) |>
+  left_join(select(mean_income_2023, y2023, GEOID, race), by = c("GEOID", "race")) 
+
+
+```
+</details>
+
+The table can be viewed below. 
+
+```{r}
+
+datatable(total_mean_incomes)
+
+```
+
+Lastly, I pulled data to show the population per occupation type by county. The following is how the data was downloaded. 
+
+<details>
+  <summary>**Click here to see how the data was downloaded into R and cleaned**</summary>
+```{r}
+var_map4 <- c(
+  "S2402_C01_001" = "Total Employed Full-Time",
+  "S2402_C01_002" = "Management, Business, Science, Arts", 
+  "S2402_C01_018" = "Service",
+  "S2402_C01_026" = "Sales and Office", 
+  "S2402_C01_029" = "Natural Resources, Construction, Maintenance",
+  "S2402_C01_033" = "Production, Transportation, Material Moving"
+)
+
+# Occupation 2018
+
+
+main_occupation_2018 <- get_acs(
+  geography = "county",
+  variables = c("S2402_C01_001", "S2402_C01_002", "S2402_C01_018", "S2402_C01_026", "S2402_C01_029", "S2402_C01_033"),
+  year = 2018,
+  survey = "acs1"
+)
+
+main_occupation_2018 <- main_occupation_2018 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(job_type = variable) |>
+  rename(y2018 = estimate) |>
+  select(-moe)
+
+
+main_occupation_2018 <- main_occupation_2018 |>
+  mutate(job_type = var_map4[job_type])
+
+
+# Occupation 2019
+
+
+main_occupation_2019 <- get_acs(
+  geography = "county",
+  variables = c("S2402_C01_001", "S2402_C01_002", "S2402_C01_018", "S2402_C01_026", "S2402_C01_029", "S2402_C01_033"),
+  year = 2019,
+  survey = "acs1"
+)
+
+main_occupation_2019 <- main_occupation_2019 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(job_type = variable) |>
+  rename(y2019 = estimate) |>
+  select(-moe)
+
+
+main_occupation_2019 <- main_occupation_2019 |>
+  mutate(job_type = var_map4[job_type])
+
+
+# Occupation 2021
+
+
+main_occupation_2021 <- get_acs(
+  geography = "county",
+  variables = c("S2402_C01_001", "S2402_C01_002", "S2402_C01_018", "S2402_C01_026", "S2402_C01_029", "S2402_C01_033"),
+  year = 2021,
+  survey = "acs1"
+)
+
+main_occupation_2021 <- main_occupation_2021 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(job_type = variable) |>
+  rename(y2021 = estimate) |>
+  select(-moe)
+
+
+main_occupation_2021 <- main_occupation_2021 |>
+  mutate(job_type = var_map4[job_type])
+
+# Occupation 2022
+
+
+main_occupation_2022 <- get_acs(
+  geography = "county",
+  variables = c("S2402_C01_001", "S2402_C01_002", "S2402_C01_018", "S2402_C01_026", "S2402_C01_029", "S2402_C01_033"),
+  year = 2022,
+  survey = "acs1"
+)
+
+main_occupation_2022 <- main_occupation_2022 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(job_type = variable) |>
+  rename(y2022 = estimate) |>
+  select(-moe)
+
+
+main_occupation_2022 <- main_occupation_2022 |>
+  mutate(job_type = var_map4[job_type])
+
+
+# Occupation 2023
+
+
+main_occupation_2023 <- get_acs(
+  geography = "county",
+  variables = c("S2402_C01_001", "S2402_C01_002", "S2402_C01_018", "S2402_C01_026", "S2402_C01_029", "S2402_C01_033"),
+  year = 2023,
+  survey = "acs1"
+)
+
+main_occupation_2023 <- main_occupation_2023 |>
+  filter(str_detect(NAME, regex("New York", ignore_case = TRUE))) |>
+  rename(job_type = variable) |>
+  rename(y2023 = estimate) |>
+  select(-moe)
+
+
+main_occupation_2023 <- main_occupation_2023 |>
+  mutate(job_type = var_map4[job_type])
+
+
+
+```
+</details>
+
+
+The following is how the tables were joined.
+
+<details>
+  <summary>**Click here to see how this was done**</summary>
+```{r}
+
+# Join tables
+
+total_occupations <- main_occupation_2018 |>
+  left_join(select(main_occupation_2019, y2019, GEOID, job_type), by = c("GEOID", "job_type")) |>
+  left_join(select(main_occupation_2021, y2021, GEOID, job_type), by = c("GEOID", "job_type")) |>
+  left_join(select(main_occupation_2022, y2022, GEOID, job_type), by = c("GEOID", "job_type")) |>
+  left_join(select(main_occupation_2023, y2023, GEOID, job_type), by = c("GEOID", "job_type")) 
+
+```
+</details>
+
+The data table can be viewed below. 
+
+```{r}
+
+datatable(total_occupations)
+
+```
+
+
+Now that I retrieved all of the data needed, I decided to format each of the tables in a different way so it would be easier to run the code. Thus, I put the tables into a long format. This can be seen below. 
+
+<details>
+  <summary>**Click here to see how the tables were made**</summary>
+
+```{r}
+
+estimated_total <- total_population_race |>
+  filter(grepl("Estimated Total", race))
+
+            
+estimated_total_long <- estimated_total |>
+  pivot_longer(cols = starts_with("y"),
+               names_to = "year",
+               values_to = "population") |>
+  mutate(year = as.numeric(gsub("y", "", year))) |>
+  select(-race, -NAME)
+
+
+total_income_household_long <- total_income_household |>
+  pivot_longer(cols = starts_with("y"),
+               names_to = "year",
+               values_to = "households") |>
+  mutate(year = as.numeric(gsub("y", "", year))) 
+
+
+total_mean_incomes_long <- total_mean_incomes |>
+  pivot_longer(cols = starts_with("y"),
+               names_to = "year",
+               values_to = "mean_income") |>
+  mutate(year = as.numeric(gsub("y", "", year))) 
+            
+
+total_occupations_long <- total_occupations |>
+  pivot_longer(cols = starts_with("y"),
+               names_to = "year",
+               values_to = "population") |>
+  mutate(year = as.numeric(gsub("y", "", year))) 
+
+            
+
+```
+</details>
+
+#### Creating Tables with the Data
+
+All of the tables seen below will be the ones I contributed to our group project. Since I was in charge of our data on a geographic level, this is the majority of what my work amounted to. 
+
+
+The first thing I decided to look into was the Mean Income by County. This graph was made by the following code below. 
+
+
+<details>
+  <summary>**Click here to see how this was done**</summary>
+```{r}
+
+total_loan <- combined_data |>
+  select(activity_year, county_code, loan_amount) |>
+  group_by(county_code, activity_year) |>
+  summarize(Total_loan = sum(loan_amount)) 
+
+total_mean_incomes_long22 <- total_mean_incomes_long |>
+  rename(county_code = GEOID) |>
+  select(-race) |>
+  mutate(year = as.numeric(year),
+         county_code = as.numeric(county_code)) |>
+  group_by(county_code, NAME, year) |>
+  summarize(mean_income = sum(mean_income, na.rm = TRUE)) 
+
+
+total_loan <- total_loan |>
+  rename(year = activity_year) |>
+  mutate(year = as.numeric(year),
+         county_code = as.numeric(county_code))
+
+
+total_loan_mean_income <- total_mean_incomes_long22 |>
+  inner_join(total_loan, by = c("county_code", "year"))
+
+total_loan_mean_income2 <- total_loan_mean_income |>
+  group_by(year) |>
+  mutate(
+    Highlight = case_when(
+    Total_loan %in% sort(Total_loan, decreasing = TRUE)[1:3] ~ "Highest",
+    Total_loan %in% sort(Total_loan, decreasing = FALSE)[1:3] ~ "Lowest",
+    TRUE ~ "Normal"
+  ))
+
+total_loan_mean_income3 <- total_loan_mean_income |>
+  group_by(year) |>
+  mutate(
+    Highlight = case_when(
+      mean_income %in% sort(mean_income, decreasing = TRUE)[1:3] ~ "Highest",
+      mean_income %in% sort(mean_income, decreasing = FALSE)[1:3] ~ "Lowest",
+      TRUE ~ "Normal"
+    ))
+
+
+
+income_plot <- ggplot(total_loan_mean_income3, aes(x = NAME, y = mean_income, fill = Highlight)) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
+  scale_fill_manual(values =  c("Highest" = "springgreen2", "Lowest" = "firebrick3", "Normal" = "gray")) +
+  facet_wrap(~year) +
+  coord_flip() +
+  labs(title = "The Total Mean Income Per County in New York, 2018 - 2023 (Excluding 2020)", x = "County", y = "Mean Income") +
+  theme_minimal() +
+  theme(plot.title = element_text(size = 10),
+        axis.text.y = element_text(size = 4, vjust = 0, margin = margin(r = 1)),
+        axis.text.x = element_text(size = 5),
+        plot.margin = margin(3, 3, 3)) +
+  scale_y_continuous(labels = label_comma())
+
+
+
+```
+</details>
+
+
+```{r}
+
+plot(income_plot)
+
+```
+
+
+This plot showed ... 
+
+Next, I looked into the Total Loan by County. This can be seen below. 
+
+<details>
+  <summary>**Click here to see how this was done**</summary>
+```{r}
+
+loan_plot <- ggplot(total_loan_mean_income2, aes(x = NAME, y = Total_loan, fill = Highlight)) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
+  scale_fill_manual(values =  c("Highest" = "springgreen2", "Lowest" = "firebrick3", "Normal" = "gray")) +
+  facet_wrap(~year) +
+  coord_flip() +
+  labs(title = "The Total Loan Amount Given Per County in New York, 2018 - 2023 (Excluding 2020)", x = "County", y = "Loan Amount") +
+  theme_minimal() +
+  theme(plot.title = element_text(size = 10),
+        axis.text.y = element_text(size = 4, vjust = 0, margin = margin(r = 1)),
+        axis.text.x = element_text(size = 5),
+        plot.margin = margin(3, 3, 3)) +
+  scale_y_continuous(labels = label_comma())
+
+
+
+```
+</details>
+
+
+```{r}
+
+plot(loan_plot)
+
+```
+
+
+
+For my third plot, I looked into the total loan types over time. I wanted to see if all of the loans were affected by covid. This can be seen below. 
+
+
+<details>
+  <summary>**Click here to see how this was done**</summary>
+```{r}
+
+pop_loan <- combined_data |>
+  select(activity_year, county_code, loan_type) |>
+  group_by(county_code, activity_year) |>
+  mutate(activity_year = as.numeric(activity_year),
+         county_code = as.numeric(county_code))
+
+pop_loan_count <- pop_loan |>
+  group_by(county_code, activity_year, loan_type) |>
+  summarize(count = n(), na.rm = TRUE, .groups = 'drop') |>
+  rename(year = activity_year)
+
+count_loan_mean_income <- total_mean_incomes_long22 |>
+  inner_join(pop_loan_count, by = c("county_code", "year"))
+
+
+top_loan <- count_loan_mean_income |>
+  group_by(county_code, NAME, year) |>
+  arrange(desc(count))
+
+
+total_pop_loan_count <- pop_loan_count |>
+  group_by(year, loan_type) |>
+  summarize(count = sum(count, na.rm = TRUE)) 
+
+total_pop_loan_count <- pop_loan_count |>
+  group_by(year, loan_type) |>
+  summarize(count = sum(count, na.rm = TRUE)) 
+
+
+top_loan_plot <- ggplot(total_pop_loan_count, aes(x = year, y = count, color = loan_type, group = loan_type)) +
+  geom_line(size = 1) +
+  geom_point(size = 3) +
+  labs(title = "Total Amount of Loan Types Across the NY Counties, 2018 - 2023", x = "Year", y = "Loan Type") +
+  theme_minimal() +
+  scale_y_continuous(labels = label_comma())
+
+
+```
+</details>
+
+
+```{r}
+
+plot(top_loan_plot)
+
+```
+
+
+Lastly, I looked into the total populations per occupations by county, over time. This can be seen below. 
+
+
+<details>
+  <summary>**Click here to see how this was done**</summary>
+```{r}
+
+occupations <- total_occupations_long |>
+  filter(!apply(total_occupations_long, 1, function(row) any(grepl("Total Employed Full-Time", row, ignore.case = TRUE))))
+
+
+
+occupations_plot <- ggplot(occupations, aes(x = NAME, y = population, fill = job_type)) +
+  geom_bar(stat = "identity", position = "identity", alpha = .6, width = .9) +
+  facet_wrap(~year) +
+  coord_flip() + 
+  labs(title = "Occupations by Population Per County, 2018 - 2023 (Excluding 2020)", y = "County", x = "Population") +
+  theme(legend.position = "bottom") +
+  scale_fill_brewer(palette = "Set3") +
+  scale_y_continuous(labels = label_comma()) 
+```
+</details>
+
+
+```{r}
+
+plot(occupations_plot)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
