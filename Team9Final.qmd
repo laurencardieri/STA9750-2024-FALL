@@ -104,14 +104,15 @@ Above is a graph we derived from our data to show occupation by county. Interest
 
 ## Analytical Stage Two
 
-For Stage two analysis, we looked into demographics. We wanted to look into the data and confirm equity amongst races. It was no surprise to come across the results we did, however, we also had other factors to consider to fully conclude equity amongst races. Let’s look at the questions we performed data analysis to and the graphs created to depict data: 
+For Stage two analysis, we looked at demographics. We wanted to confirm equity amongst races. Let’s look at the questions we analyzed:  
 
 ### Loan Product Types by Race
 1. What loan Type is most popular among race? Does one benefit more than others?  
 [![](https://i.postimg.cc/nh3S2zsM/image.png)](https://postimg.cc/Bj1CQJBG)
 
 
-From the data we gathered that the most popular loan was Conventional First Lien. Additionally, the races with greater loans per loan type are White, followed by Asians, followed by Black or African Americans. This holds true throughout the three stages of the pandemic, although max dollar distribution was during years 2020 -2021, and lowest post pandemic. 
+The data shows us that the most popular loan is Conventional First Lien. Additionally, the race/s with the greater loans per loan type are White, followed by Asians, followed by Black or African Americans. This holds true through the three stages of the pandemic. We also see that dollar distribution is greater between years 2020 -2021, and lowest post pandemic. 
+
 
 
 ### Total Loan Amount by Race 
@@ -119,7 +120,7 @@ From the data we gathered that the most popular loan was Conventional First Lien
 
 [![](https://i.postimg.cc/9Qg1TnS7/image.png)](https://postimg.cc/zyWnY0qz)
 
-From the data we gathered that the greatest dollar loans start at White, followed by Asian, followed by Black/African America,  followed by 2 or more minority races , and American Indian/Alaskan Native being at lowest dollar loans. A pattern seen throughout the three stages of the pandemic. Also important to highlight, White race received more than double the total dollars loaned in comparison to other races through all three stages of the pandemic.
+From the data we gather that the greatest dollar loans go to White race, followed by Asian, followed by Black/African America,  followed by 2 or more minority races , and finally American Indian/Alaskan Native at the lowest dollar distribution. The pattern holds true through the three stages of the pandemic. Also important to highlight, the White race received more than double the total dollars loaned in comparison to other races through all three stages.
 
 
 ### Average Percentage Interst Rate by Race 
@@ -128,7 +129,7 @@ From the data we gathered that the greatest dollar loans start at White, followe
 [![](https://i.postimg.cc/rsT9MXdv/image.png)](https://postimg.cc/9Rx9YkYp)
 
      
-From the data we gathered the races that benefited with lowest rates were Asian, followed by White, followed by Black/African American. In contrast, the races with highest rates went to Native Hawaiian/ Other Pacific Islander, American Indian/Alaskan Native, and 2 or more minority races. In addition to this, in the year 2021 the data shows us that although interest rates dropped sharply, it is the point where max equity is witnessed, where almost all races had about/close to the same rates.
+The data shows us that the races that benefit with lowest rates are Asian, followed by White, followed by Black/African American. In contrast, the races with highest rates are Native Hawaiian/ Other Pacific Islander, American Indian/Alaskan Native, and 2 or more minority races. In addition, in 2021 the data shows us that although interest rates dropped sharply, it is the point where max equity is witnessed, where almost all races have about/close to the same rates.
 
 ### Average Income Distribution by Race: Thousand $ 
 4. What are the average income distributions by race? Does one benefit more than the others? 
@@ -136,10 +137,13 @@ From the data we gathered the races that benefited with lowest rates were Asian,
 [![](https://i.postimg.cc/Gmtxcj2h/image.png)](https://postimg.cc/zymg7KK9)
 
 
-The data shows us that the highest average income distribution Pre-Pademic went to 2 or more minority races, followed by  White, followed by Asian. During the pandemic we see two different shifts happened in 2020 the highest income distribution went to Black/African American, followed by, followed by Asian. By 2021 the second shift happened where the highest average income distribution went to White, Asian, and two or more minority races. Finally post pandemic, specifically in 2022 the highest distribution went to Asian, followed by White, followed by American Indian and Alaskan Native. However, in 2023 the highest distribution went to American Indian and Alaskan Native. With so many shifts and shocking results here, it begged the questions why? From a raw data and numbers perspective, one can assume there exists highly skewed numbers, but what to do with these numbers? Additionally it leads to wonder, perhaps numbers were not following the correct format, maybe human error in data input, or error while data rendering at reporting. Whichever the case, it is difficult for an analyst to remove such numbers as verification of its existence or confirmation of error must be done, as this was the final data shared/distributed to HMDA by Financial Institutions. 
+Based on the data, the race/s with the highest average income distribution Pre-Pandemic  are 2 or more minority races, followed by  White, followed by Asian. During the pandemic we see two different shifts. In 2020 the race/s with the highest income distribution are Black/African American, followed by Asian. By 2021 the second shift happens, where the races with highest average income distribution are White, Asian, and two or more minority races. Finally post pandemic, in 2022 the highest distribution was for Asian, followed by White, followed by American Indian and Alaskan Native. In 2023 the highest distribution was for American Indian and Alaskan Native. With income distribution by race varying across the three stages, and because graphs portrayed unexpected results, we looked at data values and discovered some numbers were too large, skewing average calculations. A bigger question now is, how accurate is the data? Does it need further cleaning, and how can we be sure to extract large skewed values? 
 
 ### Overall Stage Two Findings: 
-Overall we see that the highest benefited race in mortgage dollars length and types of loans is White at a more than twice the distribution than any other races. Additionally, we see that the lowest mortgage rates benefit went to the Asian race, with an exception for 2021 where we see highest equity amongst all races. However, for average income distribution we don’t see a clear beneficial race, it looks like pre, during and post pandemic the distributions vary, leading to question the accuracy of the data. To conclude this analysis, based on the metrics analyzed there is a lot of work to be done in terms of equability by race. We do see an example in 2021 where that can be achieved, looking back at history when NY was going through the COVID19 lock-down. It leads to the question, does equability happen only during a world crisis? When every human is at risk of fatality? Although this was only seen at the mortgage rate metrics, it gave us a small glimpse into a potentially equitable future for all races, which lies at the core of our existence as equal humans in the same path. 
+Overall we see that the highest benefited race in mortgage dollars length and types of loans is White at a more than twice the distribution than any other races. Additionally, we see that the lowest mortgage rates benefit went to the Asian race, with an exception of 2021 where we witness the highest equity amongst all races. For average income distribution we don’t see a clear beneficial race through the three stages. Further metrics must be analyzed, and further questions arise, like: Is equitability more pronounced during a world crisis? Although this was only seen at the mortgage rate metrics, it provided us a glimpse for a potentially equitable future, for all races.
+
+
+
 
 
 ## Analytical Stage Three 
