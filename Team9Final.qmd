@@ -60,7 +60,7 @@ To begin our analysis, we wanted to understand our data on a geographic level. T
 With these three questions in mind, we began our analysis. From it, the following four graphs were created. 
 
 ### Mean Income Amount by County 
-[![image.png](https://i.postimg.cc/L64DnSXT/image.png)](https://postimg.cc/JtgZ29jD)
+[![](https://i.postimg.cc/L64DnSXT/image.png)](https://postimg.cc/JtgZ29jD)
 
 Above is a graph we derived that shows the mean income by county. The green bars represent the three highest counties and the red represents the three lowest. It is clear that the three top counties did not change overtime. For the converse, the lowest counties did change, but they remained consistent. 
 
@@ -107,34 +107,36 @@ Above is a graph we derived from our data to show occupation by county. Interest
 For Stage two analysis, we looked into demographics. We wanted to look into the data and confirm equity amongst races. It was no surprise to come across the results we did, however, we also had other factors to consider to fully conclude equity amongst races. Let’s look at the questions we performed data analysis to and the graphs created to depict data: 
 
 ### Loan Product Types by Race
-
+1. What loan Type is most popular among race? Does one benefit more than others?  
 [![](https://i.postimg.cc/nh3S2zsM/image.png)](https://postimg.cc/Bj1CQJBG)
 
-1. What loan Type is most popular among race? Does one benefit more than others?  
 
-     From the data we gathered that the most popular loan was Conventional First Lien. Additionally, the races with greater loans per loan type are White, followed by Asians, followed by Black or African Americans. This holds true throughout the three stages of the pandemic, although max dollar distribution was during years 2020 -2021, and lowest post pandemic. 
+From the data we gathered that the most popular loan was Conventional First Lien. Additionally, the races with greater loans per loan type are White, followed by Asians, followed by Black or African Americans. This holds true throughout the three stages of the pandemic, although max dollar distribution was during years 2020 -2021, and lowest post pandemic. 
 
 
 ### Total Loan Amount by Race 
-[![](https://i.postimg.cc/9Qg1TnS7/image.png)](https://postimg.cc/zyWnY0qz)
-
 2. Who has the greatest loan $ by race? Does one benefit more than others?
 
-     From the data we gathered that the greatest dollar loans start at White, followed by Asian, followed by Black/African America,  followed by 2 or more minority races , and American Indian/Alaskan Native being at lowest dollar loans. A pattern seen throughout the three stages of the pandemic. Also important to highlight, White race received more than double the total dollars loaned in comparison to other races through all three stages of the pandemic.
+[![](https://i.postimg.cc/9Qg1TnS7/image.png)](https://postimg.cc/zyWnY0qz)
+
+From the data we gathered that the greatest dollar loans start at White, followed by Asian, followed by Black/African America,  followed by 2 or more minority races , and American Indian/Alaskan Native being at lowest dollar loans. A pattern seen throughout the three stages of the pandemic. Also important to highlight, White race received more than double the total dollars loaned in comparison to other races through all three stages of the pandemic.
+
 
 ### Average Percentage Interst Rate by Race 
+3. What are the interest rates by race? Does one benefit more than the others? 
+
 [![](https://i.postimg.cc/rsT9MXdv/image.png)](https://postimg.cc/9Rx9YkYp)
 
-3. What are the interest rates by race? Does one benefit more than the others? 
      
-     From the data we gathered the races that benefited with lowest rates were Asian, followed by White, followed by Black/African American. In contrast, the races with highest rates went to Native Hawaiian/ Other Pacific Islander, American Indian/Alaskan Native, and 2 or more minority races. In addition to this, in the year 2021 the data shows us that although interest rates dropped sharply, it is the point where max equity is witnessed, where almost all races had about/close to the same rates.
+From the data we gathered the races that benefited with lowest rates were Asian, followed by White, followed by Black/African American. In contrast, the races with highest rates went to Native Hawaiian/ Other Pacific Islander, American Indian/Alaskan Native, and 2 or more minority races. In addition to this, in the year 2021 the data shows us that although interest rates dropped sharply, it is the point where max equity is witnessed, where almost all races had about/close to the same rates.
 
 ### Average Income Distribution by Race: Thousand $ 
-[![](https://i.postimg.cc/Gmtxcj2h/image.png)](https://postimg.cc/zymg7KK9)
-
 4. What are the average income distributions by race? Does one benefit more than the others? 
 
-    The data shows us that the highest average income distribution Pre-Pademic went to 2 or more minority races, followed by  White, followed by Asian. During the pandemic we see two different shifts happened in 2020 the highest income distribution went to Black/African American, followed by, followed by Asian. By 2021 the second shift happened where the highest average income distribution went to White, Asian, and two or more minority races. Finally post pandemic, specifically in 2022 the highest distribution went to Asian, followed by White, followed by American Indian and Alaskan Native. However, in 2023 the highest distribution went to American Indian and Alaskan Native. With so many shifts and shocking results here, it begged the questions why? From a raw data and numbers perspective, one can assume there exists highly skewed numbers, but what to do with these numbers? Additionally it leads to wonder, perhaps numbers were not following the correct format, maybe human error in data input, or error while data rendering at reporting. Whichever the case, it is difficult for an analyst to remove such numbers as verification of its existence or confirmation of error must be done, as this was the final data shared/distributed to HMDA by Financial Institutions. 
+[![](https://i.postimg.cc/Gmtxcj2h/image.png)](https://postimg.cc/zymg7KK9)
+
+
+The data shows us that the highest average income distribution Pre-Pademic went to 2 or more minority races, followed by  White, followed by Asian. During the pandemic we see two different shifts happened in 2020 the highest income distribution went to Black/African American, followed by, followed by Asian. By 2021 the second shift happened where the highest average income distribution went to White, Asian, and two or more minority races. Finally post pandemic, specifically in 2022 the highest distribution went to Asian, followed by White, followed by American Indian and Alaskan Native. However, in 2023 the highest distribution went to American Indian and Alaskan Native. With so many shifts and shocking results here, it begged the questions why? From a raw data and numbers perspective, one can assume there exists highly skewed numbers, but what to do with these numbers? Additionally it leads to wonder, perhaps numbers were not following the correct format, maybe human error in data input, or error while data rendering at reporting. Whichever the case, it is difficult for an analyst to remove such numbers as verification of its existence or confirmation of error must be done, as this was the final data shared/distributed to HMDA by Financial Institutions. 
 
 ### Overall Stage Two Findings: 
 Overall we see that the highest benefited race in mortgage dollars length and types of loans is White at a more than twice the distribution than any other races. Additionally, we see that the lowest mortgage rates benefit went to the Asian race, with an exception for 2021 where we see highest equity amongst all races. However, for average income distribution we don’t see a clear beneficial race, it looks like pre, during and post pandemic the distributions vary, leading to question the accuracy of the data. To conclude this analysis, based on the metrics analyzed there is a lot of work to be done in terms of equability by race. We do see an example in 2021 where that can be achieved, looking back at history when NY was going through the COVID19 lock-down. It leads to the question, does equability happen only during a world crisis? When every human is at risk of fatality? Although this was only seen at the mortgage rate metrics, it gave us a small glimpse into a potentially equitable future for all races, which lies at the core of our existence as equal humans in the same path. 
@@ -145,24 +147,31 @@ Overall we see that the highest benefited race in mortgage dollars length and ty
 To complete our analysis, we finally wanted to look at our data on a economic level. The following analysis and graphs is what we derived. 
 
 ### Income and Mortgage Rates
+
+1. Are people with higher incomes more likely to get lower mortgage rates during the pandemic? Do higher incomes affect mortgage rates during the pandemic? 
+
 [![](https://i.postimg.cc/gkS3B6D9/image.png)](https://postimg.cc/cr3KvC2T)
 
 [![](https://i.postimg.cc/W44Xk1y7/image.png)](https://postimg.cc/LJrtd22q)
 
-1. Are people with higher incomes more likely to get lower mortgage rates during the pandemic? Do higher incomes affect mortgage rates during the pandemic? 
 
 Both visual and statistical analyses confirm that high-income earners had slightly lower mortgage rates compared to other income groups before the pandemic, with lower-middle-income earners facing the highest rates. During the pandemic, rates dropped across all groups and became almost equal, with high-income groups maintaining a slight advantage. Post-pandemic, rates for high-income, upper-middle-income, and low-income groups equalized, while lower-middle-income earners continued to face higher rates. Statistical tests further validated these findings, showing a significant difference in loan rates during the pandemic, with high-income earners benefiting from lower rates (t-statistic: -90.94, p-value: <2.2e-16). Similar differences were observed pre-pandemic, while post-pandemic dynamics shifted, with high-income groups no longer enjoying the lowest rates.
 
 
 ### Loan Approvals in New York State 
-[![](https://i.postimg.cc/d1gYfXCz/image.png)](https://postimg.cc/r0G30fQJ)
 
 2. How did loan applications and approval rates vary across Pre-Pandemic, Pandemic, and Post-Pandemic periods?
 
-     During the pandemic, loan applications significantly increased, as shown in the plot,  likely due to reduced mortgage rates. Post-pandemic, applications declined to levels below pre-pandemic figures. Approval rates remained consistent across all three periods. Statistical results confirmed these trends, indicating that lower rates during the pandemic likely drove the increased application numbers.
+[![](https://i.postimg.cc/d1gYfXCz/image.png)](https://postimg.cc/r0G30fQJ)
+
+During the pandemic, loan applications significantly increased, as shown in the plot,  likely due to reduced mortgage rates. Post-pandemic, applications declined to levels below pre-pandemic figures. Approval rates remained consistent across all three periods. Statistical results confirmed these trends, indicating that lower rates during the pandemic likely drove the increased application numbers.
 
 
 ### Jobs and Mortgages Rates, NYC vs State
+
+3. Do certain jobs in a county affect mortgage rates during the pandemic?
+
+
 [![](https://i.postimg.cc/vmRgp7xK/image.png)](https://postimg.cc/qNLvK3Lc)
 
 This plot reveals that NYC and the ‘Rest of the State’ experienced comparable average loan rates during all periods due to similar distributions of job types. Loan rates dropped significantly during the pandemic and increased post-pandemic.
@@ -170,8 +179,6 @@ This plot reveals that NYC and the ‘Rest of the State’ experienced comparabl
 [![](https://i.postimg.cc/7PBCxrT0/image.png)](https://postimg.cc/jC7qX9cS)
 
 This plot highlights differences among NYC boroughs. Manhattan and Brooklyn, with the highest proportions of "Management, Business, Science, Arts" jobs, consistently experienced lower loan rates compared to other boroughs. Post-pandemic, Manhattan maintained its advantage in rates and job composition.
-
-3. Do certain jobs in a county affect mortgage rates during the pandemic?
 
 [![](https://i.postimg.cc/c18Z3xyZ/image.png)](https://postimg.cc/Z0Z1th5D)
 
