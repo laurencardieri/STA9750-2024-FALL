@@ -173,6 +173,9 @@ This plot highlights differences among NYC boroughs. Manhattan and Brooklyn, wit
 
 3. Do certain jobs in a county affect mortgage rates during the pandemic?
 
+[![](https://i.postimg.cc/c18Z3xyZ/image.png)](https://postimg.cc/Z0Z1th5D)
+
+
 The statistical ANOVA test, conducted on the pandemic time period across all counties in New York State, found no significant linear relationship between job type proportions and loan rates. However, visual correlation analyses for all job groups versus average loan rates during the pandemic indicated variations in slopes among different job types. Additionally, specific regression analyses confirmed that the "Management, Business, Science, Arts" job group had a significant negative impact on average loan rates, showing a strong negative correlation across pre-, during, and post-pandemic periods. Furthermore, multivariable regression analysis for the pandemic period revealed that higher proportions of Natural Resources, Construction, Maintenance and Production, Transportation, Material Moving jobs were associated with increased loan rates. These findings suggest that job type proportions within counties do influence average loan rates during 2021.
 
 ## Conclusion 
