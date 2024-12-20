@@ -1,13 +1,22 @@
-# STA 9750 Final Project Individual - Lauren
-
 <div style="text-align: center;">
-## Broker T's: Mortgages: What's the Big Deal?
-</div>
+# STA 9750 Final Project Individual
 
+
+## Broker T's: Mortgages: What's the Big Deal?
+
+
+*Lauren Cardieri* 
+
+
+![](https://dr5dymrsxhdzh.cloudfront.net/blog/images/af4aebfda/2022/08/mortgage-contract-for-the-purchase-or-sale-of-an-apartment-house-or-picture-id1268445983.jpg)
+</div>
+--- 
 
 ### Preface
 
 In this project, my team decided to deep dive into the mortgage rates in New York pre, during, and post pandemic of the Covid-19 Virus. We aimed to see that if the county you live in, income you make, and demographics you identify with affect mortgage loans and rates through these stages. 
+
+### Data Sources
 
 To do this, we narrowed down our resources to two main data sources. 
 
@@ -16,10 +25,27 @@ First, we decided to pull data from the [Consumer Finance Protection Bureau- HMD
 
 Second, we decided to pull data from the [United States Census Bureau](https://data.census.gov/). From this data, we retrieved mean income, population by race, job distribution, and much more. I was in charge of retrieving this data, and I will explain how I did so below. 
 
+I used two files from the Census Bureau to get the necessary data we needed:
+
+
+1. [S1901 Income in the Past 12 Months (in 2022 Inflation-Adjusted Dollars)](https://data.census.gov/table/ACSST5Y2022.S1901?q=Income%20by%20county&g=040XX00US36,36$0500000)
+
+
+     - Income by household type: Family, Married, Nonfamily, etc.
+     - Mean and Median income per household type
+     - Estimate of how many people per $50,000 increments 
+     
+     
+2. [S2401Occupation by Sex for the Civilian Employed Population 16 Years and Over](https://data.census.gov/table/ACSST5Y2022.S2401?q=Employment%20by%20county&g=040XX00US36,36$0500000)
+
+
+     - Total employment per county in New York
+     - Gives the population of each job type 
+
 
 ### My Contribution 
 
-My contribution to this project began with retrieving data from the Census Bureau. The first thing I had to do was retrieve a personal key to access the database. Then, I downloaded the tidycensus library into my Rstudio, as well as the following libraries. 
+My contribution to this project began with retrieving data from the Census Bureau. The first thing I had to do was retrieve a personal key to access the database. Then, I downloaded the tidycensus library into my Rstudio, as well as the following libraries. This can be seen in the folded code below. 
 
 <details>
   <summary>**Click here to see how the libraries were downloaded**</summary>
@@ -57,7 +83,7 @@ After this, I began to download the data in the following manners.
 
 #### Downloading & Cleaning the Data
 
-First, to clean the data, I created a table to change the variables to make the data easier to read. 
+First, to clean the data, I created a table to change the variables to make the data easier to read, as the data was only identifiable by the nine digit code assigned to it. 
 
 <details>
   <summary>**Click here to see how the variables were changed**</summary>
@@ -81,6 +107,7 @@ var_map <- c(
 
 Then, I downloaded all of the data into my R, from 2018 - 2023. Notice that the data from 2020 is unavailable. This is due to the pandemic not giving reliable data, so the Census does not readily offer it in the same fashion. 
 
+To retrieve the data, I used the tidycensus library to pull from the Cenus' records. I then picked what variables I want from the data, and put what year I wish to pull. After, I filtered the data to only show the New York counties, rather than the entire United States. Lastly, I renamed the columns and changed the variable names to make the data set easier to read. I repeated this process for the following desired years. 
 
 <details>
   <summary>**Click here to see how the population data was downloaded into R**</summary>
@@ -188,7 +215,7 @@ population_1901_2023 <- population_1901_2023 |>
 </details>
 
 
-Lastly, I decided to create a table to show all of the populations through the years, by race and county. I joined the table with the code below. 
+Next, I wanted to create a table to show all of the populations through the years, by race and county. To do this, I joined the table with the code below, on the items of GEOID and race. 
 
 <details>
   <summary>**Click here to see how the data was joined**</summary>
@@ -204,7 +231,7 @@ total_population_race <- population_1901_2018 |>
 </details>
 
 
-The data can be viewed below. 
+The data table can be viewed below. 
 
 ```{r}
 
@@ -212,7 +239,9 @@ datatable(total_population_race)
 
 ```
 
-Next, I downloaded the data that shows the mean household income. This can be seen below. 
+Now that this data was retrieved, I moved on to the data that shows the mean household income by county. This retrieval can be seen below. I retrieved the information the same way I retrieved the population amount by race above. 
+
+This can be seen below in the folded code. 
 
 
 <details>
@@ -358,9 +387,9 @@ datatable(total_income_household)
 
 ```
 
-Third, I downloaded the mean income per captita per race by county. 
+Thirdly, I decided to download the mean income per capita per race by county. which can be seen in the folded code below. This was done the same way as above. 
 
-<details>
+
   <summary>**Click here to see how the data was downloaded into R and cleaned**</summary>
 ```{r}
 
@@ -505,7 +534,7 @@ total_mean_incomes <- mean_income_2018 |>
 ```
 </details>
 
-The table can be viewed below. 
+This data table can be viewed below. 
 
 ```{r}
 
@@ -513,7 +542,7 @@ datatable(total_mean_incomes)
 
 ```
 
-Lastly, I pulled data to show the population per occupation type by county. The following is how the data was downloaded. 
+Lastly, I pulled data to show the population per occupation type by county. The following is how the data was downloaded, again, similar to how it was done above. 
 
 <details>
   <summary>**Click here to see how the data was downloaded into R and cleaned**</summary>
@@ -662,7 +691,7 @@ datatable(total_occupations)
 ```
 
 
-Now that I retrieved all of the data needed, I decided to format each of the tables in a different way so it would be easier to run the code. Thus, I put the tables into a long format. This can be seen below. 
+Now that I retrieved all of the data needed, I decided to format each of the tables in a different way so it would be easier to run the code. Thus, I put the tables into a long format. Now, when I attempt to create facet maps or make judgement by year, I will not run into any issues. This can be seen below. 
 
 <details>
   <summary>**Click here to see how the tables were made**</summary>
@@ -710,8 +739,13 @@ total_occupations_long <- total_occupations |>
 
 All of the tables seen below will be the ones I contributed to our group project. Since I was in charge of our data on a geographic level, this is the majority of what my work amounted to. 
 
+I sought out to solve the following questions: 
 
-The first thing I decided to look into was the Mean Income by County. This graph was made by the following code below. 
+1. What is the mean income amount by county? 
+2. What is the total loan amount by county? 
+3. What are the main jobs/occupations by county? 
+
+My graph was prepared with the following code below. 
 
 
 <details>
@@ -787,7 +821,7 @@ plot(income_plot)
 ```
 
 
-This plot showed ... 
+This plot showed how the total mean income per county changed overtime. The three highest counties are represented by the green bars and the three lowest by the red bars. Here we can see that the three highest paid counties remained the same over the 6 years, being Westchester County, New York County, and Nassau county. On the other hand, the three lowest mean income counties fluctuated overtime, but remotely stayed consistent. Incomes seemed to stay consistent over the years, with slight growths occurring after Covid. 
 
 Next, I looked into the Total Loan by County. This can be seen below. 
 
@@ -820,9 +854,9 @@ plot(loan_plot)
 
 ```
 
+This plot depicts the total loan amount per county over time. Again, the green represents the three highest and the red represents the lowest. Here, we can see that besides 2018, the three highest counties remained the same. The three lowest remained consistent, but not exactly the same. It is also important to realize that the counties that tended to have the lower incomes also had the lower total loan amount given and the highest incomes tended to receive the highest total loans. It is also important to note that after Covid, each county received less total loan amounts than they did before Covid. 
 
-
-For my third plot, I looked into the total loan types over time. I wanted to see if all of the loans were affected by covid. This can be seen below. 
+For my third plot, I looked into the total loan types over time. I wanted to see if all of the loans were affected by Covid. This can be seen below. 
 
 
 <details>
@@ -880,6 +914,7 @@ plot(top_loan_plot)
 
 ```
 
+This graph shows the four types of loans compared over the years, with lines representing the total from every county. Here, it can be seen that loan type 1 is *by far* the most frequent loan type of the four. We can also see that after the height of Covid struck in 2021, each loan type experienced a drop, with loan type one experiencing the most dramatic drop. 
 
 Lastly, I looked into the total populations per occupations by county, over time. This can be seen below. 
 
@@ -915,13 +950,34 @@ plot(occupations_plot)
 
 ```
 
+Above is a graph we derived from our data to show occupation by county. Interestingly enough, we can see that the "Management, Business, Science, Arts" category *dominated* the four other categories in every single county. 
+
+### Overall Findings 
+
+1. Does the county you live in affect how much money you make? 
+
+     Yes, the county you live in does affect how much you make, as some make progressively more than others
+     
+2. Does the mean income that a county makes correlate with the total amount of loans a county receives?
+
+     Yes, they do correlate. The counties that tended to have lower mean incomes, had less total loans. The ones that had a higher mean income, had more total loans. 
+     
+3. Did any change occur with mean income and total loans before, during, and after COVID? 
+
+     Mean income seemed to get higher after COVID in each county, while the Total Loans seemed to get lower. For both, the highest counties remained the same while the lowest counties varied throughout the years. 
+     
+4. Was there a loan type that prevailed over the others, and did the total loans given change overtime?
+
+     Yes, Loan Type 1, Conventional Loans, was the highest in each county by far. After 2021, each loan type experienced a dramatic drop.
+     
+5. Was there a job category that prevailed in each county overtime?
+
+     Yes, the Management, Business, Science, Art category prevailed in each county overtime by far.
 
 
+### Conclusion
 
-
-
-
-
+Therefore, my contribution to this project resided mostly in retrieving the data from the Census, cleaning/creating the necessary tables, and conducting the analysis on our data at a geographic level. For the written part of the project, I also contributed greatly in both presentations and the final written group report. Everything else was completed by my lovely group members. 
 
 
 
