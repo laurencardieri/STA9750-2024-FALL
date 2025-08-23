@@ -1,32 +1,48 @@
 ---
-title: "My Website"
+title: "Analytics Portfolio"
 ---
 
-My name is **Lauren** and I am *22 years old*. 
+**Lauren Cardieri** 
+
+--- 
 
 
-I am currently a student in Baruch's [MS Business Analytics Program](https://zicklin.baruch.cuny.edu/academic-programs/graduate/ms/masters-in-business-analytics/).
+# Education: 
+- MS in Business Analytics, *CUNY Baruch*
+- BS in Mathematics with Concentration in Education 7-12, *CUNY College of Staten Island*
 
+---
 
-### My Dogs!
+# Projects:
 
+- **Personality Test: Introvert vs Extrovert**
+     - Click [here](https://personalitytest.streamlit.app/) to view
+     
+- **A.I. Mood-Based Game Recommender**
+     - Click [here](https://mood-based-game-rec.streamlit.app/) to view
+     
+- **Healthcare Charge Predictor**
+     - Click [here](https://insurance-charge.streamlit.app/) to view
+     
 
-I have two dogs! Their names are: 
+- **Fiscal Characteristics of Major US Public Transit Systems**
+     - Click [here](https://laurencardieri.github.io/STA9750-2024-FALL/mp01.html) to view
+     
+     
+- **The Business of Show Business**
+     - Click [here](https://laurencardieri.github.io/STA9750-2024-FALL/mp02.html) to view
+     
+     
+- **Do Proportional Electoral College Allocations Yield a More Representative Presidency?**
+     - Click [here](https://laurencardieri.github.io/STA9750-2024-FALL/mp03.html) to view
 
-1) Macaroni 
+ - **Monte Carlo-Informed Selection of CUNY Retirement Plans**
+     - Click [here](https://laurencardieri.github.io/STA9750-2024-FALL/mp04.html) to view
+     
+- **Broker T’s: Mortgages: What’s the Big Deal? (Individual)**
+     - Click [here](https://laurencardieri.github.io/STA9750-2024-FALL/Final_Individual.html#data-sources) to view
+     
 
-    - Macaroni (Mack) is technically my brother's dog, but we babysit him while he's at work. 
-    
-    
-    - He is a Golden Retreiver and is 2 years old! 
+--- 
 
-    ![](https://yourimageshare.com/ib/wUHEdXt2VU){width=50%}
-
-1) Rusty 
-
-    - Rusty is extremely loving and the smartest dog I have ever met. 
-    
-    
-    - He is a Pitbull/Lab mix and is 13 years old (we think, he's a rescue)! 
-
-    ![](https://yourimageshare.com/ib/ngs0Qa20Uf){width=50%}
+Github Username: laurencardieri
